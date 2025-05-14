@@ -1,4 +1,4 @@
-import { getFontSizeClass } from "@/utils/accessibilityStyles";
+import { getSettings } from "@/utils/accessibilityStyles";
 import React, { useState } from "react";
 import type { CellType } from "../../../data/tileData";
 import { tileData } from "../../../data/tileData";
@@ -41,7 +41,9 @@ export const FloorGrid: React.FC<pathSegmentsProps> = ({
   );
 
   // Get specifically the font size class for elements that need independent scaling
-  const fontSizeClass = settings ? getFontSizeClass(settings) : "text-base";
+  const fontSizeClass = settings
+    ? getSettings(settings as types.AccessibilitySettings)
+    : "";
 
   // Validate currentFloor and get floor data
   const floorIndex = currentFloor - 1;
@@ -423,180 +425,194 @@ export const FloorGrid: React.FC<pathSegmentsProps> = ({
   );
 
   return (
-    <div className="p-4 relative">
-      <div
-        className={`inline-block ${
-          showGrid ? "border-2 border-gray-400" : "border border-gray-200"
-        } bg-white relative`}
-      >
+    <div
+      className="w-full h-full flex flex-col items-center justify-between"
+      aria-label="Floor grid container"
+      aria-describedby="floor-grid-desc"
+    >
+      {/* Description for screen readers */}
+      <div id="floor-grid-desc" className="sr-only">
+        This grid visually represents the current floor layout, including rooms,
+        paths, and accessibility features. Use the map to explore or select
+        locations.
+      </div>
+      <div className="p-4 relative">
         <div
-          className="grid"
-          style={{
-            display: "grid",
-            gridTemplateColumns: `repeat(${gridSize}, minmax(0, 1fr))`,
-            gap: "0px",
-            backgroundColor: "transparent",
-          }}
+          className={`inline-block ${
+            showGrid ? "border-2 border-gray-400" : "border border-gray-200"
+          } bg-white relative`}
         >
-          {finalGrid.map((row: CellType[], rowIndex: number) =>
-            row.map((cell: CellType, colIndex: number) => {
-              // Check if the cell needs a border by checking adjacent cells
-              const topCell = finalGrid[rowIndex - 1]?.[colIndex];
-              const bottomCell = finalGrid[rowIndex + 1]?.[colIndex];
-              const leftCell = finalGrid[rowIndex]?.[colIndex - 1];
-              const rightCell = finalGrid[rowIndex]?.[colIndex + 1];
+          <div
+            className="grid"
+            style={{
+              display: "grid",
+              gridTemplateColumns: `repeat(${gridSize}, minmax(0, 1fr))`,
+              gap: "0px",
+              backgroundColor: "transparent",
+            }}
+          >
+            {finalGrid.map((row: CellType[], rowIndex: number) =>
+              row.map((cell: CellType, colIndex: number) => {
+                // Check if the cell needs a border by checking adjacent cells
+                const topCell = finalGrid[rowIndex - 1]?.[colIndex];
+                const bottomCell = finalGrid[rowIndex + 1]?.[colIndex];
+                const leftCell = finalGrid[rowIndex]?.[colIndex - 1];
+                const rightCell = finalGrid[rowIndex]?.[colIndex + 1];
 
-              // Add borders between different types OR between cells of the same type but different labels (e.g., different classrooms)
-              const needsTopBorder =
-                rowIndex > 0 &&
-                topCell &&
-                (topCell.type !== cell.type ||
-                  (topCell.type === "classroom" &&
-                    cell.type === "classroom" &&
-                    topCell.label !== cell.label));
-              const needsBottomBorder =
-                rowIndex < gridSize - 1 &&
-                bottomCell &&
-                (bottomCell.type !== cell.type ||
-                  (bottomCell.type === "classroom" &&
-                    cell.type === "classroom" &&
-                    bottomCell.label !== cell.label));
-              const needsLeftBorder =
-                colIndex > 0 &&
-                leftCell &&
-                (leftCell.type !== cell.type ||
-                  (leftCell.type === "classroom" &&
-                    cell.type === "classroom" &&
-                    leftCell.label !== cell.label));
-              const needsRightBorder =
-                colIndex < gridSize - 1 &&
-                rightCell &&
-                (rightCell.type !== cell.type ||
-                  (rightCell.type === "classroom" &&
-                    cell.type === "classroom" &&
-                    rightCell.label !== cell.label));
+                // Add borders between different types OR between cells of the same type but different labels (e.g., different classrooms)
+                const needsTopBorder =
+                  rowIndex > 0 &&
+                  topCell &&
+                  (topCell.type !== cell.type ||
+                    (topCell.type === "classroom" &&
+                      cell.type === "classroom" &&
+                      topCell.label !== cell.label));
+                const needsBottomBorder =
+                  rowIndex < gridSize - 1 &&
+                  bottomCell &&
+                  (bottomCell.type !== cell.type ||
+                    (bottomCell.type === "classroom" &&
+                      cell.type === "classroom" &&
+                      bottomCell.label !== cell.label));
+                const needsLeftBorder =
+                  colIndex > 0 &&
+                  leftCell &&
+                  (leftCell.type !== cell.type ||
+                    (leftCell.type === "classroom" &&
+                      cell.type === "classroom" &&
+                      leftCell.label !== cell.label));
+                const needsRightBorder =
+                  colIndex < gridSize - 1 &&
+                  rightCell &&
+                  (rightCell.type !== cell.type ||
+                    (rightCell.type === "classroom" &&
+                      cell.type === "classroom" &&
+                      rightCell.label !== cell.label));
 
-              // Only show borders where needed
-              const borderTop = needsTopBorder ? "1px solid #333" : "none";
-              const borderBottom = needsBottomBorder
-                ? "1px solid #333"
-                : "none";
-              const borderLeft = needsLeftBorder ? "1px solid #333" : "none";
-              const borderRight = needsRightBorder ? "1px solid #333" : "none";
+                // Only show borders where needed
+                const borderTop = needsTopBorder ? "1px solid #333" : "none";
+                const borderBottom = needsBottomBorder
+                  ? "1px solid #333"
+                  : "none";
+                const borderLeft = needsLeftBorder ? "1px solid #333" : "none";
+                const borderRight = needsRightBorder
+                  ? "1px solid #333"
+                  : "none";
 
-              // Check if this cell should be highlighted as destination
-              const isHighlighted =
-                highlightedLocation &&
-                highlightedLocation.floor === currentFloor &&
-                highlightedLocation.location.y === rowIndex &&
-                highlightedLocation.location.x === colIndex;
+                // Check if this cell should be highlighted as destination
+                const isHighlighted =
+                  highlightedLocation &&
+                  highlightedLocation.floor === currentFloor &&
+                  highlightedLocation.location.y === rowIndex &&
+                  highlightedLocation.location.x === colIndex;
 
-              // Check if this cell should be highlighted as starting point
-              const isStartPoint =
-                startLocation &&
-                startLocation.floor === currentFloor &&
-                startLocation.location.y === rowIndex &&
-                startLocation.location.x === colIndex;
+                // Check if this cell should be highlighted as starting point
+                const isStartPoint =
+                  startLocation &&
+                  startLocation.floor === currentFloor &&
+                  startLocation.location.y === rowIndex &&
+                  startLocation.location.x === colIndex;
 
-              const cellTitle = cell.label
-                ? `${cell.label} (${colIndex}, ${rowIndex})`
-                : `(${colIndex}, ${rowIndex})`;
+                const cellTitle = cell.label
+                  ? `${cell.label} (${colIndex}, ${rowIndex})`
+                  : `(${colIndex}, ${rowIndex})`;
 
-              return (
-                <div
-                  key={`${rowIndex}-${colIndex}`}
-                  className={`w-3 h-3 relative ${fontSizeClass}`}
-                  style={{
-                    backgroundColor: cell.color,
-                    borderTop: showGrid ? "1px solid #ddd" : borderTop,
-                    borderBottom: showGrid ? "1px solid #ddd" : borderBottom,
-                    borderLeft: showGrid ? "1px solid #ddd" : borderLeft,
-                    borderRight: showGrid ? "1px solid #ddd" : borderRight,
-                    boxSizing: "border-box",
-                  }}
-                  onMouseEnter={(e) => {
-                    const rect = (
-                      e.target as HTMLElement
-                    ).getBoundingClientRect();
-                    const containerRect = (e.target as HTMLElement)
-                      .closest(".inline-block")
-                      ?.getBoundingClientRect();
-                    if (containerRect) {
-                      setHoveredCell({
-                        text: cellTitle,
-                        x: rect.left - containerRect.left + rect.width / 2,
-                        y: rect.top - containerRect.top,
-                      });
-                    }
-                  }}
-                  onMouseLeave={() => {
-                    setHoveredCell(null);
-                  }}
-                >
-                  {isHighlighted && (
-                    <div
-                      className="absolute inset-0 flex items-center justify-center z-10 pointer-events-none"
-                      title={
-                        highlightedLocation.description ||
-                        highlightedLocation.name
+                return (
+                  <div
+                    key={`${rowIndex}-${colIndex}`}
+                    className={`w-3 h-3 relative ${fontSizeClass}`}
+                    style={{
+                      backgroundColor: cell.color,
+                      borderTop: showGrid ? "1px solid #ddd" : borderTop,
+                      borderBottom: showGrid ? "1px solid #ddd" : borderBottom,
+                      borderLeft: showGrid ? "1px solid #ddd" : borderLeft,
+                      borderRight: showGrid ? "1px solid #ddd" : borderRight,
+                      boxSizing: "border-box",
+                    }}
+                    onMouseEnter={(e) => {
+                      const rect = (
+                        e.target as HTMLElement
+                      ).getBoundingClientRect();
+                      const containerRect = (e.target as HTMLElement)
+                        .closest(".inline-block")
+                        ?.getBoundingClientRect();
+                      if (containerRect) {
+                        setHoveredCell({
+                          text: cellTitle,
+                          x: rect.left - containerRect.left + rect.width / 2,
+                          y: rect.top - containerRect.top,
+                        });
                       }
-                    >
+                    }}
+                    onMouseLeave={() => {
+                      setHoveredCell(null);
+                    }}
+                  >
+                    {isHighlighted && (
                       <div
-                        className="absolute w-4 h-4 border-2 border-white rounded-full shadow-lg"
-                        style={{
-                          backgroundColor:
-                            highlightedLocation.color || "#F44336",
-                        }} // Use custom color or default red
+                        className="absolute inset-0 flex items-center justify-center z-10 pointer-events-none"
+                        title={
+                          highlightedLocation.description ||
+                          highlightedLocation.name
+                        }
                       >
                         <div
-                          className="absolute inset-0 rounded-full animate-ping opacity-60"
+                          className="absolute w-4 h-4 border-2 border-white rounded-full shadow-lg"
                           style={{
                             backgroundColor:
                               highlightedLocation.color || "#F44336",
-                          }}
-                        ></div>
+                          }} // Use custom color or default red
+                        >
+                          <div
+                            className="absolute inset-0 rounded-full animate-ping opacity-60"
+                            style={{
+                              backgroundColor:
+                                highlightedLocation.color || "#F44336",
+                            }}
+                          ></div>
+                        </div>
                       </div>
-                    </div>
-                  )}
-                  {isStartPoint && (
-                    <div
-                      className="absolute inset-0 flex items-center justify-center z-10 pointer-events-none"
-                      title={startLocation.description || startLocation.name}
-                    >
+                    )}
+                    {isStartPoint && (
                       <div
-                        className="absolute w-4 h-4 border-2 border-white rounded-full shadow-lg"
-                        style={{
-                          backgroundColor: startLocation.color || "#4CAF50",
-                        }} // Use custom color or default green
+                        className="absolute inset-0 flex items-center justify-center z-10 pointer-events-none"
+                        title={startLocation.description || startLocation.name}
                       >
                         <div
-                          className="absolute inset-0 rounded-full animate-ping opacity-60"
+                          className="absolute w-4 h-4 border-2 border-white rounded-full shadow-lg"
                           style={{
                             backgroundColor: startLocation.color || "#4CAF50",
-                          }}
-                        ></div>
+                          }} // Use custom color or default green
+                        >
+                          <div
+                            className="absolute inset-0 rounded-full animate-ping opacity-60"
+                            style={{
+                              backgroundColor: startLocation.color || "#4CAF50",
+                            }}
+                          ></div>
+                        </div>
                       </div>
-                    </div>
-                  )}
-                </div>
-              );
-            })
+                    )}
+                  </div>
+                );
+              })
+            )}
+          </div>
+
+          {hoveredCell && (
+            <div
+              className={`absolute z-20 p-2 rounded shadow-lg pointer-events-none bg-gray-400 font-bold ${fontSizeClass}`}
+              style={{
+                left: `${hoveredCell.x}px`,
+                top: `${hoveredCell.y}px`,
+                transform: "translate(-50%, -110%)",
+                whiteSpace: "nowrap",
+              }}
+            >
+              {hoveredCell.text}
+            </div>
           )}
         </div>
-
-        {hoveredCell && (
-          <div
-            className={`absolute z-20 p-2 rounded shadow-lg pointer-events-none bg-gray-400 font-bold ${fontSizeClass}`}
-            style={{
-              left: `${hoveredCell.x}px`,
-              top: `${hoveredCell.y}px`,
-              transform: "translate(-50%, -110%)",
-              whiteSpace: "nowrap",
-            }}
-          >
-            {hoveredCell.text}
-          </div>
-        )}
       </div>
     </div>
   );

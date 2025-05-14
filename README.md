@@ -1,39 +1,39 @@
 # Campus Navigator: Accessible Wayfinding System
 
-Campus Navigator is a modern, accessible wayfinding application built with React, TypeScript, and Vite. The system helps users navigate through complex building environments with special attention to accessibility needs.
+Campus Navigator is a modern, accessible wayfinding application built with React, TypeScript, and Vite. The system helps users navigate complex building environments with a strong focus on accessibility and usability.
 
 ## Features
 
-### Accessible Navigation
+### Accessibility
+- **Wheelchair Mode**: Optimized routes and time calculations for wheelchair users
+- **Visual Accessibility**: High contrast mode, adjustable text size, and accessible color schemes
+- **Audio Navigation**: Text-to-speech for route directions and location info
+- **Keyboard & Screen Reader Support**: All interactive elements are accessible via keyboard and have ARIA labels
 
-- **Wheelchair Mode**: Optimized routes for wheelchair users with adjusted time calculations
-- **Visual Accessibility**: High contrast mode and adjustable text size
-- **Audio Navigation**: Text-to-speech functionality for route directions
-
-### Pathfinding
-
+### Pathfinding & Navigation
 - **Intelligent Routing**: Find the most efficient path between any two points
-- **Multi-floor Navigation**: Seamless navigation across different floors with elevator and stair options
+- **Multi-floor Navigation**: Seamless navigation across floors with elevator and stair options
 - **Distance & Time Calculation**: Accurate distance (in meters) and time estimates based on:
-  - Path length (each tile = 0.5 meter)
-  - Standard moving speed (determined by the user /m)
-  - Wheelchair adjustments (1.5x time factor when in wheelchair mode)
+  - Path length (each tile = 1 meter)
+  - User-adjustable walking speed (m/s)
+  - Wheelchair adjustments (1.5x time factor)
   - Floor transitions (60 seconds per floor change)
+- **Custom Locations**: Add and save your own navigation points
+- **Quick Navigation**: Shortcuts to commonly used destinations
 
 ### User Interface
-
-- **Interactive Map**: Visual representation of the path with start and end points
-- **Location Search**: Easily find rooms, facilities, and points of interest
-- **Quick Navigation**: Shortcuts to commonly used destinations
-- **Custom Locations**: Add and save your own navigation points
-- **Floor Management**: Easily switch between different building floors
+- **Interactive Map**: Visual map with grid, start/end points, and path highlighting
+- **Map Legend**: Always visible at the bottom for easy reference
+- **Location Search**: Find rooms, facilities, and points of interest
+- **Floor Management**: Easily switch between building floors
+- **Sidebar Layout**: Left sidebar for navigation and settings, right sidebar for route details and accessibility options
+- **Responsive Design**: Works on all screen sizes
 
 ### Technical Details
-
-- Built with React 18+ and TypeScript
-- Uses Vite for fast development and optimized builds
-- Component-based architecture for maintainability
-- Responsive design that works on various screen sizes
+- Built with React 18+, TypeScript, and Vite
+- Modular, component-based architecture
+- Uses Tailwind CSS for styling
+- Accessible by design (ARIA, keyboard navigation, color contrast)
 
 ## Getting Started
 
@@ -44,7 +44,7 @@ Campus Navigator is a modern, accessible wayfinding application built with React
 git clone [repository-url]
 
 # Navigate to project directory
-cd pathFinder
+cd final
 
 # Install dependencies
 npm install
@@ -54,13 +54,12 @@ npm run dev
 ```
 
 ### Usage
-
-1. Select your starting point and destination
-2. Toggle wheelchair mode if needed
-3. Adjust accessibility settings according to your preferences
-4. Click "Find Path" to generate the optimal route
-5. Use the provided navigation instructions or audio guidance to reach your destination
+1. Select your starting point and destination on the map or via search
+2. Toggle wheelchair mode or adjust accessibility settings as needed
+3. Click "Find Path" to generate the optimal route
+4. Use the navigation instructions or audio guidance to reach your destination
+5. Adjust walking speed and preferred bathroom type in the right sidebar for personalized results
 
 ## Development
 
-This project is built with React + TypeScript + Vite. To learn more about working with this stack, check the sections below.
+This project uses React, TypeScript, and Vite. For more details, see the codebase and comments in each component. Contributions and accessibility improvements are welcome!

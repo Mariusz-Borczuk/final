@@ -15,7 +15,16 @@ export const MainHeader: React.FC<{ settings: AccessibilitySettings }> = ({
 }) => {
   const localSettings = `mb-6 ${getSettings(settings)}`;
   return (
-    <header className={localSettings}>
+    <header
+      className={localSettings}
+      aria-label="Campus Navigator header"
+      aria-describedby="main-header-desc"
+    >
+      {/* Description for screen readers */}
+      <div id="main-header-desc" className="sr-only">
+        This is the main header for the Campus Navigator application, providing
+        the title and subtitle.
+      </div>
       <h1 className={`font-bold text-gray-100`}>Campus Navigator</h1>
       <p className="text-gray-400">Accessible Wayfinding System</p>
     </header>

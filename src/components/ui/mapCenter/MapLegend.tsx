@@ -1,7 +1,7 @@
-import { getFontSizeClass } from "@/utils/accessibilityStyles";
+import { getSettings } from "@/utils/accessibilityStyles";
 import React from "react";
 import { tileData } from "../../../data/tileData";
-import { AccessibilityFontSizeProps, MapLegendProps } from "../../types/types";
+import { AccessibilitySettings, MapLegendProps } from "../../types/types";
 
 /**
  * A component that displays a legend for the map, showing what each color represents.
@@ -26,10 +26,7 @@ import { AccessibilityFontSizeProps, MapLegendProps } from "../../types/types";
  */
 export const MapLegend: React.FC<MapLegendProps> = ({ settings }) => {
   // Determine font size and family classes
-  const fontSizeClass = getFontSizeClass(
-    settings as AccessibilityFontSizeProps
-  );
-
+  const fontSizeClass = getSettings(settings as AccessibilitySettings);
   const legendItems = [
     { label: "Classroom", color: tileData.classroom.color },
     { label: "Entry Point", color: tileData.classroomEntry.color },
@@ -42,10 +39,22 @@ export const MapLegend: React.FC<MapLegendProps> = ({ settings }) => {
   ];
 
   return (
-    <div className="mt-4 p-4 bg-gray-800 rounded-lg shadow-sm border border-gray-700">
+    <div
+      className="mt-4 p-4 w-full bg-gray-800 rounded-lg shadow-sm border border-gray-700"
+      role="region"
+      aria-label="Map legend"
+      aria-describedby="map-legend-desc"
+    >
+      {/* Description for screen readers */}
+      <div id="map-legend-desc" className="sr-only">
+        This legend explains the meaning of each color and symbol used on the
+        campus map, such as classrooms, entry points, paths, and more.
+      </div>
       {/* Apply settings to the title */}
       <h3
-        className={`text-lg font-semibold mb-3 text-gray-200 ${fontSizeClass}`}
+        className={`text-lg font-semibold mb-3 text-gray-200 ${getSettings(
+          settings as AccessibilitySettings
+        )}`}
       >
         Map Legend
       </h3>
@@ -66,5 +75,3 @@ export const MapLegend: React.FC<MapLegendProps> = ({ settings }) => {
     </div>
   );
 };
-
-export default MapLegend;

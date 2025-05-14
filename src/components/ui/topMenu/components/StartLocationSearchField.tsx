@@ -1,26 +1,31 @@
 import {
-  getEndLocationStyles,
-  getFontSizeClass,
+  getSettings,
+  getStartLocationStyles,
 } from "@/utils/accessibilityStyles";
-import {
-  FaMapMarkerAlt,
-  MdLocationPin,
-  SiGoogleclassroom,
-} from "@/utils/icons";
+import { FaPlay, MdLocationPin, SiGoogleclassroom } from "@/utils/icons";
 import React, { useEffect, useState } from "react";
 import {
-  AccessibilityFontSizeProps,
+  AccessibilitySettings,
   allFloorData,
   Coordinate,
   coordRegex,
-  LocationSearchFieldProps,
   LocationSearchResult,
 } from "../../../types/types";
 
 /**
- * End Location Search Field - Updated to support finding paths between different room types.
+ * Props for the search field, onSearch returns the full LocationSearchResult
  */
-export const EndLocationSearchField: React.FC<LocationSearchFieldProps> = ({
+interface LocationSearchFieldProps {
+  onSearch: (result: LocationSearchResult | null) => void; // Changed signature
+  currentFloor: number;
+  setCurrentFloor?: (floor: number) => void;
+  settings?: any;
+}
+
+/**
+ * Start Location Search Field - Updated to pass full LocationSearchResult.
+ */
+export const StartLocationSearchField: React.FC<LocationSearchFieldProps> = ({
   onSearch,
   currentFloor,
   setCurrentFloor,
@@ -63,7 +68,7 @@ export const EndLocationSearchField: React.FC<LocationSearchFieldProps> = ({
     if (coordinates) {
       results.push({
         type: "coordinate",
-        name: `Destination at (${coordinates.x}, ${coordinates.y})`,
+        name: `Start at (${coordinates.x}, ${coordinates.y})`,
         floor: currentFloor,
         location: coordinates,
         description: `Coordinates (${coordinates.x}, ${coordinates.y}) on current floor`,
@@ -176,7 +181,7 @@ export const EndLocationSearchField: React.FC<LocationSearchFieldProps> = ({
 
   // Handle selection from dropdown
   const handleResultClick = (result: LocationSearchResult) => {
-    console.log("End Location Selected:", result);
+    console.log("Start Location Selected:", result);
     if (result.floor !== currentFloor && setCurrentFloor) {
       setCurrentFloor(result.floor);
     }
@@ -187,55 +192,69 @@ export const EndLocationSearchField: React.FC<LocationSearchFieldProps> = ({
   };
 
   // --- UI Rendering ---
-  const styles = getEndLocationStyles(settings);
-  const fontSizeClass = getFontSizeClass(
-    settings as AccessibilityFontSizeProps
-  );
+  const styles = getStartLocationStyles(settings);
 
   const getLocationIcon = (type?: string) => {
     switch (type) {
       case "classroom":
-        return <SiGoogleclassroom className="text-red-600" />;
+        return <SiGoogleclassroom className="text-green-600" />;
       case "coordinate":
-        return <MdLocationPin className="text-red-600" />;
+        return <MdLocationPin className="text-green-600" />;
       // Add other icons
       default:
-        return <MdLocationPin className="text-red-600" />;
+        return <MdLocationPin className="text-green-600" />;
     }
   };
 
   return (
-    <div className="relative w-full">
+    <div
+      className="relative w-full"
+      aria-label="Start location search field"
+      aria-describedby="start-location-search-desc"
+    >
+      {/* Description for screen readers */}
+      <div id="start-location-search-desc" className="sr-only">
+        Use this field to search for and select the starting location for
+        navigation.
+      </div>
       {/* Label and Input */}
       <div className="relative">
         <label
-          htmlFor="end-location-search"
-          className={`block text-sm font-medium ${styles.labelText} ${fontSizeClass}`}
+          htmlFor="start-location-search"
+          className={`block text-sm font-medium ${
+            styles.labelText
+          } ${getSettings(settings as AccessibilitySettings)}`}
         >
-          Set Destination
+          Set Starting Point
           {selectedDisplayLocation && (
-            <span className="ml-2 text-red-600 font-bold">✓ Selected</span>
+            <span className="ml-2 text-green-600 font-bold">✓ Selected</span>
           )}
         </label>
         <div className="flex items-center">
           <input
-            id="end-location-search"
+            id="start-location-search"
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder={
               selectedDisplayLocation
-                ? "Change destination..."
-                : "Search destination..."
+                ? "Change start point..."
+                : "Search start point..."
             }
-            className={`w-full px-3 pr-10 py-2 ${styles.inputBg} ${styles.inputText} ${styles.inputBorder} rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 shadow-sm ${fontSizeClass}`}
+            className={`w-full px-3 pr-10 py-2 ${styles.inputBg} ${
+              styles.inputText
+            } ${
+              styles.inputBorder
+            } rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 shadow-sm ${getSettings(
+              settings as AccessibilitySettings
+            )}`}
             onFocus={() => searchResults.length > 0 && setIsDropdownOpen(true)}
             onBlur={() => setTimeout(() => setIsDropdownOpen(false), 200)}
-            aria-label="Search for a destination location"
+            aria-label="Search for a starting location"
           />
           <div className="absolute inset-y-0 right-0 flex items-center top-5">
             <button
-              className={`${styles.buttonBg} ${styles.buttonText} h-full px-2 rounded-r-lg shadow-sm hover:scale-105 transition-opacity focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-red-500 flex items-center justify-center border-l ${styles.inputBorder}`}
+              className={`${styles.buttonBg} ${styles.buttonText} h-full px-2 rounded-r-lg shadow-sm hover:scale-105 transition-opacity focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-green-500 flex items-center justify-center border-l ${styles.inputBorder}`}
               onClick={() => {
                 if (searchResults.length > 0 && searchResults[0]) {
                   handleResultClick(searchResults[0]);
@@ -245,7 +264,7 @@ export const EndLocationSearchField: React.FC<LocationSearchFieldProps> = ({
                   if (coords) {
                     const coordResult: LocationSearchResult = {
                       type: "coordinate",
-                      name: `Destination at (${coords.x}, ${coords.y})`,
+                      name: `Start at (${coords.x}, ${coords.y})`,
                       floor: currentFloor,
                       location: coords,
                       description: `Coordinates (${coords.x}, ${coords.y}) on current floor`,
@@ -257,9 +276,9 @@ export const EndLocationSearchField: React.FC<LocationSearchFieldProps> = ({
                   }
                 }
               }}
-              aria-label="Set destination"
+              aria-label="Set starting point"
             >
-              <FaMapMarkerAlt className={`h-4 w-4 ${styles.iconColor}`} />
+              <FaPlay className={`h-4 w-4 ${styles.iconColor}`} />
             </button>
           </div>
         </div>
@@ -268,15 +287,14 @@ export const EndLocationSearchField: React.FC<LocationSearchFieldProps> = ({
       {/* Selected Location Display */}
       {selectedDisplayLocation && (
         <div
-          className={`mt-1 p-2 ${styles.inputBg} border-2 border-red-500 rounded-lg flex items-center`}
+          className={`mt-1 p-2 ${styles.inputBg} border-2 border-green-500 rounded-lg flex items-center`}
         >
-          {/* Updated icon wrapper with red styling */}
-          <div className="mr-2 text-lg flex items-center justify-center w-6 h-6 rounded-md ring-2 ring-red-500 bg-red-100/30 text-bold">
+          <div className="mr-2 text-lg flex items-center justify-center w-6 h-6 rounded-md ring-2   ring-green-500 bg-green-100/30 text-bold">
             {getLocationIcon(selectedDisplayLocation.type)}
           </div>
           <div className="flex flex-col flex-1">
             <span className={`font-semibold ${styles.resultText}`}>
-              {selectedDisplayLocation.name.replace("Destination at ", "")}
+              {selectedDisplayLocation.name.replace("Start at ", "")}
             </span>
             <span className={`text-xs ${styles.resultDetailText}`}>
               {selectedDisplayLocation.type !== "coordinate"
@@ -298,12 +316,16 @@ export const EndLocationSearchField: React.FC<LocationSearchFieldProps> = ({
       {/* Search Results Dropdown */}
       {isDropdownOpen && searchResults.length > 0 && (
         <div
-          className={`absolute z-180 mt-1 w-full ${styles.dropdownBg} ${styles.dropdownBorder} border-2 border-red-500 rounded-lg p-1 shadow-lg max-h-60 overflow-auto`}
+          className={`absolute z-180 mt-1 w-full ${styles.dropdownBg} ${styles.dropdownBorder} border-2 border-green-500 rounded-lg p-1 shadow-lg max-h-60 overflow-auto`}
         >
           {searchResults.map((result, index) => (
             <div
               key={`${result.type}-${result.floor}-${result.location.x}-${result.location.y}-${index}`}
-              className={`px-4 py-2 cursor-pointer ${styles.dropdownItemHover} flex items-center ${fontSizeClass}`}
+              className={`px-4 py-2 cursor-pointer ${
+                styles.dropdownItemHover
+              } flex items-center ${getSettings(
+                settings as AccessibilitySettings
+              )}`}
               onClick={() => handleResultClick(result)}
             >
               <div className="mr-1 pr-2 text-lg">

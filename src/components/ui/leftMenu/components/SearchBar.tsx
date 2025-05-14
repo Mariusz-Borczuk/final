@@ -1,7 +1,7 @@
+import { RightSidebarProps } from "@/components/types/types";
 import { getSettings } from "@/utils/accessibilityStyles";
-import { Search } from "lucide-react";
+import { MdSearch } from "@/utils/icons";
 import { useState } from "react";
-import { RightSidebarProps } from "../../types/types";
 
 /**
  * SearchBar component that provides a search input field for locations/rooms.
@@ -19,7 +19,16 @@ export const SearchBar: React.FC<RightSidebarProps> = ({ settings }) => {
   const [searchQuery, setSearchQuery] = useState("");
 
   return (
-    <div className="relative mb-6">
+    <div
+      className="relative mb-6"
+      aria-label="Search bar for locations"
+      aria-describedby="search-bar-desc"
+    >
+      {/* Description for screen readers */}
+      <div id="search-bar-desc" className="sr-only">
+        Use this search bar to find locations within the building. Enter a room
+        name, number, or feature to search.
+      </div>
       <label htmlFor="location-search" className="sr-only">
         Search for a location
       </label>
@@ -34,7 +43,7 @@ export const SearchBar: React.FC<RightSidebarProps> = ({ settings }) => {
         onChange={(e) => setSearchQuery(e.target.value)}
         aria-label="Search locations"
       />
-      <Search
+      <MdSearch
         className="absolute left-3 top-3 text-gray-400"
         size={20}
         aria-hidden="true"

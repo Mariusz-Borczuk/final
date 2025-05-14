@@ -3,6 +3,18 @@ import { floor2Data } from "../../data/floor2Data";
 import { floor3Data } from "../../data/floor3Data";
 import { floor4Data } from "../../data/floor4Data";
 
+/*  Building Entities
+  *Coordinate: Represents a point on the floor plan with x and y coordinates.
+  *Room: Represents a room with a number, start and end coordinates, and optional entry points.
+  *Elevator: Represents an elevator with start, end, and entry coordinates.
+  *Bathroom: Represents a bathroom with a type (Male, Female, Neutral) and start, end, and entry coordinates.
+  *FireEquipment: Represents fire safety equipment with a location coordinate.
+  *UtilityRoom: Represents a utility room with a name, start and end coordinates, and entry points.
+  *Stair: Represents a stairway with start, end, and entry coordinates.
+  *Path: Represents a path with start and end coordinates.
+  *NavigationItem: Represents a navigation item with a name, coordinates, icon, and optional color.
+  */
+ 
 export interface Coordinate {
   x: number;
   y: number;
@@ -12,22 +24,6 @@ export interface Room {
   start: Coordinate;
   end: Coordinate;
   entry?: Coordinate[] | Coordinate;
-}
-export interface FloorManagementProps {
-  currentFloor: number;
-  onFloorChange: (floor: number) => void;
-}
-
-export interface HoveredCellInfo {
-  text: string;
-  x: number;
-  y: number;
-}
-export interface NavigationItem {
-  name: string;
-  coordinates: { x: number; y: number };
-  icon: React.ReactNode;
-  color?: string; // Color property for the location marker
 }
 export interface Elevator {
   start: Coordinate;
@@ -58,6 +54,17 @@ export interface Path {
   start: Coordinate;
   end: Coordinate;
 }
+export interface NavigationItem {
+  name: string;
+  coordinates: { x: number; y: number };
+  icon: React.ReactNode;
+  color?: string; // Color property for the location marker
+}
+/* Floor Management
+  *FloorData: Represents the data for a floor, including rooms, elevators, bathrooms, fire equipment, utility rooms, stairs, and paths.
+  *FloorManagementProps: Props for managing the current floor. 
+  *AllfloorData: Combined floor data for all floors in the building.
+*/
 export interface FloorData {
   classrooms: Room[];
   elevators: Elevator[];
@@ -67,17 +74,38 @@ export interface FloorData {
   stairs: Stair[];
   paths: Path[];
 }
-export type PreferredBathroom = "Male" | "Female" | "Neutral" | "Any";
-
-export interface AccessibilitySettings {
-  fontSize: "normal" | "large" | "xlarge";
-  contrast: "normal" | "high";
-  preferredBathroom?: PreferredBathroom; // Add preferred bathroom
-  walkingSpeedMPS?: number; // Changed from secondsPer5m to metersPerSecond
+export interface FloorManagementProps {
+  currentFloor: number;
+  onFloorChange: (floor: number) => void;
 }
+export const allFloorData: FloorData[] = [
+  floor1Data,
+  floor2Data,
+  floor3Data,
+  floor4Data,
+];
+/*  Accessibility
+  *AccessibilityFontSizeProps: Props for the font size component.
+  *AccessibilitySettings: Represents the accessibility settings for the application, including font size, contrast, preferred bathroom, and walking speed.
+  *AccessibilitySettingsProps: Props for the accessibility settings component.
+  *AccessibilityFontSizeProps: Props for the font size component.
+*/
 export interface AccessibilityFontSizeProps {
   fontSize: "normal" | "large" | "xlarge";
+  contrast: "normal" | "high";
 }
+export interface AccessibilitySettings {
+  [x: string]: boolean | "normal" | "large" | "xlarge" | "high" | PreferredBathroom | number | undefined;
+  fontSize: "normal" | "large" | "xlarge";
+  contrast: "normal" | "high";
+  preferredBathroom?: PreferredBathroom;
+  walkingSpeedMPS?: number;
+}
+export interface AccessibilitySettingsProps {
+  settings: AccessibilitySettings;
+  onUpdateSettings: (newSettings: Partial<AccessibilitySettings>) => void;
+}
+
 export interface PathMapProps {
   title?: string;
   onFindPath?: () => void;
@@ -95,7 +123,7 @@ export interface Route {
   estimatedTime: string;
   accessibilityNotes: string;
   navigationInstructions: string;
-  distance?: string; // Added distance property
+  distance?: string;
 }
 export interface RouteInformationCardProps {
   route: Route;
@@ -198,12 +226,7 @@ export interface AddCustomNavigationButtonProps {
  * Combined floor data for all floors in the building
  * Index corresponds to floor number - 1 (e.g., floor1Data is at index 0)
  */
-export const allFloorData: FloorData[] = [
-  floor1Data,
-  floor2Data,
-  floor3Data,
-  floor4Data,
-];
+
 // Define props for MapLegend
 export interface MapLegendProps {
   settings?: AccessibilitySettings;
@@ -297,3 +320,47 @@ export type TransitPoint = {
   coord: Coordinate;
   isElevator: boolean;
 };
+
+export interface LeftSidebarProps {
+  // Accessibility and UI settings
+  settings: AccessibilitySettings ;
+  isWheelchair: boolean;
+  setIsWheelchair: (isWheelchair: boolean) => void;
+  onUpdateSettings: (
+    settings: Partial<AccessibilitySettings & { isWheelchair: boolean }>
+  ) => void;
+
+  // Floor management
+  currentFloor: number;
+  onFloorChange: (floor: number) => void;
+
+  // Location selection (for QuickNavigation, etc)
+  onSelectLocation?: (location: LocationSearchResult) => void;
+};
+
+export interface TopBarProps {
+  showGrid: boolean;
+  onToggleGrid: () => void;
+  settings: AccessibilitySettings;
+  currentFloor: number;
+  setCurrentFloor: (floor: number) => void;
+  isWheelchair: boolean;
+  onPathFound: (
+    path: PathSegment[],
+    startCoord: { x: number; y: number },
+    endCoord: { x: number; y: number }
+  ) => void;
+}
+/**
+ * Interface for the IconSelector component
+ */
+export interface IconSelectorProps {
+  selectedIcon: React.ReactNode;
+  onIconSelect: (icon: React.ReactNode, iconName: string) => void;
+  className?: string;
+}export interface HoveredCellInfo {
+  text: string;
+  x: number;
+  y: number;
+}
+export type PreferredBathroom = "Male" | "Female" | "Neutral" | "Any";

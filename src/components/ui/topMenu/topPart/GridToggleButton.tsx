@@ -1,11 +1,11 @@
-import { getFontSizeClass } from "@/utils/accessibilityStyles";
+import { getSettings } from "@/utils/accessibilityStyles";
 import { IoMdGrid } from "@/utils/icons";
 import React from "react";
 import {
-  AccessibilityFontSizeProps,
+  AccessibilitySettings,
   GridToggleButtonProps,
 } from "../../../types/types";
-import { ToggleButtonContainer } from "./ToggleButtonContainer";
+import { ToggleButtonContainer } from "../components/ToggleButtonContainer";
 
 /**
  * A button component that toggles the grid visibility on the map.
@@ -28,15 +28,16 @@ export const GridToggleButton: React.FC<GridToggleButtonProps> = ({
   // Simplified initialization using the current showGrid state for the label
   const gridLabel = showGrid ? "Hide Grid" : "Show Grid";
   // Get font size class from settings
-  const fontSizeClass = getFontSizeClass(
-    settings as AccessibilityFontSizeProps
-  );
 
   // Get contrast-appropriate styles
   const labelClass =
     settings.contrast === "high"
-      ? `text-white font-bold ${fontSizeClass} px-0 py-0 rounded-md`
-      : `text-white font-medium ${fontSizeClass} px-0 py-0 rounded-md`;
+      ? `text-white font-bold ${getSettings(
+          settings as AccessibilitySettings
+        )} px-0 py-0 rounded-md`
+      : `text-white font-medium ${getSettings(
+          settings as AccessibilitySettings
+        )} px-0 py-0 rounded-md`;
 
   // Create size mapping based on font size
   let containerSize: "small" | "medium" | "large" = "medium";
@@ -63,14 +64,25 @@ export const GridToggleButton: React.FC<GridToggleButtonProps> = ({
 
   // Create the label element
   const labelElement = (
-    <span className={`text-center ${labelClass} pb-8`}>{gridLabel}</span>
+    <span className={`text-center ${labelClass} pb-4`}>{gridLabel}</span>
   );
 
   return (
-    <ToggleButtonContainer
-      label={labelElement}
-      button={buttonElement}
-      size={containerSize}
-    />
+    <div
+      className="relative"
+      aria-label="Grid toggle button (top part)"
+      aria-describedby="grid-toggle-top-desc"
+    >
+      {/* Description for screen readers */}
+      <div id="grid-toggle-top-desc" className="sr-only">
+        This button toggles the grid overlay on the map from the top bar
+        controls.
+      </div>
+      <ToggleButtonContainer
+        label={labelElement}
+        button={buttonElement}
+        size={containerSize}
+      />
+    </div>
   );
 };

@@ -1,14 +1,6 @@
+import { IconSelectorProps } from "@/components/types/types";
 import * as Icons from "@/utils/icons";
 import React from "react";
-
-/**
- * Interface for the IconSelector component
- */
-interface IconSelectorProps {
-  selectedIcon: React.ReactNode;
-  onIconSelect: (icon: React.ReactNode, iconName: string) => void;
-  className?: string;
-}
 
 /**
  * IconSelector component displays a grid of all available icons for users to choose from
@@ -73,7 +65,17 @@ const IconSelector: React.FC<IconSelectorProps> = ({
   };
 
   return (
-    <div className={`p-4 bg-gray-100 dark:bg-gray-800 rounded-md ${className}`}>
+    <div
+      className={`p-4 bg-gray-100 dark:bg-gray-800 rounded-md ${className}`}
+      aria-label="Icon selector container"
+      aria-describedby="icon-selector-desc"
+    >
+      {/* Description for screen readers */}
+      <div id="icon-selector-desc" className="sr-only">
+        This section allows you to select an icon for a custom location. Icons
+        represent different types of locations and features on the map.
+      </div>
+
       {/* Primary Icons - Most commonly used */}
       <div className="mb-6">
         <h4 className="text-sm font-bold text-gray-700 dark:text-gray-300 mb-2 border-b border-gray-300 dark:border-gray-600">
@@ -89,7 +91,7 @@ const IconSelector: React.FC<IconSelectorProps> = ({
                   "MdLocationPin"
                 )
               }
-              className={`p-3 flex items-center justify-center rounded-md w-16 h-16 transition-all ${
+              className={`p-3 flex items-center justify-center rounded-md w-12 h-12 transition-all ${
                 isSelected(Icons.MdLocationPin)
                   ? "bg-blue-500 text-white ring-2 ring-blue-300 scale-105"
                   : "bg-white dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-200"
@@ -97,7 +99,7 @@ const IconSelector: React.FC<IconSelectorProps> = ({
               title="Location Pin (Primary Location Icon)"
             >
               {React.createElement(Icons.MdLocationPin, {
-                className: "text-3xl",
+                className: "text-2xl",
               })}
             </button>
             <span className="text-xs mt-1 text-center text-gray-500 dark:text-gray-400">
@@ -111,14 +113,14 @@ const IconSelector: React.FC<IconSelectorProps> = ({
               onClick={() =>
                 onIconSelect(React.createElement(Icons.FaWalking), "FaWalking")
               }
-              className={`p-3 flex items-center justify-center rounded-md w-16 h-16 transition-all ${
+              className={`p-3 flex items-center justify-center rounded-md w-12 h-12 transition-all ${
                 isSelected(Icons.FaWalking)
                   ? "bg-blue-500 text-white ring-2 ring-blue-300 scale-105"
                   : "bg-white dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-200"
               }`}
               title="Walking (Primary Walking Icon)"
             >
-              {React.createElement(Icons.FaWalking, { className: "text-3xl" })}
+              {React.createElement(Icons.FaWalking, { className: "text-2xl" })}
             </button>
             <span className="text-xs mt-1 text-center text-gray-500 dark:text-gray-400">
               Walking
@@ -134,7 +136,7 @@ const IconSelector: React.FC<IconSelectorProps> = ({
                   "FaWheelchair"
                 )
               }
-              className={`p-3 flex items-center justify-center rounded-md w-16 h-16 transition-all ${
+              className={`p-3 flex items-center justify-center rounded-md w-12 h-12 transition-all ${
                 isSelected(Icons.FaWheelchair)
                   ? "bg-blue-500 text-white ring-2 ring-blue-300 scale-105"
                   : "bg-white dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-200"
@@ -142,7 +144,7 @@ const IconSelector: React.FC<IconSelectorProps> = ({
               title="Wheelchair (Accessibility Icon)"
             >
               {React.createElement(Icons.FaWheelchair, {
-                className: "text-3xl",
+                className: "text-2xl",
               })}
             </button>
             <span className="text-xs mt-1 text-center text-gray-500 dark:text-gray-400">
@@ -186,7 +188,7 @@ const IconSelector: React.FC<IconSelectorProps> = ({
                 }`}
                 title={iconName}
               >
-                {React.createElement(Icon, { className: "text-xl" })}
+                {React.createElement(Icon, { className: "text-3xl" })}
               </button>
             ) : null;
           })}
@@ -198,7 +200,7 @@ const IconSelector: React.FC<IconSelectorProps> = ({
         <h4 className="text-xs uppercase font-bold text-gray-500 dark:text-gray-400 mb-2">
           Facilities
         </h4>
-        <div className="grid grid-cols-5 gap-2">
+        <div className="grid grid-cols-4 gap-2">
           {[
             "SiGoogleclassroom",
             "FaRestroom",
@@ -223,7 +225,7 @@ const IconSelector: React.FC<IconSelectorProps> = ({
                 }`}
                 title={iconName}
               >
-                {React.createElement(Icon, { className: "text-xl" })}
+                {React.createElement(Icon, { className: "text-3xl" })}
               </button>
             ) : null;
           })}
@@ -251,7 +253,7 @@ const IconSelector: React.FC<IconSelectorProps> = ({
                 }`}
                 title={iconName}
               >
-                {React.createElement(Icon, { className: "text-xl" })}
+                {React.createElement(Icon, { className: "text-3xl" })}
               </button>
             ) : null;
           })}

@@ -1,5 +1,3 @@
-import { getSettings } from "@/utils/accessibilityStyles";
-import { FaWheelchair, FiType, IoMdEye } from "@/utils/icons";
 import React, { useState } from "react";
 import {
   AccessibilitySettings,
@@ -8,14 +6,10 @@ import {
   LocationSearchResult,
   PathSegment,
 } from "../../types/types";
-import FloorManagement from "../leftMenu/FloorManagement";
-import { MainHeader } from "../leftMenu/MainHeader";
-import { QuickNavigation } from "../leftMenu/QuickNavigation";
-import { AccessibilityButton } from "../mapCenter/AccessibilityButton";
+import { LeftSidebar } from "../leftMenu/LeftSidebar";
 import { MapView } from "../mapCenter/MapView";
-import { GridToggleButton } from "../mapCenter/topPart/GridToggleButton";
-import { PathFinder } from "../mapCenter/topPart/PathFinder";
 import { RightSidebar } from "../rightMenu/RightSidebar";
+import { TopBar } from "../topMenu/TopBar";
 
 /**
  * WayfindingApp3 component represents the main layout for the wayfinding application.
@@ -37,11 +31,11 @@ import { RightSidebar } from "../rightMenu/RightSidebar";
  * </WayfindingApp3>
  * ```
  */
-const MainLayout: React.FC<LayoutProps> = ({ children }) => {
+const MainLayout: React.FC<LayoutProps> = () => {
   const [settings, setSettings] = useState<AccessibilitySettings>({
     fontSize: "normal",
     contrast: "normal",
-  });
+  } as AccessibilitySettings);
   const [isWheelchair, setIsWheelchair] = useState<boolean>(false);
   const [currentFloor, setCurrentFloor] = useState(1);
   const [showGrid, setShowGrid] = useState(false);
@@ -55,10 +49,17 @@ const MainLayout: React.FC<LayoutProps> = ({ children }) => {
   const handleUpdateSettings = (
     newSettings: Partial<AccessibilitySettings>
   ) => {
-    setSettings((prevSettings) => ({
-      ...prevSettings,
-      ...newSettings,
-    }));
+    setSettings((prevSettings) => {
+      const { fontSize, contrast, preferredBathroom, walkingSpeedMPS } =
+        newSettings;
+      return {
+        ...prevSettings,
+        ...(fontSize !== undefined ? { fontSize } : {}),
+        ...(contrast !== undefined ? { contrast } : {}),
+        ...(preferredBathroom !== undefined ? { preferredBathroom } : {}),
+        ...(walkingSpeedMPS !== undefined ? { walkingSpeedMPS } : {}),
+      };
+    });
   };
 
   // Updated handler to receive path segments and coordinates
@@ -155,134 +156,84 @@ const MainLayout: React.FC<LayoutProps> = ({ children }) => {
   };
 
   return (
-    <div className="flex h-full w-full bg-gray-900" role="application">
-      {/* Left Sidebar */}
-      <aside
-        className={`w-80 bg-gray-800 shadow-lg p-4 flex flex-col ${getSettings(
-          settings
-        )}`}
-        role="complementary"
+    <main
+      className="flex flex-row min-h-screen bg-gray-900"
+      aria-label="Main application layout"
+      aria-describedby="main-layout-desc"
+    >
+      {/* Description for screen readers */}
+      <div id="main-layout-desc" className="sr-only">
+        This is the main layout of the application, containing the left sidebar,
+        map view, and right sidebar.
+      </div>
+      <div
+        className="flex h-full w-full bg-gray-900"
+        role="application"
+        aria-label="Campus Navigator Main Layout"
       >
-        <MainHeader settings={settings} />
-
+        {/* Left Sidebar */}
         <div
-          className={`mb-6 bg-gray-700 p-4 rounded-lg ${getSettings(settings)}`}
-          aria-label="Accessibility settings"
+          className="w-80 flex flex-col mr-4"
+          role="complementary"
+          aria-label="Main navigation and settings sidebar"
         >
-          <h2 className="font-semibold mb-3 text-gray-200">
-            Visibility Settings
-          </h2>
-          <div className="space-y-3">
-            <div className="flex items-center justify-between">
-              <label className="text-gray-300">Text Size</label>
-              <div className="flex gap-2">
-                {(["normal", "large", "xlarge"] as const).map((size) => (
-                  <AccessibilityButton
-                    key={size}
-                    label={`Set text size to ${size}`}
-                    isActive={settings.fontSize === size}
-                    onClick={() => setSettings({ ...settings, fontSize: size })}
-                    icon={
-                      <FiType
-                        className={`text-gray-200 ${
-                          settings.contrast === "high"
-                            ? " text-zinc-950"
-                            : "text-gray-100"
-                        }`}
-                      />
-                    }
-                    description={`Change text size to ${size}`}
-                  />
-                ))}
-              </div>
-            </div>
-
-            <div className="h-px bg-gray-600 my-3" />
-
-            <div className="flex items-center justify-between">
-              <label className="text-gray-300">Wheelchair mode</label>
-              <AccessibilityButton
-                label="Toggle wheelchair accessibility"
-                isActive={isWheelchair}
-                onClick={() => setIsWheelchair(!isWheelchair)}
-                icon={<FaWheelchair className="text-gray-200 w-6 h-6" />}
-                description="Toggle wheelchair accessibility"
-              />
-            </div>
-
-            <div className="flex items-center justify-between">
-              <label className="text-gray-300">High Contrast</label>
-              <AccessibilityButton
-                label="Toggle high contrast"
-                isActive={settings.contrast === "high"}
-                onClick={() =>
-                  setSettings({
-                    ...settings,
-                    contrast: settings.contrast === "high" ? "normal" : "high",
-                  })
-                }
-                icon={<IoMdEye className="w-6 h-6 text-gray-200" />}
-                description="Toggle high contrast mode"
-              />
-            </div>
-          </div>
-        </div>
-
-        <QuickNavigation
-          settings={settings}
-          currentFloor={currentFloor}
-          onUpdateSettings={handleUpdateSettings}
-        />
-        <FloorManagement
-          currentFloor={currentFloor}
-          onFloorChange={setCurrentFloor}
-        />
-      </aside>
-
-      <div className="flex-1 p-4 flex flex-col justify-center">
-        {/* Top control bar with centered PathFinder */}
-        <div className="flex items-center justify-center space-x-3 py-4 px-3 mb-4 bg-gray-800 rounded-lg w-full shadow-md">
-          <GridToggleButton
-            showGrid={showGrid}
-            onToggle={() => setShowGrid(!showGrid)}
-            settings={{
-              contrast: settings.contrast,
-              fontSize: settings.fontSize,
+          <LeftSidebar
+            settings={settings}
+            currentFloor={currentFloor}
+            isWheelchair={isWheelchair}
+            setIsWheelchair={setIsWheelchair}
+            onUpdateSettings={handleUpdateSettings}
+            onFloorChange={function (floor: number): void {
+              setCurrentFloor(floor);
             }}
           />
-
-          <PathFinder
+        </div>
+        {/* Main Content Area */}
+        <main
+          className="flex-1 flex flex-col"
+          role="main"
+          aria-label="Map and pathfinding area"
+        >
+          {/* Top Bar */}
+          <TopBar
+            showGrid={showGrid}
+            onToggleGrid={() => setShowGrid(!showGrid)}
+            settings={settings}
             currentFloor={currentFloor}
             setCurrentFloor={setCurrentFloor}
-            settings={settings}
-            isWheelchair={isWheelchair} // Pass isWheelchair state to PathFinder
+            isWheelchair={isWheelchair}
             onPathFound={handlePathFound}
           />
-        </div>
-
-        {/* Map View with centered content */}
-        <div className="flex-1 overflow-hidden flex items-center justify-center">
-          <MapView
+          {/* Map View */}
+          <div className="flex-1 overflow-hidden flex items-center justify-center p-4">
+            <MapView
+              settings={settings}
+              currentFloor={currentFloor}
+              showGrid={showGrid}
+              endLocation={pathEndLocation}
+              startLocation={pathStartLocation}
+              pathSegments={pathSegments}
+            />
+          </div>
+        </main>
+        {/* Right Sidebar */}
+        <aside
+          className="w-72 pl-4"
+          role="complementary"
+          aria-label="Route details and accessibility options sidebar"
+        >
+          <RightSidebar
             settings={settings}
             currentFloor={currentFloor}
-            showGrid={showGrid}
-            endLocation={pathEndLocation}
-            startLocation={pathStartLocation}
+            isWheelchair={isWheelchair}
             pathSegments={pathSegments}
+            estimatedTime={calculateEstimatedTime()}
+            distance={calculateDistance()}
+            onUpdateSettings={handleUpdateSettings}
           />
-        </div>
+        </aside>
       </div>
-      <RightSidebar
-        settings={settings}
-        currentFloor={currentFloor}
-        isWheelchair={isWheelchair}
-        pathSegments={pathSegments}
-        estimatedTime={calculateEstimatedTime()}
-        distance={calculateDistance()}
-        onUpdateSettings={handleUpdateSettings}
-      />
-      {children}
-    </div>
+    </main>
   );
 };
 

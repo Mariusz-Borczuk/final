@@ -14,7 +14,7 @@ import { StartLocationSearchField } from "./StartLocationSearchField";
  * PathFinder UI component - Handles location selection and pathfinding
  * with support for wheelchair accessibility
  */
-export const PathFinder: React.FC<PathFinderProps> = ({
+export const LocationRouter: React.FC<PathFinderProps> = ({
   currentFloor,
   setCurrentFloor,
   settings,
@@ -161,74 +161,85 @@ export const PathFinder: React.FC<PathFinderProps> = ({
     : "Standard path mode - Using stairs or elevators for floor transitions";
 
   return (
-    <div className="flex flex-col w-full space-y-3">
-      <div className="flex space-x-4 items-start">
-        {/* Start location search field */}
-        <div className="flex-1">
-          <StartLocationSearchField
-            onSearch={handleStartLocationSearch}
-            currentFloor={currentFloor}
-            setCurrentFloor={setCurrentFloor}
-            settings={settings}
-          />
-        </div>
-
-        {/* End location search field */}
-        <div className="flex-1">
-          <EndLocationSearchField
-            onSearch={handleEndLocationSearch}
-            currentFloor={currentFloor}
-            setCurrentFloor={setCurrentFloor}
-            settings={settings}
-          />
-        </div>
-
-        {/* Find path button and Navigation Button side by side */}
-        <div className="flex flex-col space-y-2 pt-5">
-          <FindPathButton
-            startLocation={startLocation}
-            endLocation={endLocation}
-            onFindPath={findPath}
-            isLoading={isLoading}
-            settings={settings}
-            isWheelchair={isWheelchair}
-          />
-
-          {pathSegments.length > 0 && (
-            <NavigationButton
-              pathSegments={pathSegments}
-              nextFloors={nextFloors}
-              currentPathIndex={currentPathIndex}
-              pathCompleted={pathCompleted}
+    <div
+      className="relative"
+      aria-label="Location router panel"
+      aria-describedby="location-router-desc"
+    >
+      {/* Description for screen readers */}
+      <div id="location-router-desc" className="sr-only">
+        This panel allows you to select start and end locations and find
+        navigation paths, including wheelchair accessible routes.
+      </div>
+      <div className="flex flex-col w-full space-y-3">
+        <div className="flex space-x-4 items-start">
+          {/* Start location search field */}
+          <div className="flex-1">
+            <StartLocationSearchField
+              onSearch={handleStartLocationSearch}
+              currentFloor={currentFloor}
               setCurrentFloor={setCurrentFloor}
-              setCurrentPathIndex={setCurrentPathIndex}
-              setPathCompleted={setPathCompleted}
-              onClearPath={handleClearPath}
               settings={settings}
             />
-          )}
-        </div>
-      </div>
+          </div>
 
-      {/* Error message display */}
-      {errorMessage && (
+          {/* End location search field */}
+          <div className="flex-1">
+            <EndLocationSearchField
+              onSearch={handleEndLocationSearch}
+              currentFloor={currentFloor}
+              setCurrentFloor={setCurrentFloor}
+              settings={settings}
+            />
+          </div>
+
+          {/* Find path button and Navigation Button side by side */}
+          <div className="flex flex-col space-y-2 pt-5">
+            <FindPathButton
+              startLocation={startLocation}
+              endLocation={endLocation}
+              onFindPath={findPath}
+              isLoading={isLoading}
+              settings={settings}
+              isWheelchair={isWheelchair}
+            />
+
+            {pathSegments.length > 0 && (
+              <NavigationButton
+                pathSegments={pathSegments}
+                nextFloors={nextFloors}
+                currentPathIndex={currentPathIndex}
+                pathCompleted={pathCompleted}
+                setCurrentFloor={setCurrentFloor}
+                setCurrentPathIndex={setCurrentPathIndex}
+                setPathCompleted={setPathCompleted}
+                onClearPath={handleClearPath}
+                settings={settings}
+              />
+            )}
+          </div>
+        </div>
+
+        {/* Error message display */}
+        {errorMessage && (
+          <div
+            className="bg-red-100 border border-red-400 text-red-700 px-4 py-2 rounded-lg mt-2"
+            role="alert"
+            aria-live="polite"
+          >
+            <span className="block sm:inline">{errorMessage}</span>
+          </div>
+        )}
+
+        {/* Accessibility message */}
         <div
-          className="bg-red-100 border border-red-400 text-red-700 px-4 py-2 rounded-lg mt-2"
-          role="alert"
+          className={`text-xs ${
+            isWheelchair ? "text-blue-600" : "text-gray-500"
+          } px-1`}
           aria-live="polite"
         >
-          <span className="block sm:inline">{errorMessage}</span>
+          {accessibilityMessage}
         </div>
-      )}
-
-      {/* Accessibility message */}
-      <div
-        className={`text-xs ${
-          isWheelchair ? "text-blue-600" : "text-gray-500"
-        } px-1`}
-        aria-live="polite"
-      >
-        {accessibilityMessage}
       </div>
     </div>
   );

@@ -1,11 +1,11 @@
-import MapLegend from './MapLegend';
-import React, { useRef } from 'react';
-import { pathSegmentsProps } from '../../types/types';
-import { FloorGrid } from './FloorGrid';
+import React, { useRef } from "react";
+import { pathSegmentsProps } from "../../types/types";
+import { FloorGrid } from "./FloorGrid";
+import { MapLegend } from "./MapLegend";
 
 /**
  * A component that renders a map view of the current floor.
- * 
+ *
  * The map can display a grid and highlight specific locations based on the provided props.
  * It includes both the main map content and a legend to help users interpret the map.
  * All content is centered vertically for better visual balance.
@@ -20,34 +20,55 @@ import { FloorGrid } from './FloorGrid';
  * @param {PathSegment[]} props.pathSegments - Path segments to display on the map
  * @returns {JSX.Element} The rendered map view component
  */
-export const MapView: React.FC<pathSegmentsProps> = ({ 
-    currentFloor, 
-    showGrid, 
-    endLocation, 
-    startLocation, 
-    settings,
-    pathSegments = [] 
+export const MapView: React.FC<pathSegmentsProps> = ({
+  currentFloor,
+  showGrid,
+  endLocation,
+  startLocation,
+  settings,
+  pathSegments = [],
 }) => {
-    const mapRef = useRef<HTMLDivElement>(null);
-    
-    return (
-        <div className="w-full h-full flex flex-col items-center justify-center">            
-            <div
-                ref={mapRef}
-                className="bg-gray-700 rounded-2xl flex items-center justify-center max-h-[90%] overflow-auto"
-                role="region"   
-                aria-label="Interactive campus map"
-            >
-                <FloorGrid 
-                    showGrid={showGrid} 
-                    currentFloor={currentFloor} 
-                    endLocation={endLocation}
-                    startLocation={startLocation}
-                    settings={settings}
-                    pathSegments={pathSegments}
-                />
-            </div>
-            <MapLegend settings={settings} />
+  const mapRef = useRef<HTMLDivElement>(null);
+
+  return (
+    <div
+      className="w-full h-full flex flex-col items-center justify-between"
+      aria-label="Map view container"
+      aria-describedby="map-view-desc"
+    >
+      {/* Description for screen readers */}
+      <div id="map-view-desc" className="sr-only">
+        This area displays the interactive campus map and its legend. Use the
+        controls to explore different floors and view navigation paths.
+      </div>
+      <div
+        ref={mapRef}
+        className="bg-gray-700 rounded-2xl flex items-center justify-center max-h-[100%] overflow-auto"
+        role="region"
+        aria-label="Interactive campus map"
+        aria-describedby="map-view-desc"
+      >
+        <FloorGrid
+          showGrid={showGrid}
+          currentFloor={currentFloor}
+          endLocation={endLocation}
+          startLocation={startLocation}
+          settings={settings}
+          pathSegments={pathSegments}
+        />
+      </div>
+      <div
+        className="w-full flex justify-center"
+        aria-label="Map legend container"
+        aria-describedby="map-legend-desc"
+      >
+        {/* Description for screen readers */}
+        <div id="map-legend-desc" className="sr-only">
+          The map legend explains the meaning of colors and symbols used on the
+          map.
         </div>
-    );
+        <MapLegend settings={settings} />
+      </div>
+    </div>
+  );
 };

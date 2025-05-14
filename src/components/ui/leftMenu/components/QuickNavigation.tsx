@@ -115,44 +115,57 @@ export const QuickNavigation: React.FC<
   };
 
   return (
-    <div>
-      <h2
-        className={`font-semibold mb-3 text-gray-200 ${getSettings(settings)}`}
-      >
-        Quick Navigation
-      </h2>
-      <ul className="space-y-2 flex flex-col">
-        {[...predefinedLocations, ...customNavigation].map(
-          (location, index) => (
-            <li key={index}>
-              <button
-                className="w-full p-3 text-left bg-gray-700 text-gray-200 hover:bg-gray-600 focus:ring-2 focus:ring-blue-400 focus:outline-none flex items-center"
-                onClick={() => handleLocationClick(location)}
-              >
-                <div className="flex items-center gap-2 flex-1">
-                  <div className="flex items-center justify-center">
-                    <div
-                      className="w-8 h-8 rounded-[4px] mr-2 flex items-center justify-center"
-                      style={{ backgroundColor: location.color || "#4CAF50" }}
-                    >
-                      <span className="text-white">{location.icon}</span>
+    <div
+      className="mb-4"
+      aria-label="Quick navigation panel"
+      aria-describedby="quick-navigation-desc"
+    >
+      {/* Description for screen readers */}
+      <div id="quick-navigation-desc" className="sr-only">
+        This panel provides quick navigation options to frequently visited
+        locations or features within the building.
+      </div>
+      <div className="rounded-2xl p-4 bg-gray-700">
+        <h2
+          className={`font-semibold mb-3 text-gray-200 ${getSettings(
+            settings
+          )}`}
+        >
+          Quick Navigation
+        </h2>
+        <ul className="space-y-2 flex flex-col">
+          {[...predefinedLocations, ...customNavigation].map(
+            (location, index) => (
+              <li key={index}>
+                <button
+                  className="w-full p-3 text-left bg-gray-700 text-gray-200 hover:bg-gray-600 focus:ring-2 focus:ring-blue-400 focus:outline-none flex items-center"
+                  onClick={() => handleLocationClick(location)}
+                >
+                  <div className="flex items-center gap-2 flex-1">
+                    <div className="flex items-center justify-center">
+                      <div
+                        className="w-8 h-8 rounded-[4px] mr-2 flex items-center justify-center"
+                        style={{ backgroundColor: location.color || "#4CAF50" }}
+                      >
+                        <span className="text-white">{location.icon}</span>
+                      </div>
                     </div>
+                    <span className="flex-1">{location.name}</span>
+                    <span className="text-xs text-gray-400">
+                      ({location.coordinates.x}, {location.coordinates.y})
+                    </span>
                   </div>
-                  <span className="flex-1">{location.name}</span>
-                  <span className="text-xs text-gray-400">
-                    ({location.coordinates.x}, {location.coordinates.y})
-                  </span>
-                </div>
-              </button>
-            </li>
-          )
-        )}
-      </ul>
-      <AddCustomNavigationButton
-        onAdd={handleAddCustomNavigation}
-        onSelectLocation={onSelectLocation}
-        currentFloor={currentFloor}
-      />
+                </button>
+              </li>
+            )
+          )}
+        </ul>
+        <AddCustomNavigationButton
+          onAdd={handleAddCustomNavigation}
+          onSelectLocation={onSelectLocation}
+          currentFloor={currentFloor}
+        />
+      </div>
     </div>
   );
 };
