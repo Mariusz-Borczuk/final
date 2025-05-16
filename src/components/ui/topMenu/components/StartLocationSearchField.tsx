@@ -290,7 +290,7 @@ export const StartLocationSearchField: React.FC<LocationSearchFieldProps> = ({
           className={`mt-1 p-2 ${styles.inputBg} border-2 border-green-500 rounded-lg flex items-center`}
         >
           <div className="mr-2 text-lg flex items-center justify-center w-6 h-6 rounded-md ring-2   ring-green-500 bg-green-100/30 text-bold">
-            {getLocationIcon(selectedDisplayLocation.type)}
+            {getLocationIcon(selectedDisplayLocation.type as string)}
           </div>
           <div className="flex flex-col flex-1">
             <span className={`font-semibold ${styles.resultText}`}>
@@ -329,7 +329,7 @@ export const StartLocationSearchField: React.FC<LocationSearchFieldProps> = ({
               onClick={() => handleResultClick(result)}
             >
               <div className="mr-1 pr-2 text-lg">
-                {getLocationIcon(result.type)}
+                {getLocationIcon(result.type as string)}
               </div>
               <div className="flex flex-col">
                 <span className={`font-semibold ${styles.resultText}`}>

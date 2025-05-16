@@ -283,7 +283,7 @@ export const EndLocationSearchField: React.FC<LocationSearchFieldProps> = ({
         >
           {/* Updated icon wrapper with red styling */}
           <div className="mr-2 text-lg flex items-center justify-center w-6 h-6 rounded-md ring-2 ring-red-500 bg-red-100/30 text-bold">
-            {getLocationIcon(selectedDisplayLocation.type)}
+            {getLocationIcon(selectedDisplayLocation.type as string)}
           </div>
           <div className="flex flex-col flex-1">
             <span className={`font-semibold ${styles.resultText}`}>
@@ -322,7 +322,7 @@ export const EndLocationSearchField: React.FC<LocationSearchFieldProps> = ({
               onClick={() => handleResultClick(result)}
             >
               <div className="mr-1 pr-2 text-lg">
-                {getLocationIcon(result.type)}
+                {getLocationIcon(result.type as string)}
               </div>
               <div className="flex flex-col">
                 <span className={`font-semibold ${styles.resultText}`}>

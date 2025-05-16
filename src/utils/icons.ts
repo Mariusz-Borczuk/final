@@ -15,7 +15,7 @@
 
 import React from "react";
 import { IoMdEye, IoMdGrid, IoMdArrowDropdown } from "react-icons/io";
-import { FaRestroom, FaFireExtinguisher, FaWrench, FaMapMarkerAlt, FaPlay, FaRoute, FaWheelchair, FaArrowRight, FaCheck, FaClock, FaRuler, FaWalking } from "react-icons/fa";
+import { FaRestroom, FaFireExtinguisher, FaWrench, FaTrashAlt, FaMapMarkerAlt, FaPlay, FaRoute, FaWheelchair, FaArrowRight, FaCheck, FaClock, FaRuler, FaWalking } from "react-icons/fa";
 import { SiGoogleclassroom } from "react-icons/si";
 import {
   MdDarkMode,
@@ -33,7 +33,7 @@ import { FiType } from "react-icons/fi";
 import { FaElevator } from "react-icons/fa6";
 
 export {
-  IoMdEye, MdDarkMode, MdFemale, MdHome, SiGoogleclassroom, MdLocationOn, MdMale, MdSearch, MdSportsTennis, MdWater, MdStairs, FaRestroom, FaFireExtinguisher, FaWrench, MdLocationPin, FaMapMarkerAlt, FaPlay, FaRoute, FaWheelchair, FaArrowRight, FaCheck, FaClock, FaRuler, FaWalking, FiType, IoMdGrid, FaElevator, IoMdArrowDropdown
+  IoMdEye, MdDarkMode, MdFemale, MdHome, SiGoogleclassroom, MdLocationOn, MdMale, MdSearch, MdSportsTennis, MdWater, MdStairs, FaRestroom, FaFireExtinguisher, FaWrench, MdLocationPin, FaMapMarkerAlt, FaPlay, FaRoute, FaWheelchair, FaArrowRight, FaCheck, FaClock, FaRuler, FaWalking, FiType, IoMdGrid, FaElevator, IoMdArrowDropdown, FaTrashAlt
 };
 // Export icon types for type safety
 export type IconType = React.ReactNode;

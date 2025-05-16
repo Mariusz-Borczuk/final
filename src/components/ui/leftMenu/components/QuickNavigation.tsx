@@ -6,29 +6,16 @@ import {
 } from "@/components/types/types";
 import { getSettings } from "@/utils/accessibilityStyles";
 import {
-  FaElevator,
-  FaRestroom,
-  FaWalking,
-  MdSportsTennis,
-  MdWater,
-} from "@/utils/icons";
-import React, { useState } from "react";
+  deleteLocationFromFile,
+  readLocationsFromFile,
+  saveLocationToFile,
+} from "@/utils/browserLocationManager";
+import { FaMapMarkerAlt, FaTrashAlt } from "@/utils/icons";
+import React, { useEffect, useState } from "react";
 import AddCustomNavigationButton from "./CustomLocation";
 
 /**
- * QuickNavigation component provides a list of predefined locations and custom navigation items.
- *
- * The component displays a list of locations, each with an icon, name, and coordinates. Users can
- * also add custom navigation items which will appear alongside the predefined ones.
- *
- * @component
- * @param {RightSidebarProps} props - Props for the QuickNavigation component
- * @param {Object} props.settings - The settings for displaying the component
- * @param {number} props.currentFloor - The current floor number
- * @param {Function} [props.onSelectLocation] - Optional callback for when a location is selected
- * @param {Function} [props.onUpdateSettings] - Optional callback for updating settings
- *
- * @returns {JSX.Element} A sidebar section with quick navigation options and ability to add custom locations
+ * QuickNavigation component provides a list of saved locations and custom navigation items.
  */
 export const QuickNavigation: React.FC<
   RightSidebarProps & {
@@ -36,81 +23,52 @@ export const QuickNavigation: React.FC<
     onUpdateSettings?: (settings: AccessibilitySettings) => void;
   }
 > = ({ settings, currentFloor, onSelectLocation, onUpdateSettings }) => {
-  const [customNavigation, setCustomNavigation] = useState<NavigationItem[]>(
+  const [savedLocations, setSavedLocations] = useState<LocationSearchResult[]>(
     []
   );
 
-  // Default settings for locations if not already set
-  const initializeDefaultSettings = () => {
-    if (!settings.preferredBathroom) {
-      onUpdateSettings?.({ preferredBathroom: "Any" });
-    }
-
-    if (!settings.walkingSpeedMPS) {
-      onUpdateSettings?.({ walkingSpeedMPS: 1.4 });
-    }
-  };
-
-  // Initialize default settings on component mount
-  React.useEffect(() => {
-    initializeDefaultSettings();
+  // Load saved locations on mount
+  useEffect(() => {
+    const loadedLocations = readLocationsFromFile();
+    setSavedLocations(loadedLocations);
   }, []);
 
-  // Predefined locations with colors
-  const predefinedLocations: NavigationItem[] = [
-    {
-      icon: <MdSportsTennis />,
-      name: "Gymnasium",
-      coordinates: { x: 10, y: 20 },
-      color: "#4CAF50", // Green
-    },
-    {
-      icon: <FaRestroom />,
-      name: "Restrooms",
-      coordinates: { x: 15, y: 25 },
-      color: "#2196F3", // Blue
-    },
-    {
-      icon: <FaElevator />,
-      name: "Elevators",
-      coordinates: { x: 5, y: 10 },
-      color: "#673AB7", // Deep Purple
-    },
-    {
-      icon: <FaWalking />,
-      name: "Escape route",
-      coordinates: { x: 30, y: 40 },
-      color: "#FF5722", // Deep Orange
-    },
-    {
-      icon: <MdWater />,
-      name: "Water",
-      coordinates: { x: 50, y: 60 },
-      color: "#00BCD4", // Cyan
-    },
-  ];
-
   const handleAddCustomNavigation = (item: NavigationItem) => {
-    setCustomNavigation((prev) => [...prev, item]);
+    const locationResult: LocationSearchResult = {
+      type: "custom",
+      name: item.name,
+      floor: currentFloor,
+      location: { x: item.coordinates.x, y: item.coordinates.y },
+      description: `Custom location: ${item.name}`,
+      color: item.color,
+    };
+
+    if (saveLocationToFile(locationResult)) {
+      setSavedLocations((prev) => [...prev, locationResult]);
+    }
   };
 
   // Handle location click
-  const handleLocationClick = (location: NavigationItem) => {
+  const handleLocationClick = (location: LocationSearchResult) => {
     if (onSelectLocation) {
-      const locationResult: LocationSearchResult = {
-        type: "coordinate",
-        name: location.name,
-        floor: currentFloor,
-        location: { x: location.coordinates.x, y: location.coordinates.y },
-        description: `Quick navigation to ${location.name}`,
-        color: location.color || "#4CAF50", // Use provided color or default to green
-      };
-      onSelectLocation(locationResult);
+      onSelectLocation(location);
     }
+  };
 
-    // If clicking on bathroom, update preferred bathroom setting
-    if (location.name === "Restrooms" && onUpdateSettings) {
-      onUpdateSettings({ preferredBathroom: "Any" });
+  // Handle location deletion
+  const handleDeleteLocation = (location: LocationSearchResult) => {
+    if (deleteLocationFromFile(location)) {
+      setSavedLocations((prev) =>
+        prev.filter(
+          (loc) =>
+            !(
+              loc.name === location.name &&
+              loc.floor === location.floor &&
+              loc.location.x === location.location.x &&
+              loc.location.y === location.location.y
+            )
+        )
+      );
     }
   };
 
@@ -122,8 +80,8 @@ export const QuickNavigation: React.FC<
     >
       {/* Description for screen readers */}
       <div id="quick-navigation-desc" className="sr-only">
-        This panel provides quick navigation options to frequently visited
-        locations or features within the building.
+        This panel provides quick access to saved locations and allows you to
+        add custom locations.
       </div>
       <div className="rounded-2xl p-4 bg-gray-700">
         <h2
@@ -131,40 +89,61 @@ export const QuickNavigation: React.FC<
             settings
           )}`}
         >
-          Quick Navigation
+          Saved Locations
         </h2>
-        <ul className="space-y-2 flex flex-col">
-          {[...predefinedLocations, ...customNavigation].map(
-            (location, index) => (
-              <li key={index}>
-                <button
-                  className="w-full p-3 text-left bg-gray-700 text-gray-200 hover:bg-gray-600 focus:ring-2 focus:ring-blue-400 focus:outline-none flex items-center"
-                  onClick={() => handleLocationClick(location)}
-                >
-                  <div className="flex items-center gap-2 flex-1">
-                    <div className="flex items-center justify-center">
-                      <div
-                        className="w-8 h-8 rounded-[4px] mr-2 flex items-center justify-center"
-                        style={{ backgroundColor: location.color || "#4CAF50" }}
-                      >
-                        <span className="text-white">{location.icon}</span>
-                      </div>
+        <ul className="space-y-2 flex flex-col max-h-60 overflow-y-auto">
+          {savedLocations.map((location, index) => (
+            <li key={`${location.name}-${location.floor}-${index}`}>
+              <div className="flex items-center justify-between p-2 bg-gray-600 hover:bg-gray-500 rounded-lg transition-colors">
+                <div className="flex-1 flex items-center text-white text-left">
+                  <div className="flex items-center gap-2">
+                    <div
+                      className="w-8 h-8 rounded-[4px] flex items-center justify-center"
+                      style={{ backgroundColor: location.color || "#4CAF50" }}
+                    >
+                      <FaMapMarkerAlt className="text-white" />
                     </div>
-                    <span className="flex-1">{location.name}</span>
-                    <span className="text-xs text-gray-400">
-                      ({location.coordinates.x}, {location.coordinates.y})
-                    </span>
+                    <div className="flex flex-col">
+                      <span>{location.name}</span>
+                      <span className="text-xs text-gray-400">
+                        Floor {location.floor} • ({location.location.x},{" "}
+                        {location.location.y})
+                      </span>
+                    </div>
                   </div>
-                </button>
-              </li>
-            )
+                </div>
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={() => handleLocationClick(location)}
+                    className="p-2 bg-green-600 text-white hover:bg-green-500 rounded-lg transition-colors flex items-center gap-1"
+                    aria-label={`Show ${location.name} on map`}
+                  >
+                    <FaMapMarkerAlt />
+                  </button>
+                  <button
+                    onClick={() => handleDeleteLocation(location)}
+                    className="p-2 bg-red-500 text-white hover:bg-red-400 rounded-lg transition-colors flex items-center gap-1"
+                    aria-label={`Delete ${location.name} from saved locations`}
+                  >
+                    <FaTrashAlt />
+                  </button>
+                </div>
+              </div>
+            </li>
+          ))}
+          {savedLocations.length === 0 && (
+            <li className="text-gray-400 text-center p-4">
+              No saved locations yet. Add some using the form below.
+            </li>
           )}
         </ul>
-        <AddCustomNavigationButton
-          onAdd={handleAddCustomNavigation}
-          onSelectLocation={onSelectLocation}
-          currentFloor={currentFloor}
-        />
+        <div className="mt-4 pt-4 border-t border-gray-600">
+          <AddCustomNavigationButton
+            onAdd={handleAddCustomNavigation}
+            onSelectLocation={onSelectLocation}
+            currentFloor={currentFloor}
+          />
+        </div>
       </div>
     </div>
   );

@@ -1,7 +1,7 @@
 import React, { useRef } from "react";
 import { pathSegmentsProps } from "../../types/types";
-import { FloorGrid } from "./FloorGrid";
 import { MapLegend } from "./MapLegend";
+import { GridMap } from "./GridMap";
 
 /**
  * A component that renders a map view of the current floor.
@@ -48,7 +48,7 @@ export const MapView: React.FC<pathSegmentsProps> = ({
         aria-label="Interactive campus map"
         aria-describedby="map-view-desc"
       >
-        <FloorGrid
+        <GridMap
           showGrid={showGrid}
           currentFloor={currentFloor}
           endLocation={endLocation}

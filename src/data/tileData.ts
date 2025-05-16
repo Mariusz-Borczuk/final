@@ -49,8 +49,9 @@ export const tileData = {
     utilityEntry: { color: "#4B6272", label: "Utility Entry", type: "utilityEntry", row: 0, col: 0 }, // Darker gray-blue
     start: { color: "#34C759", label: "Start", type: "start", row: 0, col: 0 },
     end: { color: "#FF3737", label: "End", type: "end", row: 0, col: 0 },
-    classroomEntry:{color:"#C78600",label:"entry",type:"entry", row: 0, col: 0 }
-};
+    classroomEntry:{color:"#C78600",label:"Entry",type:"entry", row: 0, col: 0 },
+    exit:{color:"#00FF00",label:"Exit",type:"exit", row: 0, col: 0 }
+  };
 export type TileType = typeof tileData[keyof typeof tileData];
 export interface CellProps {
   type: keyof typeof tileData;

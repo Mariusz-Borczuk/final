@@ -1,20 +1,22 @@
+import { TileType } from "@/data/tileData";
 import { floor1Data } from "../../data/floor1Data";
 import { floor2Data } from "../../data/floor2Data";
 import { floor3Data } from "../../data/floor3Data";
 import { floor4Data } from "../../data/floor4Data";
 
 /*  Building Entities
-  *Coordinate: Represents a point on the floor plan with x and y coordinates.
-  *Room: Represents a room with a number, start and end coordinates, and optional entry points.
-  *Elevator: Represents an elevator with start, end, and entry coordinates.
-  *Bathroom: Represents a bathroom with a type (Male, Female, Neutral) and start, end, and entry coordinates.
-  *FireEquipment: Represents fire safety equipment with a location coordinate.
-  *UtilityRoom: Represents a utility room with a name, start and end coordinates, and entry points.
-  *Stair: Represents a stairway with start, end, and entry coordinates.
-  *Path: Represents a path with start and end coordinates.
-  *NavigationItem: Represents a navigation item with a name, coordinates, icon, and optional color.
-  */
- 
+ *Coordinate: Represents a point on the floor plan with x and y coordinates.
+ *Room: Represents a room with a number, start and end coordinates, and optional entry points.
+ *Elevator: Represents an elevator with start, end, and entry coordinates.
+ *Bathroom: Represents a bathroom with a type (Male, Female, Neutral) and start, end, and entry coordinates.
+ *FireEquipment: Represents fire safety equipment with a location coordinate.
+ *UtilityRoom: Represents a utility room with a name, start and end coordinates, and entry points.
+ *Stair: Represents a stairway with start, end, and entry coordinates.
+ *Path: Represents a path with start and end coordinates.
+ *NavigationItem: Represents a navigation item with a name, coordinates, icon, and optional color.
+ *Exit: Represents an exit point with coordinates and a description.
+ */
+
 export interface Coordinate {
   x: number;
   y: number;
@@ -60,11 +62,16 @@ export interface NavigationItem {
   icon: React.ReactNode;
   color?: string; // Color property for the location marker
 }
+export interface Exit {
+  type: "main" | "standard";
+  coordinates: Coordinate;
+  description: string;
+}
 /* Floor Management
-  *FloorData: Represents the data for a floor, including rooms, elevators, bathrooms, fire equipment, utility rooms, stairs, and paths.
-  *FloorManagementProps: Props for managing the current floor. 
-  *AllfloorData: Combined floor data for all floors in the building.
-*/
+ *FloorData: Represents the data for a floor, including rooms, elevators, bathrooms, fire equipment, utility rooms, stairs, and paths.
+ *FloorManagementProps: Props for managing the current floor.
+ *AllfloorData: Combined floor data for all floors in the building.
+ */
 export interface FloorData {
   classrooms: Room[];
   elevators: Elevator[];
@@ -73,6 +80,7 @@ export interface FloorData {
   utilityRooms: UtilityRoom[];
   stairs: Stair[];
   paths: Path[];
+  exits: Exit[];
 }
 export interface FloorManagementProps {
   currentFloor: number;
@@ -85,17 +93,25 @@ export const allFloorData: FloorData[] = [
   floor4Data,
 ];
 /*  Accessibility
-  *AccessibilityFontSizeProps: Props for the font size component.
-  *AccessibilitySettings: Represents the accessibility settings for the application, including font size, contrast, preferred bathroom, and walking speed.
-  *AccessibilitySettingsProps: Props for the accessibility settings component.
-  *AccessibilityFontSizeProps: Props for the font size component.
-*/
+ *AccessibilityFontSizeProps: Props for the font size component.
+ *AccessibilitySettings: Represents the accessibility settings for the application, including font size, contrast, preferred bathroom, and walking speed.
+ *AccessibilitySettingsProps: Props for the accessibility settings component.
+ *AccessibilityFontSizeProps: Props for the font size component.
+ */
 export interface AccessibilityFontSizeProps {
   fontSize: "normal" | "large" | "xlarge";
   contrast: "normal" | "high";
 }
 export interface AccessibilitySettings {
-  [x: string]: boolean | "normal" | "large" | "xlarge" | "high" | PreferredBathroom | number | undefined;
+  [x: string]:
+    | boolean
+    | "normal"
+    | "large"
+    | "xlarge"
+    | "high"
+    | PreferredBathroom
+    | number
+    | undefined;
   fontSize: "normal" | "large" | "xlarge";
   contrast: "normal" | "high";
   preferredBathroom?: PreferredBathroom;
@@ -111,7 +127,7 @@ export interface PathMapProps {
   onFindPath?: () => void;
   onReset?: () => void;
 }
-export interface FloorGridProps {
+export interface GridMapProps {
   showGrid: boolean;
   currentFloor: number;
   endLocation?: LocationSearchResult | null;
@@ -202,15 +218,7 @@ export function isRoomOnFloor(
  * @property {PreferredBathroom} [PreferredBathroom] - Preferred bathroom type.
  */
 export interface LocationSearchResult {
-  type:
-    | "classroom"
-    | "bathroom"
-    | "elevator"
-    | "stairs"
-    | "fireEquipment"
-    | "utilityRoom"
-    | "coordinate"
-    | "path";
+  type: TileType|string;
   name: string;
   floor: number;
   location: Coordinate;
@@ -323,7 +331,7 @@ export type TransitPoint = {
 
 export interface LeftSidebarProps {
   // Accessibility and UI settings
-  settings: AccessibilitySettings ;
+  settings: AccessibilitySettings;
   isWheelchair: boolean;
   setIsWheelchair: (isWheelchair: boolean) => void;
   onUpdateSettings: (
@@ -336,7 +344,7 @@ export interface LeftSidebarProps {
 
   // Location selection (for QuickNavigation, etc)
   onSelectLocation?: (location: LocationSearchResult) => void;
-};
+}
 
 export interface TopBarProps {
   showGrid: boolean;
@@ -358,7 +366,8 @@ export interface IconSelectorProps {
   selectedIcon: React.ReactNode;
   onIconSelect: (icon: React.ReactNode, iconName: string) => void;
   className?: string;
-}export interface HoveredCellInfo {
+}
+export interface HoveredCellInfo {
   text: string;
   x: number;
   y: number;

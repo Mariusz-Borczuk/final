@@ -6,7 +6,7 @@ import * as types from "../../types/types";
 import { PathSegment, pathSegmentsProps } from "../../types/types";
 
 /**
- * FloorGrid component renders a visual representation of a floor map with various room types.
+ * GridMap component renders a visual representation of a floor map with various room types.
  *
  * This component takes floor data and renders a grid-based visualization showing classrooms,
  * bathrooms, elevators, utility rooms, stairs, fire equipment, and paths. It handles:
@@ -27,10 +27,10 @@ import { PathSegment, pathSegmentsProps } from "../../types/types";
  *
  * @returns {React.ReactElement} The rendered floor grid component
  */
-export const FloorGrid: React.FC<pathSegmentsProps> = ({
+export const GridMap: React.FC<pathSegmentsProps> = ({
   showGrid,
   currentFloor,
-  endLocation: highlightedLocation,
+  endLocation: highlightedCell,
   startLocation,
   settings,
   pathSegments = [],
@@ -349,6 +349,21 @@ export const FloorGrid: React.FC<pathSegmentsProps> = ({
     gridWithStairs
   );
 
+  // Add exits (emergency exits, etc.)
+  const gridWithExits = (currentFloorData.exits || []).reduce(
+    (grid: CellType[][], exit: types.Exit) => {
+      return updateGridCell(grid, exit.coordinates.y, exit.coordinates.x, {
+        row: exit.coordinates.y,
+        col: exit.coordinates.x,
+        type: "exit",
+        color: exit.type === "main" ? "#00FF00" : "#22AA22", // Main: dark green, Standard: lighter dark green
+        label:
+          exit.description || (exit.type === "main" ? "Main Exit" : "Exit"),
+      });
+    },
+    gridWithFire
+  );
+
   // Add paths last to not override other elements
   const gridWithBasicPaths = currentFloorData.paths.reduce(
     (grid: CellType[][], path: types.Path) => {
@@ -379,7 +394,7 @@ export const FloorGrid: React.FC<pathSegmentsProps> = ({
 
       return updatedGrid;
     },
-    gridWithFire
+    gridWithExits
   );
 
   // Add the calculated path segments in purple
@@ -501,10 +516,10 @@ export const FloorGrid: React.FC<pathSegmentsProps> = ({
 
                 // Check if this cell should be highlighted as destination
                 const isHighlighted =
-                  highlightedLocation &&
-                  highlightedLocation.floor === currentFloor &&
-                  highlightedLocation.location.y === rowIndex &&
-                  highlightedLocation.location.x === colIndex;
+                  highlightedCell &&
+                  highlightedCell.floor === currentFloor &&
+                  highlightedCell.location.y === rowIndex &&
+                  highlightedCell.location.x === colIndex;
 
                 // Check if this cell should be highlighted as starting point
                 const isStartPoint =
@@ -552,22 +567,20 @@ export const FloorGrid: React.FC<pathSegmentsProps> = ({
                       <div
                         className="absolute inset-0 flex items-center justify-center z-10 pointer-events-none"
                         title={
-                          highlightedLocation.description ||
-                          highlightedLocation.name
+                          highlightedCell.description || highlightedCell.name
                         }
                       >
                         <div
                           className="absolute w-4 h-4 border-2 border-white rounded-full shadow-lg"
                           style={{
-                            backgroundColor:
-                              highlightedLocation.color || "#F44336",
+                            backgroundColor: highlightedCell.color || "#F44336",
                           }} // Use custom color or default red
                         >
                           <div
                             className="absolute inset-0 rounded-full animate-ping opacity-60"
                             style={{
                               backgroundColor:
-                                highlightedLocation.color || "#F44336",
+                                highlightedCell.color || "#F44336",
                             }}
                           ></div>
                         </div>
