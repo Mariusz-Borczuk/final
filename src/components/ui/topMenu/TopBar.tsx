@@ -13,7 +13,7 @@ export const TopBar: React.FC<TopBarProps> = ({
   onPathFound,
 }) => (
   <div
-    className="flex items-center justify-center space-x-3 p-4 bg-gray-800 rounded-lg w-full shadow-md"
+    className="flex items-center justify-center space-x-4 p-4 bg-gray-800 rounded-lg shadow-md"
     aria-label="Top bar navigation and pathfinding"
     aria-describedby="top-bar-desc"
   >

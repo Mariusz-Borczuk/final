@@ -42,11 +42,11 @@ export const AccessibilitySettingsPanel: React.FC<
       aria-describedby="accessibility-settings-desc"
     >
       <div
-        className="flex items-center justify-between"
+        className="flex flex-col gap-2"
         aria-label="Text size controls"
         aria-describedby="text-size-desc"
       >
-        <label className="text-gray-300 p-2" id="text-size-label">
+        <label className="text-gray-300 font-medium" id="text-size-label">
           Text Size
         </label>
         {/* Description for text size controls */}
@@ -55,7 +55,7 @@ export const AccessibilitySettingsPanel: React.FC<
           normal, large, and extra large.
         </div>
         <div
-          className="flex gap-2"
+          className="flex gap-2 justify-center"
           role="group"
           aria-label="Text size options"
           aria-describedby="text-size-desc"
@@ -69,8 +69,14 @@ export const AccessibilitySettingsPanel: React.FC<
               icon={
                 <FiType
                   className={`text-gray-200 ${
+                    size === "normal"
+                      ? "text-base"
+                      : size === "large"
+                      ? "text-lg"
+                      : "text-xl"
+                  } ${
                     settings.contrast === "high"
-                      ? " text-zinc-950"
+                      ? "text-zinc-950"
                       : "text-gray-100"
                   }`}
                 />

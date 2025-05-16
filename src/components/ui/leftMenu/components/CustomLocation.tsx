@@ -55,6 +55,7 @@ const AddCustomNavigationButton: React.FC<
       name,
       coordinates,
       icon: selectedIcon,
+      iconName: selectedIconName,
       color: markerColor,
     };
 
@@ -69,6 +70,7 @@ const AddCustomNavigationButton: React.FC<
         location: { x: coordinates.x, y: coordinates.y },
         description: `Custom location: ${name}`,
         color: markerColor,
+        icon: selectedIconName, // Add the selected icon name
       };
       onSelectLocation(locationResult);
     }
@@ -173,12 +175,13 @@ const AddCustomNavigationButton: React.FC<
                   id="nav-name"
                   type="text"
                   value={name}
-                  onChange={(e) => setName(e.target.value)}
+                  onChange={(e) => setName(e.target.value.slice(0, 8))}
+                  maxLength={8}
                   className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                   required
                   aria-required="true"
-                  placeholder="Name for the navigation point"
-                  aria-label="Navigation point name"
+                  placeholder="Name (max 8 chars)"
+                  aria-label="Navigation point name, maximum 8 characters"
                   aria-describedby="nav-name-desc"
                 />
                 <span id="nav-name-desc" className="sr-only">

@@ -22,7 +22,7 @@ export const LeftSidebar: React.FC<LeftSidebarProps> = ({
 }) => {
   return (
     <aside
-      className="bg-gray-800 text-white w-80 p-6 flex flex-col"
+      className="bg-gray-800 text-white w-72 h-full p-4 flex flex-col"
       role="complementary"
       aria-label="Main navigation sidebar"
       aria-describedby="left-sidebar-desc"

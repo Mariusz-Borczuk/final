@@ -10,8 +10,9 @@ import {
   readLocationsFromFile,
   saveLocationToFile,
 } from "@/utils/browserLocationManager";
-import { FaMapMarkerAlt, FaTrashAlt } from "@/utils/icons";
+import * as Icons from "@/utils/icons";
 import React, { useEffect, useState } from "react";
+import { IconType } from "react-icons";
 import AddCustomNavigationButton from "./CustomLocation";
 
 /**
@@ -22,7 +23,7 @@ export const QuickNavigation: React.FC<
     onSelectLocation?: (location: LocationSearchResult) => void;
     onUpdateSettings?: (settings: AccessibilitySettings) => void;
   }
-> = ({ settings, currentFloor, onSelectLocation, onUpdateSettings }) => {
+> = ({ settings, currentFloor, onSelectLocation }) => {
   const [savedLocations, setSavedLocations] = useState<LocationSearchResult[]>(
     []
   );
@@ -33,6 +34,15 @@ export const QuickNavigation: React.FC<
     setSavedLocations(loadedLocations);
   }, []);
 
+  // Function to render the icon based on icon name
+  const renderIcon = (iconName?: string) => {
+    if (!iconName || !(iconName in Icons)) {
+      return <Icons.MdLocationPin className="text-white text-xl" />;
+    }
+    const Icon = Icons[iconName as keyof typeof Icons] as IconType;
+    return <Icon className="text-white text-xl" />;
+  };
+
   const handleAddCustomNavigation = (item: NavigationItem) => {
     const locationResult: LocationSearchResult = {
       type: "custom",
@@ -41,6 +51,7 @@ export const QuickNavigation: React.FC<
       location: { x: item.coordinates.x, y: item.coordinates.y },
       description: `Custom location: ${item.name}`,
       color: item.color,
+      icon: item.iconName, // Save the icon name
     };
 
     if (saveLocationToFile(locationResult)) {
@@ -91,7 +102,7 @@ export const QuickNavigation: React.FC<
         >
           Saved Locations
         </h2>
-        <ul className="space-y-2 flex flex-col max-h-60 overflow-y-auto">
+        <ul className="space-y-2 flex flex-col max-h-80  overflow-y-auto">
           {savedLocations.map((location, index) => (
             <li key={`${location.name}-${location.floor}-${index}`}>
               <div className="flex items-center justify-between p-2 bg-gray-600 hover:bg-gray-500 rounded-lg transition-colors">
@@ -101,7 +112,7 @@ export const QuickNavigation: React.FC<
                       className="w-8 h-8 rounded-[4px] flex items-center justify-center"
                       style={{ backgroundColor: location.color || "#4CAF50" }}
                     >
-                      <FaMapMarkerAlt className="text-white" />
+                      {renderIcon(location.icon)}
                     </div>
                     <div className="flex flex-col">
                       <span>{location.name}</span>
@@ -118,14 +129,14 @@ export const QuickNavigation: React.FC<
                     className="p-2 bg-green-600 text-white hover:bg-green-500 rounded-lg transition-colors flex items-center gap-1"
                     aria-label={`Show ${location.name} on map`}
                   >
-                    <FaMapMarkerAlt />
+                    <Icons.FaMapMarkerAlt />
                   </button>
                   <button
                     onClick={() => handleDeleteLocation(location)}
                     className="p-2 bg-red-500 text-white hover:bg-red-400 rounded-lg transition-colors flex items-center gap-1"
                     aria-label={`Delete ${location.name} from saved locations`}
                   >
-                    <FaTrashAlt />
+                    <Icons.FaTrashAlt />
                   </button>
                 </div>
               </div>

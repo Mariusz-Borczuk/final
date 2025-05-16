@@ -60,6 +60,7 @@ export interface NavigationItem {
   name: string;
   coordinates: { x: number; y: number };
   icon: React.ReactNode;
+  iconName: string; // Name of the icon component (e.g., "FaMapMarkerAlt")
   color?: string; // Color property for the location marker
 }
 export interface Exit {
@@ -218,13 +219,14 @@ export function isRoomOnFloor(
  * @property {PreferredBathroom} [PreferredBathroom] - Preferred bathroom type.
  */
 export interface LocationSearchResult {
-  type: TileType|string;
+  type: TileType | string;
   name: string;
   floor: number;
   location: Coordinate;
   description?: string;
   color?: string;
   PreferredBathroom?: PreferredBathroom;
+  icon?: string; // Name of the icon to display
 }
 export interface AddCustomNavigationButtonProps {
   onAdd: (item: NavigationItem) => void;

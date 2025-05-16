@@ -31,7 +31,7 @@ import { TopBar } from "../topMenu/TopBar";
  * </WayfindingApp3>
  * ```
  */
-const MainLayout: React.FC<LayoutProps> = () => {
+export const MainLayout: React.FC<LayoutProps> = () => {
   const [settings, setSettings] = useState<AccessibilitySettings>({
     fontSize: "normal",
     contrast: "normal",
@@ -167,13 +167,13 @@ const MainLayout: React.FC<LayoutProps> = () => {
         map view, and right sidebar.
       </div>
       <div
-        className="flex h-full w-full bg-gray-900"
+        className="flex w-full bg-gray-900"
         role="application"
         aria-label="Campus Navigator Main Layout"
       >
         {/* Left Sidebar */}
         <div
-          className="w-80 flex flex-col mr-4"
+          className="w-80 flex h-full flex-col"
           role="complementary"
           aria-label="Main navigation and settings sidebar"
         >
@@ -190,7 +190,7 @@ const MainLayout: React.FC<LayoutProps> = () => {
         </div>
         {/* Main Content Area */}
         <main
-          className="flex-1 flex flex-col"
+          className="flex-1 flex flex-col mr-8"
           role="main"
           aria-label="Map and pathfinding area"
         >
@@ -217,10 +217,10 @@ const MainLayout: React.FC<LayoutProps> = () => {
           </div>
         </main>
         {/* Right Sidebar */}
-        <aside
-          className="w-72 pl-4"
+         <div
+          className="w-72 flex flex-col"
           role="complementary"
-          aria-label="Route details and accessibility options sidebar"
+          aria-label="Main navigation and settings sidebar"
         >
           <RightSidebar
             settings={settings}
@@ -231,10 +231,9 @@ const MainLayout: React.FC<LayoutProps> = () => {
             distance={calculateDistance()}
             onUpdateSettings={handleUpdateSettings}
           />
-        </aside>
+        </div>
       </div>
     </main>
   );
 };
 
-export default MainLayout;
