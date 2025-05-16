@@ -1,5 +1,4 @@
-import { LocationSearchResult } from "@/components/types/types";
-
+import { LocationSearchResult } from "@/types/types";
 
 // Initial building features
 export const savedLocations: LocationSearchResult[] = [
@@ -19,14 +18,14 @@ export const savedLocations: LocationSearchResult[] = [
     description: "Elevator location",
     color: "#673AB7",
   },
-//   {
-//     type: "escapeRoute",
-//     location: { x: 6, y: 52 },
-//     floor: 1,
-//     name: "Escape Route",
-//     description: "Escape route location",
-//     color: "#FF5722",
-//   },
+  //   {
+  //     type: "escapeRoute",
+  //     location: { x: 6, y: 52 },
+  //     floor: 1,
+  //     name: "Escape Route",
+  //     description: "Escape route location",
+  //     color: "#FF5722",
+  //   },
 ];
 
 export function addBuildingFeatureLocation(location: LocationSearchResult) {

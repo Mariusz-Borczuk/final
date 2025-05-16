@@ -1,4 +1,4 @@
-import { RightSidebarProps } from "@/components/types/types";
+import { RightSidebarProps } from "@/types/types";
 import { getSettings } from "@/utils/accessibilityStyles";
 import { MdSearch } from "@/utils/icons";
 import { useState } from "react";

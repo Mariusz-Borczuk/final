@@ -1,4 +1,4 @@
-import { LeftSidebarProps } from "@/components/types/types";
+import { LeftSidebarProps } from "@/types/types";
 import React from "react";
 import { AccessibilitySettingsPanel } from "./components/AccessibilitySettings";
 import { BuildingFeatures } from "./components/BuildingFeatures";

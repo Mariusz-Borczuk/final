@@ -1,4 +1,4 @@
-import { FloorManagementProps } from "@/components/types/types";
+import { FloorManagementProps } from "@/types/types";
 import React from "react";
 
 /**

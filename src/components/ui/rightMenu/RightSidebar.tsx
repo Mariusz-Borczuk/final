@@ -1,7 +1,7 @@
+import { PreferredBathroom, RightSidebarProps, Route } from "@/types/types";
 import { getSettings } from "@/utils/accessibilityStyles";
 import { FaRestroom, FaWheelchair, MdFemale, MdMale } from "@/utils/icons";
 import React, { useEffect, useState } from "react";
-import { PreferredBathroom, RightSidebarProps, Route } from "../../types/types";
 import { AccessibleTTSButton } from "./SpeechOutput";
 
 /**
@@ -154,259 +154,259 @@ export const RightSidebar: React.FC<RightSidebarProps> = ({
     >
       {/* Description for screen readers */}
       <div id="right-sidebar-desc" className="sr-only">
-      This sidebar provides additional information and features related to
-      navigation and accessibility.
+        This sidebar provides additional information and features related to
+        navigation and accessibility.
       </div>
       <div
-      className="w-72 flex-1 bg-gray-800 shadow-lg p-4 flex flex-col gap-4"
-      role="region"
-      aria-label="Location Information and Settings"
+        className="w-72 flex-1 bg-gray-800 shadow-lg p-4 flex flex-col gap-4"
+        role="region"
+        aria-label="Location Information and Settings"
       >
-      <h2 className={`text-xl font-semibold mb-4 ${getSettings(settings)}`}>
-        Location & Route
-      </h2>
+        <h2 className={`text-xl font-semibold mb-4 ${getSettings(settings)}`}>
+          Location & Route
+        </h2>
 
-      <div className="space-y-4 flex-grow overflow-y-auto">
-        {/* Current Location Section */}
-        <div
-        className={`p-3 ${
-          settings.contrast === "high" ? "bg-gray-700" : "bg-gray-700"
-        } rounded-lg`}
-        role="group"
-        aria-label="Current Location Details"
-        >
-        <h3 className={`font-medium ${getSettings(settings)}`}>
-          Current Location
-        </h3>
-        <p className={`${getSettings(settings)}`}>
-          Building A, Floor {currentFloor}
-        </p>
-        {pathSegments.length > 0 ? (
-          <>
-          <p className={`mt-2 ${getSettings(settings)}`}>
-            <span className="font-medium">Distance:</span>{" "}
-            {route.distance}
-          </p>
-          <p className={`${getSettings(settings)}`}>
-            <span className="font-medium">Est. Time:</span>{" "}
-            <span
-            className={
-              currentSpeed !== walkingSpeed ? "text-blue-400" : ""
-            }
-            >
-            {route.estimatedTime}
-            </span>
-            {isWheelchair && (
-            <span className="block text-xs opacity-70 mt-1">
-              (Includes wheelchair pace adjustment)
-            </span>
+        <div className="space-y-4 flex-grow overflow-y-auto">
+          {/* Current Location Section */}
+          <div
+            className={`p-3 ${
+              settings.contrast === "high" ? "bg-gray-700" : "bg-gray-700"
+            } rounded-lg`}
+            role="group"
+            aria-label="Current Location Details"
+          >
+            <h3 className={`font-medium ${getSettings(settings)}`}>
+              Current Location
+            </h3>
+            <p className={`${getSettings(settings)}`}>
+              Building A, Floor {currentFloor}
+            </p>
+            {pathSegments.length > 0 ? (
+              <>
+                <p className={`mt-2 ${getSettings(settings)}`}>
+                  <span className="font-medium">Distance:</span>{" "}
+                  {route.distance}
+                </p>
+                <p className={`${getSettings(settings)}`}>
+                  <span className="font-medium">Est. Time:</span>{" "}
+                  <span
+                    className={
+                      currentSpeed !== walkingSpeed ? "text-blue-400" : ""
+                    }
+                  >
+                    {route.estimatedTime}
+                  </span>
+                  {isWheelchair && (
+                    <span className="block text-xs opacity-70 mt-1">
+                      (Includes wheelchair pace adjustment)
+                    </span>
+                  )}
+                </p>
+
+                <p
+                  className={`mt-1 ${getSettings(settings)} text-xs opacity-70`}
+                >
+                  {`Based on ${currentSpeed.toFixed(1)} meters per second`}
+                  {isWheelchair ? " with 1.5x factor" : ""}
+                </p>
+              </>
+            ) : (
+              <p className={`mt-2 ${getSettings(settings)} text-sm opacity-80`}>
+                Find a path to see route details.
+              </p>
             )}
-          </p>
+          </div>
 
-          <p
-            className={`mt-1 ${getSettings(settings)} text-xs opacity-70`}
+          {/* Accessibility Settings Section */}
+          <div
+            className={`p-3 ${
+              settings.contrast === "high" ? "bg-gray-700" : "bg-gray-700"
+            } rounded-lg`}
+            role="group"
+            aria-label="Accessibility Settings"
           >
-            {`Based on ${currentSpeed.toFixed(1)} meters per second`}
-            {isWheelchair ? " with 1.5x factor" : ""}
-          </p>
-          </>
-        ) : (
-          <p className={`mt-2 ${getSettings(settings)} text-sm opacity-80`}>
-          Find a path to see route details.
-          </p>
-        )}
-        </div>
+            <h3 className={`font-medium mb-3 ${getSettings(settings)}`}>
+              Accessibility Settings
+            </h3>
+            {/* Wheelchair Mode Info */}
+            <p className={`${getSettings(settings)} mb-3 text-sm`}>
+              Wheelchair Mode:{" "}
+              {isWheelchair ? (
+                <span className="font-semibold text-green-400">ON</span>
+              ) : (
+                <span className="font-semibold text-red-400">OFF</span>
+              )}
+              <span className="block text-xs opacity-70">
+                (Toggle in main settings)
+              </span>
+            </p>
 
-        {/* Accessibility Settings Section */}
-        <div
-        className={`p-3 ${
-          settings.contrast === "high" ? "bg-gray-700" : "bg-gray-700"
-        } rounded-lg`}
-        role="group"
-        aria-label="Accessibility Settings"
-        >
-        <h3 className={`font-medium mb-3 ${getSettings(settings)}`}>
-          Accessibility Settings
-        </h3>
-        {/* Wheelchair Mode Info */}
-        <p className={`${getSettings(settings)} mb-3 text-sm`}>
-          Wheelchair Mode:{" "}
-          {isWheelchair ? (
-          <span className="font-semibold text-green-400">ON</span>
-          ) : (
-          <span className="font-semibold text-red-400">OFF</span>
-          )}
-          <span className="block text-xs opacity-70">
-          (Toggle in main settings)
-          </span>
-        </p>
-
-        {/* Preferred Bathroom Selector */}
-        <div className="mb-4">
-          <label
-          htmlFor="bathroom-pref"
-          className={`block text-sm font-medium mb-1 ${getSettings(
-            settings
-          )}`}
-          >
-          Preferred Bathroom:
-          </label>
-          <div className="relative">
-          <div className="flex items-center">
-            <div className="absolute left-2 text-lg z-10">
-            {getBathroomIcon(preferredBathroom as PreferredBathroom)}
+            {/* Preferred Bathroom Selector */}
+            <div className="mb-4">
+              <label
+                htmlFor="bathroom-pref"
+                className={`block text-sm font-medium mb-1 ${getSettings(
+                  settings
+                )}`}
+              >
+                Preferred Bathroom:
+              </label>
+              <div className="relative">
+                <div className="flex items-center">
+                  <div className="absolute left-2 text-lg z-10">
+                    {getBathroomIcon(preferredBathroom as PreferredBathroom)}
+                  </div>
+                  <select
+                    id="bathroom-pref"
+                    value={preferredBathroom}
+                    onChange={handleBathroomChange}
+                    className={`w-full pl-9 pr-2 py-2 border border-gray-600 rounded-md bg-gray-700 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${getSettings(
+                      settings
+                    )}`}
+                    aria-describedby="bathroom-feedback"
+                  >
+                    <option value="Any">Any Bathroom</option>
+                    <option value="Male">Male Only</option>
+                    <option value="Female">Female Only</option>
+                    <option value="Neutral">All-Gender/Neutral</option>
+                  </select>
+                </div>
+                <div
+                  id="bathroom-feedback"
+                  className={`text-xs text-green-400 ${
+                    showSaveIndicator === "bathroom"
+                      ? "animate-pulse"
+                      : "invisible"
+                  }`}
+                >
+                  Preference saved
+                </div>
+              </div>
             </div>
-            <select
-            id="bathroom-pref"
-            value={preferredBathroom}
-            onChange={handleBathroomChange}
-            className={`w-full pl-9 pr-2 py-2 border border-gray-600 rounded-md bg-gray-700 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${getSettings(
-              settings
-            )}`}
-            aria-describedby="bathroom-feedback"
-            >
-            <option value="Any">Any Bathroom</option>
-            <option value="Male">Male Only</option>
-            <option value="Female">Female Only</option>
-            <option value="Neutral">All-Gender/Neutral</option>
-            </select>
+
+            {/* Walking Speed Slider */}
+            <div className="mb-2">
+              <label
+                htmlFor="walking-speed"
+                className={`block text-sm font-medium mb-1 ${getSettings(
+                  settings
+                )}`}
+              >
+                Walking Speed:{" "}
+                <span className="font-semibold">
+                  {currentSpeed.toFixed(1)} m/s
+                </span>
+                <span className="ml-2 text-xs">
+                  ({getSpeedDescription(currentSpeed)})
+                </span>
+              </label>
+              {/* Combined Slider Container */}
+              <div className="mt-3 relative h-6 flex items-center">
+                {/* Background Track */}
+                <div className="absolute top-1/2 left-1 right-1 h-2 bg-gray-600 rounded-lg transform -translate-y-1/2 pointer-events-none"></div>
+
+                {/* Filled Track - Modified to start from left edge with proper margin */}
+                <div
+                  className="absolute top-1/2 left-1 h-2 bg-blue-500 rounded-lg pointer-events-none transform -translate-y-1/2"
+                  style={{
+                    width: `${((currentSpeed - 0.5) / 2) * (100 - 8)}%`, // Adjusted to account for margins
+                    maxWidth: "calc(100% - 8px)", // Account for left and right margin
+                  }}
+                ></div>
+
+                {/* Visible Thumb/Knob */}
+                <div
+                  className="absolute w-5 h-5 bg-blue-500 rounded-full shadow-lg transform -translate-x-1/2 cursor-grab hover:scale-110 transition-transform z-10 ring-2 ring-blue-300 ring-opacity-50 flex items-center justify-center"
+                  style={{
+                    left: `calc(${
+                      ((currentSpeed - 0.5) / 2) * (100 - 8)
+                    }% + 20px)`, // Adjusted position calculation
+                    top: "50%",
+                    transform: "translate(-50%, -50%)",
+                  }}
+                >
+                  {/* Line indicators for better grip visual */}
+                  <div className="w-2 h-0.5 bg-white rounded-full"></div>
+                </div>
+
+                {/* Invisible Input Range - positioned over the visual elements */}
+                <input
+                  type="range"
+                  id="walking-speed"
+                  min="0.5"
+                  max="2.5"
+                  step="0.1"
+                  value={currentSpeed}
+                  onChange={handleSpeedChange}
+                  onInput={handleSliderInput}
+                  className="absolute inset-x-1 inset-y-0 w-[calc(100%-8px)] h-full opacity-0 cursor-grab z-20" // Adjusted to match visible track
+                  aria-label={`Walking speed slider, currently ${currentSpeed.toFixed(
+                    1
+                  )} meters per second (${getSpeedDescription(currentSpeed)})`}
+                  aria-describedby="speed-feedback"
+                />
+              </div>
+
+              {/* Speed indicators */}
+              <div className="flex justify-between text-xs mt-3 px-1">
+                <span className={`${getSettings(settings)} text-xs opacity-70`}>
+                  0.5 m/s
+                  <br />
+                  Very Slow
+                </span>
+                <span className={`${getSettings(settings)} text-xs opacity-70`}>
+                  1.4 m/s
+                  <br />
+                  Average
+                </span>
+                <span className={`${getSettings(settings)} text-xs opacity-70`}>
+                  2.5 m/s
+                  <br />
+                  Very Fast
+                </span>
+              </div>
+
+              {/* Feedback messages */}
+              <div
+                id="speed-feedback"
+                className={`text-xs text-green-400 mt-1 ${
+                  showSaveIndicator === "speed" ? "animate-pulse" : "invisible"
+                }`}
+              >
+                Speed setting saved
+              </div>
+              {currentSpeed !== walkingSpeed && pathSegments.length > 0 && (
+                <div className="text-xs text-blue-400 mt-1">
+                  Est. arrival: {localEstimatedTime}
+                </div>
+              )}
+
+              <p className={`mt-2 text-xs ${getSettings(settings)} opacity-70`}>
+                {isWheelchair
+                  ? "Note: Wheelchair mode applies a 1.5× time factor to account for accessibility needs."
+                  : "Adjust based on your typical walking pace."}
+              </p>
+            </div>
           </div>
+
+          {/* Audio Navigation Section (Fixed at bottom) */}
           <div
-            id="bathroom-feedback"
-            className={`text-xs text-green-400 ${
-            showSaveIndicator === "bathroom"
-              ? "animate-pulse"
-              : "invisible"
-            }`}
+            className="p-3 bg-gray-700 rounded-lg"
+            role="group"
+            aria-label="Audio Navigation"
           >
-            Preference saved
-          </div>
+            <h3 className={`font-medium ${getSettings(settings)}`}>
+              Audio Navigation
+            </h3>
+            <div className="mt-2">
+              <AccessibleTTSButton
+                route={route}
+                settings={settings}
+                className={`w-full ${getSettings(settings)}`}
+              />
+            </div>
           </div>
         </div>
-
-        {/* Walking Speed Slider */}
-        <div className="mb-2">
-          <label
-          htmlFor="walking-speed"
-          className={`block text-sm font-medium mb-1 ${getSettings(
-            settings
-          )}`}
-          >
-          Walking Speed:{" "}
-          <span className="font-semibold">
-            {currentSpeed.toFixed(1)} m/s
-          </span>
-          <span className="ml-2 text-xs">
-            ({getSpeedDescription(currentSpeed)})
-          </span>
-          </label>
-          {/* Combined Slider Container */}
-          <div className="mt-3 relative h-6 flex items-center">
-          {/* Background Track */}
-          <div className="absolute top-1/2 left-1 right-1 h-2 bg-gray-600 rounded-lg transform -translate-y-1/2 pointer-events-none"></div>
-
-          {/* Filled Track - Modified to start from left edge with proper margin */}
-          <div
-            className="absolute top-1/2 left-1 h-2 bg-blue-500 rounded-lg pointer-events-none transform -translate-y-1/2"
-            style={{
-            width: `${((currentSpeed - 0.5) / 2) * (100 - 8)}%`, // Adjusted to account for margins
-            maxWidth: "calc(100% - 8px)", // Account for left and right margin
-            }}
-          ></div>
-
-          {/* Visible Thumb/Knob */}
-          <div
-            className="absolute w-5 h-5 bg-blue-500 rounded-full shadow-lg transform -translate-x-1/2 cursor-grab hover:scale-110 transition-transform z-10 ring-2 ring-blue-300 ring-opacity-50 flex items-center justify-center"
-            style={{
-            left: `calc(${
-              ((currentSpeed - 0.5) / 2) * (100 - 8)
-            }% + 20px)`, // Adjusted position calculation
-            top: "50%",
-            transform: "translate(-50%, -50%)",
-            }}
-          >
-            {/* Line indicators for better grip visual */}
-            <div className="w-2 h-0.5 bg-white rounded-full"></div>
-          </div>
-
-          {/* Invisible Input Range - positioned over the visual elements */}
-          <input
-            type="range"
-            id="walking-speed"
-            min="0.5"
-            max="2.5"
-            step="0.1"
-            value={currentSpeed}
-            onChange={handleSpeedChange}
-            onInput={handleSliderInput}
-            className="absolute inset-x-1 inset-y-0 w-[calc(100%-8px)] h-full opacity-0 cursor-grab z-20" // Adjusted to match visible track
-            aria-label={`Walking speed slider, currently ${currentSpeed.toFixed(
-            1
-            )} meters per second (${getSpeedDescription(currentSpeed)})`}
-            aria-describedby="speed-feedback"
-          />
-          </div>
-
-          {/* Speed indicators */}
-          <div className="flex justify-between text-xs mt-3 px-1">
-          <span className={`${getSettings(settings)} text-xs opacity-70`}>
-            0.5 m/s
-            <br />
-            Very Slow
-          </span>
-          <span className={`${getSettings(settings)} text-xs opacity-70`}>
-            1.4 m/s
-            <br />
-            Average
-          </span>
-          <span className={`${getSettings(settings)} text-xs opacity-70`}>
-            2.5 m/s
-            <br />
-            Very Fast
-          </span>
-          </div>
-
-          {/* Feedback messages */}
-          <div
-          id="speed-feedback"
-          className={`text-xs text-green-400 mt-1 ${
-            showSaveIndicator === "speed" ? "animate-pulse" : "invisible"
-          }`}
-          >
-          Speed setting saved
-          </div>
-          {currentSpeed !== walkingSpeed && pathSegments.length > 0 && (
-          <div className="text-xs text-blue-400 mt-1">
-            Est. arrival: {localEstimatedTime}
-          </div>
-          )}
-
-          <p className={`mt-2 text-xs ${getSettings(settings)} opacity-70`}>
-          {isWheelchair
-            ? "Note: Wheelchair mode applies a 1.5× time factor to account for accessibility needs."
-            : "Adjust based on your typical walking pace."}
-          </p>
-        </div>
-        </div>
-
-      {/* Audio Navigation Section (Fixed at bottom) */}
-      <div
-        className="p-3 bg-gray-700 rounded-lg"
-        role="group"
-        aria-label="Audio Navigation"
-      >
-        <h3 className={`font-medium ${getSettings(settings)}`}>
-        Audio Navigation
-        </h3>
-        <div className="mt-2">
-        <AccessibleTTSButton
-          route={route}
-          settings={settings}
-          className={`w-full ${getSettings(settings)}`}
-        />
-        </div>
-      </div>
-      </div>
       </div>
     </aside>
   );

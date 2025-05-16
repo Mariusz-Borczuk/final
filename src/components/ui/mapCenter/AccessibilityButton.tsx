@@ -1,5 +1,5 @@
+import { AccessibilityButtonProps } from "@/types/types";
 import React from "react";
-import { AccessibilityButtonProps } from "../../types/types";
 
 /**
  * AccessibilityButton is a React component that creates an accessible button with a tooltip.

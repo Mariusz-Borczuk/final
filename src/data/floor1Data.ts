@@ -1,4 +1,4 @@
-import { FloorData } from "../components/types/types";
+import { FloorData } from "@/types/types";
 
 /**
  * Data representation of the first floor layout.

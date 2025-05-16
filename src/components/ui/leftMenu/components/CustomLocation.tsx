@@ -2,7 +2,7 @@ import {
   AddCustomNavigationButtonProps,
   LocationSearchResult,
   NavigationItem,
-} from "@/components/types/types";
+} from "@/types/types";
 import { formatIconName } from "@/utils/formatUtils"; // Import from the new utility file
 import { IoMdArrowDropdown, MdLocationPin } from "@/utils/icons";
 import React, { useState } from "react";

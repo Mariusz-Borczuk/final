@@ -1,4 +1,4 @@
-import { LocationSearchResult } from "@/components/types/types";
+import { LocationSearchResult } from "@/types/types";
 
 const STORAGE_KEY = "savedLocations";
 

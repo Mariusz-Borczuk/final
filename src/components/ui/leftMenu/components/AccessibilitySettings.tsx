@@ -1,8 +1,8 @@
-import { AccessibilitySettings } from "@/components/types/types";
 import { getSettings } from "@/utils/accessibilityStyles";
 import { FaWheelchair, FiType, IoMdEye } from "@/utils/icons";
 import React from "react";
 import { AccessibilityButton } from "../../mapCenter/AccessibilityButton";
+import { AccessibilitySettings } from "@/types/types";
 
 export interface AccessibilitySettingsPanelProps {
   settings: AccessibilitySettings;

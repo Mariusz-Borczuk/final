@@ -1,6 +1,6 @@
+import { FindPathButtonProps } from "@/types/types";
 import { FaRoute, FaWheelchair } from "@/utils/icons";
 import React, { useMemo } from "react";
-import { FindPathButtonProps } from "../../../types/types";
 
 /**
  * FindPathButton component - Triggers pathfinding with wheelchair accessibility support

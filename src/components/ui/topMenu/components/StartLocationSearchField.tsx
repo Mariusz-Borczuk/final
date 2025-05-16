@@ -1,16 +1,16 @@
 import {
-  getSettings,
-  getStartLocationStyles,
-} from "@/utils/accessibilityStyles";
-import { FaPlay, MdLocationPin, SiGoogleclassroom } from "@/utils/icons";
-import React, { useEffect, useState } from "react";
-import {
   AccessibilitySettings,
   allFloorData,
   Coordinate,
   coordRegex,
   LocationSearchResult,
-} from "../../../types/types";
+} from "@/types/types";
+import {
+  getSettings,
+  getStartLocationStyles,
+} from "@/utils/accessibilityStyles";
+import { FaPlay, MdLocationPin, SiGoogleclassroom } from "@/utils/icons";
+import React, { useEffect, useState } from "react";
 
 /**
  * Props for the search field, onSearch returns the full LocationSearchResult
@@ -173,6 +173,26 @@ export const StartLocationSearchField: React.FC<LocationSearchFieldProps> = ({
           });
         }
       });
+      // Search exit points
+      floorData.exits?.forEach((exit) => {
+        if (
+          lowerQuery.includes("exit") ||
+          (exit.description &&
+            exit.description.toLowerCase().includes(lowerQuery))
+        ) {
+          const coordinates = exit.coordinates || { x: 0, y: 0 };
+
+          results.push({
+            type: "exit",
+            name: exit.description || `Exit`,
+            floor: floorNumber,
+            location: coordinates,
+            description: `${
+              exit.description || "Building Exit"
+            } on floor ${floorNumber}`,
+          });
+        }
+      });
     });
 
     setSearchResults(results);
@@ -241,13 +261,7 @@ export const StartLocationSearchField: React.FC<LocationSearchFieldProps> = ({
                 ? "Change start point..."
                 : "Search start point..."
             }
-            className={`w-full px-3 pr-10 py-2 ${styles.inputBg} ${
-              styles.inputText
-            } ${
-              styles.inputBorder
-            } rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 shadow-sm ${getSettings(
-              settings as AccessibilitySettings
-            )}`}
+            className={`w-full px-3 pr-10 py-2 ${styles.inputBg} ${styles.inputText} ${styles.inputBorder} rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 shadow-sm}`}
             onFocus={() => searchResults.length > 0 && setIsDropdownOpen(true)}
             onBlur={() => setTimeout(() => setIsDropdownOpen(false), 200)}
             aria-label="Search for a starting location"

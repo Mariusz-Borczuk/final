@@ -1,11 +1,11 @@
-import React, { useState } from "react";
 import {
   AccessibilitySettings,
   Coordinate,
   LayoutProps,
   LocationSearchResult,
   PathSegment,
-} from "../../types/types";
+} from "@/types/types";
+import React, { useState } from "react";
 import { LeftSidebar } from "../leftMenu/LeftSidebar";
 import { MapView } from "../mapCenter/MapView";
 import { RightSidebar } from "../rightMenu/RightSidebar";
@@ -217,7 +217,7 @@ export const MainLayout: React.FC<LayoutProps> = () => {
           </div>
         </main>
         {/* Right Sidebar */}
-         <div
+        <div
           className="w-72 flex flex-col"
           role="complementary"
           aria-label="Main navigation and settings sidebar"
@@ -236,4 +236,3 @@ export const MainLayout: React.FC<LayoutProps> = () => {
     </main>
   );
 };
-

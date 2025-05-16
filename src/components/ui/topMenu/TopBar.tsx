@@ -1,4 +1,4 @@
-import { TopBarProps } from "@/components/types/types";
+import { TopBarProps } from "@/types/types";
 import React from "react";
 import { GridToggleButton } from "./components/GridToggleButton";
 import { LocationRouter } from "./components/LocationRouter";

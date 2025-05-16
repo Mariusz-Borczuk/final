@@ -1,10 +1,7 @@
+import { AccessibilitySettings, GridToggleButtonProps } from "@/types/types";
 import { getSettings } from "@/utils/accessibilityStyles";
 import { IoMdGrid } from "@/utils/icons";
 import React from "react";
-import {
-  AccessibilitySettings,
-  GridToggleButtonProps,
-} from "../../../types/types";
 import { ToggleButtonContainer } from "../components/ToggleButtonContainer";
 
 /**

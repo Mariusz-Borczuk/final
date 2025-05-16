@@ -1,10 +1,3 @@
-import { getEndLocationStyles, getSettings } from "@/utils/accessibilityStyles";
-import {
-  FaMapMarkerAlt,
-  MdLocationPin,
-  SiGoogleclassroom,
-} from "@/utils/icons";
-import React, { useEffect, useState } from "react";
 import {
   AccessibilitySettings,
   allFloorData,
@@ -12,7 +5,14 @@ import {
   coordRegex,
   LocationSearchFieldProps,
   LocationSearchResult,
-} from "../../../types/types";
+} from "@/types/types";
+import { getEndLocationStyles, getSettings } from "@/utils/accessibilityStyles";
+import {
+  FaMapMarkerAlt,
+  MdLocationPin,
+  SiGoogleclassroom,
+} from "@/utils/icons";
+import React, { useEffect, useState } from "react";
 
 /**
  * End Location Search Field - Updated to support finding paths between different room types.
@@ -165,6 +165,27 @@ export const EndLocationSearchField: React.FC<LocationSearchFieldProps> = ({
           });
         }
       });
+
+      // Search exit points
+      floorData.exits?.forEach((exit) => {
+        if (
+          lowerQuery.includes("exit") ||
+          (exit.description &&
+            exit.description.toLowerCase().includes(lowerQuery))
+        ) {
+          const coordinates = exit.coordinates || { x: 0, y: 0 };
+
+          results.push({
+            type: "exit",
+            name: exit.description || `Exit`,
+            floor: floorNumber,
+            location: coordinates,
+            description: `${
+              exit.description || "Building Exit"
+            } on floor ${floorNumber}`,
+          });
+        }
+      });
     });
 
     setSearchResults(results);
@@ -233,13 +254,7 @@ export const EndLocationSearchField: React.FC<LocationSearchFieldProps> = ({
                 ? "Change destination..."
                 : "Search destination..."
             }
-            className={`w-full px-3 pr-10 py-2 ${styles.inputBg} ${
-              styles.inputText
-            } ${
-              styles.inputBorder
-            } rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 shadow-sm ${getSettings(
-              settings as AccessibilitySettings
-            )}`}
+            className={`w-full px-3 pr-10 py-2 ${styles.inputBg} ${styles.inputText} ${styles.inputBorder} rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 shadow-sm}`}
             onFocus={() => searchResults.length > 0 && setIsDropdownOpen(true)}
             onBlur={() => setTimeout(() => setIsDropdownOpen(false), 200)}
             aria-label="Search for a destination location"

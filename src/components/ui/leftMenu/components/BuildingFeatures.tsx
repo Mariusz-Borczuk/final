@@ -1,4 +1,4 @@
-import { AccessibilitySettingsProps } from "@/components/types/types";
+import { AccessibilitySettingsProps } from "@/types/types";
 import { getSettings } from "@/utils/accessibilityStyles";
 import React from "react";
 

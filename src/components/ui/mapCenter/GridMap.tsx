@@ -2,8 +2,7 @@ import { getSettings } from "@/utils/accessibilityStyles";
 import React, { useState } from "react";
 import type { CellType } from "../../../data/tileData";
 import { tileData } from "../../../data/tileData";
-import * as types from "../../types/types";
-import { PathSegment, pathSegmentsProps } from "../../types/types";
+import * as types from "@/types/types";
 
 /**
  * GridMap component renders a visual representation of a floor map with various room types.
@@ -27,7 +26,7 @@ import { PathSegment, pathSegmentsProps } from "../../types/types";
  *
  * @returns {React.ReactElement} The rendered floor grid component
  */
-export const GridMap: React.FC<pathSegmentsProps> = ({
+export const GridMap: React.FC<types.pathSegmentsProps> = ({
   showGrid,
   currentFloor,
   endLocation: highlightedCell,
@@ -356,7 +355,7 @@ export const GridMap: React.FC<pathSegmentsProps> = ({
         row: exit.coordinates.y,
         col: exit.coordinates.x,
         type: "exit",
-        color: exit.type === "main" ? "#00FF00" : "#22AA22", // Main: dark green, Standard: lighter dark green
+        color: "#00FF00", // Main: dark green, Standard: lighter dark green
         label:
           exit.description || (exit.type === "main" ? "Main Exit" : "Exit"),
       });
@@ -399,7 +398,7 @@ export const GridMap: React.FC<pathSegmentsProps> = ({
 
   // Add the calculated path segments in purple
   const finalGrid = pathSegments.reduce(
-    (grid: CellType[][], segment: PathSegment) => {
+    (grid: CellType[][], segment: types.PathSegment) => {
       // Only process path segments for the current floor
       if (segment.floor !== currentFloor) {
         return grid;
@@ -451,7 +450,7 @@ export const GridMap: React.FC<pathSegmentsProps> = ({
         paths, and accessibility features. Use the map to explore or select
         locations.
       </div>
-      <div className="p-4 relative">
+      <div className="p-12 relative">
         <div
           className={`inline-block ${
             showGrid ? "border-2 border-gray-400" : "border border-gray-200"

@@ -1,4 +1,4 @@
-import { IconSelectorProps } from "@/components/types/types";
+import { IconSelectorProps } from "@/types/types";
 import * as Icons from "@/utils/icons";
 import React from "react";
 

@@ -1,10 +1,10 @@
-import React, { useCallback, useState } from "react";
-import { RouteNavigator } from "../../../../logic/RouteCalculator";
 import {
   LocationSearchResult,
   PathFinderProps,
   PathSegment,
-} from "../../../types/types";
+} from "@/types/types";
+import React, { useCallback, useState } from "react";
+import { RouteNavigator } from "../../../../logic/RouteCalculator";
 import { FindPathButton } from "../components/FindPathButton";
 import { NavigationButton } from "../components/NavigationButton";
 import { EndLocationSearchField } from "../components/SearchFieldEndLocation";

@@ -1,6 +1,6 @@
+import { AccessibilitySettings, PathSegment } from "@/types/types";
 import { FaArrowRight, FaCheck } from "@/utils/icons";
 import React, { useMemo } from "react";
-import { AccessibilitySettings, PathSegment } from "../../../types/types";
 
 export interface NavigationButtonProps {
   pathSegments: PathSegment[];

@@ -1,4 +1,4 @@
-import { AccessibilitySettings } from "../components/types/types";
+import { AccessibilitySettings } from "@/types/types";
 
 /**
  * Generates a string of CSS classes based on accessibility settings.

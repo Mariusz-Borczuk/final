@@ -1,7 +1,7 @@
+import { pathSegmentsProps } from "@/types/types";
 import React, { useRef } from "react";
-import { pathSegmentsProps } from "../../types/types";
-import { MapLegend } from "./MapLegend";
 import { GridMap } from "./GridMap";
+import { MapLegend } from "./MapLegend";
 
 /**
  * A component that renders a map view of the current floor.

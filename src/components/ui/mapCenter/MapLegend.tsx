@@ -1,7 +1,7 @@
+import { AccessibilitySettings, MapLegendProps } from "@/types/types";
 import { getSettings } from "@/utils/accessibilityStyles";
 import React from "react";
 import { tileData } from "../../../data/tileData";
-import { AccessibilitySettings, MapLegendProps } from "../../types/types";
 
 /**
  * A component that displays a legend for the map, showing what each color represents.
@@ -69,6 +69,11 @@ export const MapLegend: React.FC<MapLegendProps> = ({ settings }) => {
       color: tileData.utilityRoom.color,
       description: "Maintenance and building services areas",
     },
+    {
+      label: "Exit",
+      color: tileData.exit.color,
+      description: "Designated points for leaving the building",
+    },
   ];
 
   return (
@@ -118,7 +123,6 @@ export const MapLegend: React.FC<MapLegendProps> = ({ settings }) => {
             >
               {item.label}
             </span>
-            {/* Tooltip */}
             <div
               id={`tooltip-${index}`}
               role="tooltip"

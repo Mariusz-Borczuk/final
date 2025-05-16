@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from "react";
 import {
   AccessibleTTSButtonProps,
   Section,
   SpeechSettings,
   TextToSpeechOptions,
-} from "../../types/types";
+} from "@/types/types";
+import React, { useEffect, useState } from "react";
 
 /**
  * TextToSpeechService

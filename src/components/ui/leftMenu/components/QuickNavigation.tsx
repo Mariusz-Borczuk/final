@@ -3,7 +3,7 @@ import {
   LocationSearchResult,
   NavigationItem,
   RightSidebarProps,
-} from "@/components/types/types";
+} from "@/types/types";
 import { getSettings } from "@/utils/accessibilityStyles";
 import {
   deleteLocationFromFile,

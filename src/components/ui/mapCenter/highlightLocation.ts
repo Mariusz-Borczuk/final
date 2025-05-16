@@ -1,7 +1,7 @@
 // Utility function to create a startLocation object for GridMap
 // Usage: setStartLocation({ x: 10, y: 20 }, 1, "Start Point")
 import { TileType } from "@/data/tileData";
-import type { Coordinate, LocationSearchResult } from "../../types/types";
+import type { Coordinate, LocationSearchResult } from "@/types/types";
 
 /**
  * Returns a LocationSearchResult object to be used as startLocation for GridMap.
