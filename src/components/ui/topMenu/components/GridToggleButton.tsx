@@ -2,7 +2,7 @@ import { AccessibilitySettings, GridToggleButtonProps } from "@/types/types";
 import { getSettings } from "@/utils/accessibilityStyles";
 import { IoMdGrid } from "@/utils/icons";
 import React from "react";
-import { ToggleButtonContainer } from "./ToggleButtonContainer";
+import { ToggleButtonContainer } from "../components/ToggleButtonContainer";
 
 /**
  * A button component that toggles the grid visibility on the map.
@@ -67,13 +67,13 @@ export const GridToggleButton: React.FC<GridToggleButtonProps> = ({
   return (
     <div
       className="relative"
-      aria-label="Grid toggle button"
-      aria-describedby="grid-toggle-desc"
+      aria-label="Grid toggle button (top part)"
+      aria-describedby="grid-toggle-top-desc"
     >
       {/* Description for screen readers */}
-      <div id="grid-toggle-desc" className="sr-only">
-        This button toggles the visibility of the grid overlay on the map for
-        easier navigation and orientation.
+      <div id="grid-toggle-top-desc" className="sr-only">
+        This button toggles the grid overlay on the map from the top bar
+        controls.
       </div>
       <ToggleButtonContainer
         label={labelElement}

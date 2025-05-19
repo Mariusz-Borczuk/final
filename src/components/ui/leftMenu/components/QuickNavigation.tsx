@@ -13,7 +13,7 @@ import {
 import * as Icons from "@/utils/icons";
 import React, { useEffect, useState } from "react";
 import { IconType } from "react-icons";
-import AddCustomNavigationButton from "./CustomLocation";
+import { AddCustomNavigationButton } from "./CustomLocation";
 
 /**
  * QuickNavigation component provides a list of saved locations and custom navigation items.

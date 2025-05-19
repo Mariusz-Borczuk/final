@@ -1,4 +1,4 @@
-import { pathSegmentsProps } from "@/types/types";
+import { PathSegmentsProps } from "@/types/types";
 import React, { useRef } from "react";
 import { GridMap } from "./GridMap";
 import { MapLegend } from "./MapLegend";
@@ -20,7 +20,7 @@ import { MapLegend } from "./MapLegend";
  * @param {PathSegment[]} props.pathSegments - Path segments to display on the map
  * @returns {JSX.Element} The rendered map view component
  */
-export const MapView: React.FC<pathSegmentsProps> = ({
+export const MapView: React.FC<PathSegmentsProps> = ({
   currentFloor,
   showGrid,
   endLocation,

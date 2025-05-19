@@ -7,7 +7,7 @@ import {
   RouteFinderProps,
   Stair,
   TransitPoint,
-} from "../components/types/types";
+} from "../types/types";
 
 /**
  * Core PathFinder function that calculates paths between locations.

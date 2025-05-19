@@ -1,8 +1,8 @@
 import {
-  AccessibleTTSButtonProps,
   Section,
   SpeechSettings,
   TextToSpeechOptions,
+  TTSControlButtonProps,
 } from "@/types/types";
 import React, { useEffect, useState } from "react";
 
@@ -112,7 +112,7 @@ class TextToSpeechService {
 }
 
 // Accessible Text-to-Speech Button Component
-export const AccessibleTTSButton: React.FC<AccessibleTTSButtonProps> = ({
+export const AccessibleTTSButton: React.FC<TTSControlButtonProps> = ({
   route,
   className = "",
   settings,

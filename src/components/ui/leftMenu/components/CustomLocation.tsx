@@ -1,9 +1,9 @@
 import {
-  AddCustomNavigationButtonProps,
+  AddLocationButtonProps,
+  formatIconName,
   LocationSearchResult,
   NavigationItem,
 } from "@/types/types";
-import { formatIconName } from "@/utils/formatUtils"; // Import from the new utility file
 import { IoMdArrowDropdown, MdLocationPin } from "@/utils/icons";
 import React, { useState } from "react";
 import IconSelector from "./IconSelector";
@@ -17,8 +17,8 @@ import IconSelector from "./IconSelector";
  * - Accessible with ARIA labels, descriptions, and keyboard navigation
  * - All form fields and controls have clear instructions for screen readers
  */
-const AddCustomNavigationButton: React.FC<
-  AddCustomNavigationButtonProps & {
+export const AddCustomNavigationButton: React.FC<
+  AddLocationButtonProps & {
     onSelectLocation?: (location: LocationSearchResult) => void;
     currentFloor: number;
   }
@@ -55,7 +55,7 @@ const AddCustomNavigationButton: React.FC<
       name,
       coordinates,
       icon: selectedIcon,
-      iconName: selectedIconName,
+      iconName: formatIconName(selectedIconName),
       color: markerColor,
     };
 
@@ -70,7 +70,7 @@ const AddCustomNavigationButton: React.FC<
         location: { x: coordinates.x, y: coordinates.y },
         description: `Custom location: ${name}`,
         color: markerColor,
-        icon: selectedIconName, // Add the selected icon name
+        icon: formatIconName(selectedIconName),
       };
       onSelectLocation(locationResult);
     }
@@ -414,4 +414,3 @@ const AddCustomNavigationButton: React.FC<
   );
 };
 
-export default AddCustomNavigationButton;

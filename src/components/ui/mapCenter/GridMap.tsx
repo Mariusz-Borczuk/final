@@ -1,8 +1,8 @@
+import * as types from "@/types/types";
 import { getSettings } from "@/utils/accessibilityStyles";
 import React, { useState } from "react";
 import type { CellType } from "../../../data/tileData";
 import { tileData } from "../../../data/tileData";
-import * as types from "@/types/types";
 
 /**
  * GridMap component renders a visual representation of a floor map with various room types.
@@ -26,7 +26,7 @@ import * as types from "@/types/types";
  *
  * @returns {React.ReactElement} The rendered floor grid component
  */
-export const GridMap: React.FC<types.pathSegmentsProps> = ({
+export const GridMap: React.FC<types.PathSegmentsProps> = ({
   showGrid,
   currentFloor,
   endLocation: highlightedCell,
@@ -35,9 +35,8 @@ export const GridMap: React.FC<types.pathSegmentsProps> = ({
   pathSegments = [],
 }) => {
   const gridSize = 60;
-  const [hoveredCell, setHoveredCell] = useState<types.HoveredCellInfo | null>(
-    null
-  );
+  const [hoveredCell, setHoveredCell] =
+    useState<types.HighlightedCellDetails | null>(null);
 
   // Get specifically the font size class for elements that need independent scaling
   const fontSizeClass = settings

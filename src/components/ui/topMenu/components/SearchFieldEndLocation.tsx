@@ -3,7 +3,7 @@ import {
   allFloorData,
   Coordinate,
   coordRegex,
-  LocationSearchFieldProps,
+  LocationSearchProps,
   LocationSearchResult,
 } from "@/types/types";
 import { getEndLocationStyles, getSettings } from "@/utils/accessibilityStyles";
@@ -17,7 +17,7 @@ import React, { useEffect, useState } from "react";
 /**
  * End Location Search Field - Updated to support finding paths between different room types.
  */
-export const EndLocationSearchField: React.FC<LocationSearchFieldProps> = ({
+export const EndLocationSearchField: React.FC<LocationSearchProps> = ({
   onSearch,
   currentFloor,
   setCurrentFloor,
