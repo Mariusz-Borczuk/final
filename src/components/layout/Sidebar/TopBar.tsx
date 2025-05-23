@@ -1,7 +1,7 @@
+import { GridToggleButton } from "@/components/common/buttons/GridToggleButton";
 import { LocationRouter } from "@/features/navigation/components/LocationRouter";
 import { TopBarProps } from "@/styles/types";
 import React from "react";
-import { GridToggleButton } from "../common/buttons/GridToggleButton";
 
 export const TopBar: React.FC<TopBarProps> = ({
   showGrid,
@@ -21,7 +21,7 @@ export const TopBar: React.FC<TopBarProps> = ({
     <div id="top-bar-desc" className="sr-only">
       This top bar contains controls for toggling the map grid and finding
       navigation paths between locations.
-    </div>
+    </div>``
     <GridToggleButton
       showGrid={showGrid}
       onToggle={onToggleGrid}

@@ -6,9 +6,9 @@ import {
 } from "@/styles/types";
 
 import {
-  deleteLocationFromFile,
-  readLocationsFromFile,
-  saveLocationToFile,
+  fetchLocationsFromSession,
+  removeLocationFromSession,
+  storeLocationInSession,
 } from "@/services/storage/browserLocationManager";
 import { getSettings } from "@/utils/accessibility/accessibilityStyles";
 import * as Icons from "@/utils/icons/icons";
@@ -31,7 +31,7 @@ export const QuickNavigation: React.FC<
 
   // Load saved locations on mount
   useEffect(() => {
-    const loadedLocations = readLocationsFromFile();
+    const loadedLocations = fetchLocationsFromSession();
     setSavedLocations(loadedLocations);
   }, []);
 
@@ -55,7 +55,7 @@ export const QuickNavigation: React.FC<
       icon: item.iconName, // Save the icon name
     };
 
-    if (saveLocationToFile(locationResult)) {
+    if (storeLocationInSession(locationResult)) {
       setSavedLocations((prev) => [...prev, locationResult]);
     }
   };
@@ -69,17 +69,21 @@ export const QuickNavigation: React.FC<
 
   // Handle location deletion
   const handleDeleteLocation = (location: LocationSearchResult) => {
-    if (deleteLocationFromFile(location)) {
-      setSavedLocations((prev) =>
-        prev.filter(
-          (loc) =>
-            !(
-              loc.name === location.name &&
-              loc.floor === location.floor &&
-              loc.location.x === location.location.x &&
-              loc.location.y === location.location.y
-            )
-        )
+    const success = removeLocationFromSession(location);
+    if (success) {
+      const updatedLocations = savedLocations.filter(
+        (loc) =>
+          !(
+            loc.name === location.name &&
+            loc.floor === location.floor &&
+            loc.location.x === location.location.x &&
+            loc.location.y === location.location.y
+          )
+      );
+      setSavedLocations(updatedLocations);
+      sessionStorage.setItem(
+        "savedLocations",
+        JSON.stringify(updatedLocations)
       );
     }
   };

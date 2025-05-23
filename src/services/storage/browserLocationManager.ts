@@ -2,8 +2,8 @@ import { LocationSearchResult } from "@/styles/types";
 
 const STORAGE_KEY = "savedLocations";
 
-// Default locations that will be used when storage is empty
-const defaultLocations: LocationSearchResult[] = [
+// Default locations that will be always present
+export const defaultLocations: LocationSearchResult[] = [
   {
     type: "utilityRoom",
     name: "Gymnasium",
@@ -11,6 +11,7 @@ const defaultLocations: LocationSearchResult[] = [
     location: { x: 10, y: 20 },
     description: "Sports and recreation area",
     color: "#4CAF50",
+    icon: "Location Pin",
   },
   {
     type: "bathroom",
@@ -19,6 +20,7 @@ const defaultLocations: LocationSearchResult[] = [
     location: { x: 15, y: 25 },
     description: "Public restrooms",
     color: "#2196F3",
+    icon: "Location Pin",
   },
   {
     type: "elevator",
@@ -27,6 +29,7 @@ const defaultLocations: LocationSearchResult[] = [
     location: { x: 5, y: 10 },
     description: "Main elevator access",
     color: "#673AB7",
+    icon: "Location Pin",
   },
   {
     type: "emergency",
@@ -35,6 +38,7 @@ const defaultLocations: LocationSearchResult[] = [
     location: { x: 30, y: 40 },
     description: "Emergency exit route",
     color: "#FF5722",
+    icon: "Location Pin",
   },
   {
     type: "facility",
@@ -43,36 +47,50 @@ const defaultLocations: LocationSearchResult[] = [
     location: { x: 50, y: 60 },
     description: "Water fountain",
     color: "#00BCD4",
+    icon: "Location Pin",
+  },
+  {
+    type: "exit",
+    location: { x: 10, y: 5 },
+    floor: 1,
+    name: "Exit",
+    description: "Location with exit",
+    color: "#2196F3",
+  },
+  {
+    type: "elevator",
+    location: { x: 12, y: 32 },
+    floor: 1,
+    name: "Elevator",
+    description: "Elevator location",
+    color: "#673AB7",
   },
 ];
 
-/**
- * Read all saved locations from localStorage.
- * If storage is empty, initializes it with default locations.
- */
-export const readLocationsFromFile = (): LocationSearchResult[] => {
+export const fetchLocationsFromSession = (): LocationSearchResult[] => {
   try {
-    const stored = localStorage.getItem(STORAGE_KEY);
+    const stored = sessionStorage.getItem(STORAGE_KEY);
     if (!stored) {
-      // Initialize with default locations if storage is empty
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(defaultLocations));
+      sessionStorage.setItem(STORAGE_KEY, JSON.stringify(defaultLocations));
       return defaultLocations;
     }
     return JSON.parse(stored);
   } catch (error) {
     console.error("Error reading locations:", error);
-    return defaultLocations; // Return defaults if there's an error
+    return defaultLocations;
   }
 };
 
 /**
- * Save a new location to localStorage
+ * Save a new location to sessionStorage
  */
-export const saveLocationToFile = (location: LocationSearchResult): boolean => {
+export const storeLocationInSession = (
+  location: LocationSearchResult
+): boolean => {
   try {
-    const locations = readLocationsFromFile();
+    const locations = fetchLocationsFromSession();
     locations.push(location);
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(locations));
+    sessionStorage.setItem(STORAGE_KEY, JSON.stringify(locations));
     return true;
   } catch (error) {
     console.error("Error saving location:", error);
@@ -81,14 +99,14 @@ export const saveLocationToFile = (location: LocationSearchResult): boolean => {
 };
 
 /**
- * Update an existing location in localStorage
+ * Update an existing location in sessionStorage
  */
-export const updateLocationInFile = (
+export const replaceLocationInSession = (
   oldLocation: LocationSearchResult,
   newLocation: LocationSearchResult
 ): boolean => {
   try {
-    const locations = readLocationsFromFile();
+    const locations = fetchLocationsFromSession();
     const index = locations.findIndex(
       (loc) =>
         loc.name === oldLocation.name &&
@@ -100,7 +118,7 @@ export const updateLocationInFile = (
     if (index === -1) return false;
 
     locations[index] = newLocation;
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(locations));
+    sessionStorage.setItem(STORAGE_KEY, JSON.stringify(locations));
     return true;
   } catch (error) {
     console.error("Error updating location:", error);
@@ -109,13 +127,13 @@ export const updateLocationInFile = (
 };
 
 /**
- * Delete a location from localStorage
+ * Delete a location from sessionStorage
  */
-export const deleteLocationFromFile = (
+export const removeLocationFromSession = (
   location: LocationSearchResult
 ): boolean => {
   try {
-    const locations = readLocationsFromFile();
+    const locations = fetchLocationsFromSession();
     const filteredLocations = locations.filter(
       (loc) =>
         !(
@@ -126,9 +144,7 @@ export const deleteLocationFromFile = (
         )
     );
 
-    if (filteredLocations.length === locations.length) return false;
-
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(filteredLocations));
+    sessionStorage.setItem(STORAGE_KEY, JSON.stringify(filteredLocations));
     return true;
   } catch (error) {
     console.error("Error deleting location:", error);
@@ -139,10 +155,10 @@ export const deleteLocationFromFile = (
 /**
  * Search for locations by query
  */
-export const searchLocationsInFile = (
+export const searchLocationsInSession = (
   query: string
 ): LocationSearchResult[] => {
-  const locations = readLocationsFromFile();
+  const locations = fetchLocationsFromSession();
   const lowerQuery = query.toLowerCase();
 
   return locations.filter(
