@@ -7,33 +7,68 @@ Campus Navigator is a modern, accessible wayfinding application built with React
 ### Accessibility
 - **Wheelchair Mode**: Optimized routes and time calculations for wheelchair users
 - **Visual Accessibility**: High contrast mode, adjustable text size, and accessible color schemes
-- **Audio Navigation**: Text-to-speech for route directions and location info
-- **Keyboard & Screen Reader Support**: All interactive elements are accessible via keyboard and have ARIA labels
+- **Audio Navigation**: Text-to-speech for route directions with adjustable speech settings
+- **Keyboard & Screen Reader Support**: Comprehensive ARIA labels and keyboard navigation
+- **Customizable Preferences**: User-specific settings for bathrooms and walking speed
 
 ### Pathfinding & Navigation
-- **Intelligent Routing**: Find the most efficient path between any two points
-- **Multi-floor Navigation**: Seamless navigation across floors with elevator and stair options
-- **Distance & Time Calculation**: Accurate distance (in meters) and time estimates based on:
-  - Path length (each tile = 1 meter)
-  - User-adjustable walking speed (m/s)
-  - Wheelchair adjustments (1.5x time factor)
-  - Floor transitions (60 seconds per floor change)
-- **Custom Locations**: Add and save your own navigation points
-- **Quick Navigation**: Shortcuts to commonly used destinations
+- **Intelligent Routing**: Advanced pathfinding with multiple routing options
+- **Multi-floor Navigation**: Seamless transitions between floors using elevators or stairs
+- **Smart Distance & Time Calculation**:
+  - Precise distance measurements (1 tile = 1 meter)
+  - Customizable walking speed (meters per second)
+  - Wheelchair-specific timing adjustments
+  - Floor transition time estimates
+  - Real-time path updates
+- **Location Management**:
+  - Session-based location saving
+  - Custom navigation points with icons and colors
+  - Quick access to frequently used destinations
+  - Search functionality for rooms and facilities
 
 ### User Interface
-- **Interactive Map**: Visual map with grid, start/end points, and path highlighting
-- **Map Legend**: Always visible at the bottom for easy reference
-- **Location Search**: Find rooms, facilities, and points of interest
-- **Floor Management**: Easily switch between building floors
-- **Sidebar Layout**: Left sidebar for navigation and settings, right sidebar for route details and accessibility options
-- **Responsive Design**: Works on all screen sizes
+- **Interactive Grid Map**: 
+  - Color-coded areas and entry points
+  - Dynamic path highlighting
+  - Visual indicators for start/end points
+- **Enhanced Map Legend**: 
+  - Split view showing room colors and entry points
+  - Comprehensive facility type indicators
+  - Hover descriptions for each element
+- **Dual Sidebar Layout**:
+  - Left: Navigation controls and custom locations
+  - Right: Route details and accessibility settings
+- **Responsive Design**: Optimized for all screen sizes and devices
 
-### Technical Details
-- Built with React 18+, TypeScript, and Vite
-- Modular, component-based architecture
-- Uses Tailwind CSS for styling
-- Accessible by design (ARIA, keyboard navigation, color contrast)
+### Technical Architecture
+- **Modern Stack**: React 18+, TypeScript, Vite
+- **Modular Structure**:
+  - Feature-based organization
+  - Reusable component library
+  - Separate service layer
+  - Clear type definitions
+- **State Management**: React hooks and context
+- **Styling**: Tailwind CSS with accessibility considerations
+- **Storage**: Session-based data persistence
+
+## Project Structure
+
+```
+src/
+  assets/              # Static assets and global styles
+  components/          # Reusable UI components
+    common/           # Common elements (buttons, inputs)
+    layout/           # Layout components
+    map/             # Map-related components
+  data/               # Application data
+    floors/          # Floor-specific data
+    tiles/           # Tile definitions
+  features/           # Core features
+    navigation/      # Navigation functionality
+    accessibility/   # Accessibility features
+  services/           # Business logic and data management
+  utils/              # Utility functions and helpers
+```
 
 ## Getting Started
 
@@ -44,7 +79,7 @@ Campus Navigator is a modern, accessible wayfinding application built with React
 git clone [repository-url]
 
 # Navigate to project directory
-cd final
+cd campus-navigator
 
 # Install dependencies
 npm install
@@ -54,12 +89,42 @@ npm run dev
 ```
 
 ### Usage
-1. Select your starting point and destination on the map or via search
-2. Toggle wheelchair mode or adjust accessibility settings as needed
-3. Click "Find Path" to generate the optimal route
-4. Use the navigation instructions or audio guidance to reach your destination
-5. Adjust walking speed and preferred bathroom type in the right sidebar for personalized results
+1. **Initial Setup**:
+   - Configure accessibility preferences
+   - Set your preferred walking speed
+   - Choose bathroom preferences if needed
+
+2. **Navigation**:
+   - Use search fields or map clicks to set start/end points
+   - Toggle wheelchair mode if required
+   - Click "Find Path" to generate route
+
+3. **Customization**:
+   - Save frequently used locations
+   - Create custom navigation points
+   - Adjust audio settings for navigation
+
+4. **Following Routes**:
+   - Follow highlighted path on the map
+   - Use audio guidance if needed
+   - Switch floors when indicated
+   - Check estimated time and distance
 
 ## Development
 
-This project uses React, TypeScript, and Vite. For more details, see the codebase and comments in each component. Contributions and accessibility improvements are welcome!
+### Prerequisites
+- Node.js 16+
+- npm or yarn
+- Understanding of React and TypeScript
+
+### Key Files
+- `src/features/navigation/` - Core navigation logic
+- `src/components/map/` - Map rendering and interaction
+- `src/services/storage/` - Data persistence layer
+- `src/utils/accessibility/` - Accessibility utilities
+
+### Best Practices
+- Follow TypeScript type definitions
+- Maintain ARIA labels and accessibility features
+- Use provided utility functions
+- Follow the established component structure
