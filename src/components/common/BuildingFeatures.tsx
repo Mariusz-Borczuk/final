@@ -1,5 +1,5 @@
-import { AccessibilitySettingsProps } from "@/styles/types";
-import { getSettings } from "@/utils/accessibility/accessibilityStyles";
+import { AccessibilitySettingsProps, getSettings } from "@/styles/types";
+
 import React from "react";
 
 export const BuildingFeatures: React.FC<AccessibilitySettingsProps> = ({

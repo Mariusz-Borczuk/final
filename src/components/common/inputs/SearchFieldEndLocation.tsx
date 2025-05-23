@@ -3,13 +3,11 @@ import {
   allFloorData,
   Coordinate,
   coordRegex,
+  getEndLocationStyles,
+  getSettings,
   LocationSearchProps,
   LocationSearchResult,
 } from "@/styles/types";
-import {
-  getEndLocationStyles,
-  getSettings,
-} from "@/utils/accessibility/accessibilityStyles";
 import {
   FaMapMarkerAlt,
   MdLocationPin,

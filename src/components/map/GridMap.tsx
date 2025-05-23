@@ -6,6 +6,7 @@ import {
   Elevator,
   Exit,
   FireEquipment,
+  getSettings,
   HighlightedCellDetails,
   Path,
   PathSegment,
@@ -14,7 +15,7 @@ import {
   Stair,
   UtilityRoom,
 } from "@/styles/types";
-import { getSettings } from "@/utils/accessibility/accessibilityStyles";
+
 import { useState } from "react";
 
 /**

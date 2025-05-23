@@ -1,6 +1,6 @@
 import { AccessibleTTSButton } from "@/components/common/SpeechOutput";
-import { PreferredBathroom, RightSidebarProps, Route } from "@/styles/types";
-import { getSettings } from "@/utils/accessibility/accessibilityStyles";
+import { getSettings, PreferredBathroom, RightSidebarProps, Route } from "@/styles/types";
+
 import { useEffect, useState } from "react";
 import { FaRestroom, FaWheelchair } from "react-icons/fa";
 import { MdFemale, MdMale } from "react-icons/md";

@@ -1,6 +1,6 @@
 import { tileData } from "@/data/tiles/tileData";
-import { AccessibilitySettings, MapLegendProps } from "@/styles/types";
-import { getSettings } from "@/utils/accessibility/accessibilityStyles";
+import { AccessibilitySettings, getSettings, MapLegendProps } from "@/styles/types";
+
 import React from "react";
 
 /**

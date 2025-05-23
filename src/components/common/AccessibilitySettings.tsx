@@ -1,5 +1,4 @@
-import { AccessibilitySettings } from "@/styles/types";
-import { getSettings } from "@/utils/accessibility/accessibilityStyles";
+import { AccessibilitySettings, getSettings } from "@/styles/types";
 import { FaWheelchair, FiType, IoMdEye } from "@/utils/icons/icons";
 import React from "react";
 import { AccessibilityButton } from "./buttons/AccessibilityButton";

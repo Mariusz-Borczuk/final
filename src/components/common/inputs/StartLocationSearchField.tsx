@@ -3,12 +3,11 @@ import {
   allFloorData,
   Coordinate,
   coordRegex,
-  LocationSearchResult,
-} from "@/styles/types";
-import {
   getSettings,
   getStartLocationStyles,
-} from "@/utils/accessibility/accessibilityStyles";
+  LocationSearchResult,
+} from "@/styles/types";
+
 import { FaPlay, MdLocationPin, SiGoogleclassroom } from "@/utils/icons/icons";
 import React, { useEffect, useState } from "react";
 

@@ -1,5 +1,6 @@
 import {
   AccessibilitySettings,
+  getSettings,
   LocationSearchResult,
   NavigationItem,
   RightSidebarProps,
@@ -10,7 +11,6 @@ import {
   removeLocationFromSession,
   storeLocationInSession,
 } from "@/services/storage/browserLocationManager";
-import { getSettings } from "@/utils/accessibility/accessibilityStyles";
 import * as Icons from "@/utils/icons/icons";
 import React, { useEffect, useState } from "react";
 import { IconType } from "react-icons";

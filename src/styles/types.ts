@@ -352,13 +352,117 @@ export function highlightLocation(
   };
 }
 export function formatIconName(componentName: string): string {
-  // Remove common prefixes like Md, Fa, Io, etc.
   const nameWithoutPrefix = componentName.replace(
     /^(Md|SiGoogle|Si|Fa|Io|Gi|Fi|Bi|Bs|Ri|Ti|Vsc|Wi)/,
     ""
   );
-  // Insert a space before capital letters (CamelCase to Title Case)
   const spacedName = nameWithoutPrefix.replace(/([A-Z])/g, " $1").trim();
-  // Capitalize the first letter
+
   return spacedName.charAt(0).toUpperCase() + spacedName.slice(1);
 }
+
+/** Accessibility Settings
+  *getSettings: Generates a string of CSS classes based on accessibility settings.
+  *getStartLocationStyles: Returns styles for the start location input based on accessibility settings.
+  *getEndLocationStyles: Returns styles for the end location input based on accessibility settings.
+  *getSearchStyles: Returns styles for the search input based on accessibility settings.
+*/
+export const getSettings = ({
+  contrast,
+  fontSize,
+}: AccessibilitySettings): string => {
+  return `${contrast === "high" ? "text-orange-400" : "text-slate-50"} ${
+    fontSize === "large"
+      ? "text-lg"
+      : fontSize === "xlarge"
+      ? "text-2xl"
+      : fontSize === "normal"
+      ? "text-base"
+      : ""
+  }`.trim();
+};
+export const getStartLocationStyles = (settings?: AccessibilitySettings) => {
+  const highContrast = settings?.contrast === "high";
+  const textColor = highContrast ? "text-green-500" : "text-green-600";
+  const inputBorderWidth = highContrast ? "3" : "2";
+
+  return {
+    labelText: `${textColor} font-bold`,
+    inputBg: highContrast ? "bg-gray-100" : "bg-white",
+    inputText: highContrast ? "text-green-800 font-bold" : "text-green-700",
+    inputBorder: `border-${inputBorderWidth} border-${
+      highContrast ? "green-600" : "green-500"
+    }`,
+    buttonBg: highContrast
+      ? "bg-green-700 hover:bg-green-800"
+      : "bg-green-500 hover:bg-green-600",
+    buttonText: "text-white",
+    dropdownBg: highContrast ? "bg-gray-900" : "bg-white",
+    dropdownBorder: `border-${inputBorderWidth} border-${
+      highContrast ? "green-600" : "green-500"
+    }`,
+    dropdownItemHover: highContrast ? "hover:bg-gray-700" : "hover:bg-green-50",
+    resultText: `${textColor} font-bold`,
+    resultDetailText: textColor,
+    highlightBadge: highContrast
+      ? "bg-green-800 text-white font-bold"
+      : "bg-green-100 text-green-800",
+    iconColor: "text-white",
+  };
+};
+export const getEndLocationStyles = (settings?: AccessibilitySettings) => {
+  const highContrast = settings?.contrast === "high";
+  const textColor = highContrast ? "text-red-500" : "text-red-600";
+  const inputBorderWidth = highContrast ? "3" : "2";
+
+  return {
+    labelText: `${textColor} font-bold`,
+    inputBg: highContrast ? "bg-gray-100" : "bg-white",
+    inputText: highContrast ? "text-red-800 font-bold" : "text-red-700",
+    inputBorder: `border-${inputBorderWidth} border-${
+      highContrast ? "red-600" : "red-500"
+    }`,
+    buttonBg: highContrast
+      ? "bg-red-700 hover:bg-red-800"
+      : "bg-red-500 hover:bg-red-600",
+    buttonText: "text-white",
+    dropdownBg: highContrast ? "bg-gray-900" : "bg-white",
+    dropdownBorder: `border-${inputBorderWidth} border-${
+      highContrast ? "red-600" : "red-500"
+    }`,
+    dropdownItemHover: highContrast ? "hover:bg-gray-700" : "hover:bg-red-50",
+    resultText: `${textColor} font-bold`,
+    resultDetailText: textColor,
+    highlightBadge: highContrast
+      ? "bg-red-800 text-white font-bold"
+      : "bg-red-100 text-red-800",
+    iconColor: "text-white",
+  };
+};
+export const getSearchStyles = (settings?: AccessibilitySettings) => {
+  const highContrast = settings?.contrast === "high";
+
+  return {
+    labelText: highContrast
+      ? "text-gray-100 font-bold text-2xl"
+      : "text-gray-200",
+    inputBg: highContrast ? "bg-gray-100" : "bg-white",
+    inputText: highContrast ? "text-gray-900 font-bold" : "text-gray-800",
+    inputBorder: highContrast
+      ? "border-3 border-blue-600"
+      : "border border-gray-300",
+    buttonBg: highContrast ? "bg-blue-700" : "bg-blue-600 hover:bg-blue-700",
+    buttonText: "text-white" + (highContrast ? " font-bold" : ""),
+    dropdownBg: highContrast ? "bg-gray-900" : "bg-white",
+    dropdownBorder: highContrast
+      ? "border-3 border-blue-600"
+      : "border border-gray-300",
+    dropdownItemHover: highContrast ? "hover:bg-gray-700" : "hover:bg-gray-100",
+    resultText: highContrast ? "text-gray-200 font-bold" : "text-gray-800",
+    resultDetailText: highContrast ? "text-gray-200" : "text-gray-500",
+    highlightBadge: highContrast
+      ? "bg-blue-700 text-white font-bold right-0"
+      : "bg-blue-100 text-blue-800",
+    iconColor: "text-white",
+  };
+};
