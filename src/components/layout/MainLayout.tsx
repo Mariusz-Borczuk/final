@@ -7,9 +7,9 @@ import {
 } from "@/styles/types";
 import React, { useState } from "react";
 import { MapView } from "../map/MapView";
-import { LeftSidebar } from "./Sidebar/LeftSidebar";
-import { RightSidebar } from "./Sidebar/RightSidebar";
-import { TopBar } from "./TopBar";
+import { LeftSidebar } from "./sidebar/LeftSidebar";
+import { RightSidebar } from "./sidebar/RightSidebar";
+import { TopBar } from "./sidebar/TopBar";
 
 /**
  * WayfindingApp3 component represents the main layout for the wayfinding application.

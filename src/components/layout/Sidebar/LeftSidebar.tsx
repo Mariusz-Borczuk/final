@@ -4,7 +4,7 @@ import { FloorManagement } from "@/components/common/FloorManagement";
 import { QuickNavigation } from "@/features/navigation/components/QuickNavigation";
 import { LeftSidebarProps } from "@/styles/types";
 import React from "react";
-import { MainHeader } from "../MainHeader";
+import { MainHeader } from "../../common/MainHeader";
 
 /**
  * LeftSidebar component that houses the main navigation elements.
