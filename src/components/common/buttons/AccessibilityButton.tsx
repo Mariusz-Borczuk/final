@@ -1,4 +1,4 @@
-import { AccessibilityButtonProps } from "@/assets/styles/types";
+import { AccessibilityButtonProps } from "@/styles/types";
 import React from "react";
 
 /**

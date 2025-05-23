@@ -1,8 +1,8 @@
-import { LeftSidebarProps } from "@/assets/styles/types";
 import { AccessibilitySettingsPanel } from "@/components/common/AccessibilitySettings";
 import { BuildingFeatures } from "@/components/common/BuildingFeatures";
 import { FloorManagement } from "@/components/common/FloorManagement";
 import { QuickNavigation } from "@/features/navigation/components/QuickNavigation";
+import { LeftSidebarProps } from "@/styles/types";
 import React from "react";
 import { MainHeader } from "../MainHeader";
 

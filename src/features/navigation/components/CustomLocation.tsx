@@ -1,10 +1,10 @@
+import IconSelector from "@/components/common/IconSelector";
 import {
   AddLocationButtonProps,
   formatIconName,
   LocationSearchResult,
   NavigationItem,
-} from "@/assets/styles/types";
-import IconSelector from "@/components/common/IconSelector";
+} from "@/styles/types";
 import { IoMdArrowDropdown, MdLocationPin } from "@/utils/icons/icons";
 import React, { useState } from "react";
 

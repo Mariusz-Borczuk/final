@@ -1,4 +1,4 @@
-import { LocationSearchResult } from "@/assets/styles/types";
+import { LocationSearchResult } from "@/styles/types";
 import * as fs from "fs";
 import * as path from "path";
 

@@ -1,10 +1,24 @@
-import { PathSegmentsProps, HighlightedCellDetails, AccessibilitySettings, allFloorData, Room, Bathroom, Elevator, UtilityRoom, Stair, FireEquipment, Exit, Path, PathSegment } from "@/assets/styles/types";
 import { CellType, tileData } from "@/data/tiles/tileData";
+import {
+  AccessibilitySettings,
+  allFloorData,
+  Bathroom,
+  Elevator,
+  Exit,
+  FireEquipment,
+  HighlightedCellDetails,
+  Path,
+  PathSegment,
+  PathSegmentsProps,
+  Room,
+  Stair,
+  UtilityRoom,
+} from "@/styles/types";
 import { getSettings } from "@/utils/accessibility/accessibilityStyles";
 import { useState } from "react";
 
 /**
- * GridMap component renders a visual representation of a floor map with various room 
+ * GridMap component renders a visual representation of a floor map with various room
  *
  * This component takes floor data and renders a grid-based visualization showing classrooms,
  * bathrooms, elevators, utility rooms, stairs, fire equipment, and paths. It handles:
@@ -34,8 +48,9 @@ export const GridMap: React.FC<PathSegmentsProps> = ({
   pathSegments = [],
 }) => {
   const gridSize = 60;
-  const [hoveredCell, setHoveredCell] =
-    useState<HighlightedCellDetails | null>(null);
+  const [hoveredCell, setHoveredCell] = useState<HighlightedCellDetails | null>(
+    null
+  );
 
   // Get specifically the font size class for elements that need independent scaling
   const fontSizeClass = settings

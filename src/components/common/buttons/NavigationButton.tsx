@@ -1,4 +1,4 @@
-import { AccessibilitySettings, PathSegment } from "@/assets/styles/types";
+import { AccessibilitySettings, PathSegment } from "@/styles/types";
 import { FaArrowRight, FaCheck } from "@/utils/icons/icons";
 import React, { useMemo } from "react";
 

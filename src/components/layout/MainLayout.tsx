@@ -4,7 +4,7 @@ import {
   LayoutProps,
   LocationSearchResult,
   PathSegment,
-} from "@/assets/styles/types";
+} from "@/styles/types";
 import React, { useState } from "react";
 import { MapView } from "../map/MapView";
 import { LeftSidebar } from "./Sidebar/LeftSidebar";

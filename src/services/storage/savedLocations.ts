@@ -1,4 +1,4 @@
-import { LocationSearchResult } from "@/assets/styles/types";
+import { LocationSearchResult } from "@/styles/types";
 
 // Initial building features
 export const savedLocations: LocationSearchResult[] = [

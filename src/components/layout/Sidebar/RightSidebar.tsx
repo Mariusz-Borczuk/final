@@ -1,13 +1,9 @@
-import {
-  PreferredBathroom,
-  RightSidebarProps,
-  Route,
-} from "@/assets/styles/types";
 import { AccessibleTTSButton } from "@/components/common/SpeechOutput";
+import { PreferredBathroom, RightSidebarProps, Route } from "@/styles/types";
 import { getSettings } from "@/utils/accessibility/accessibilityStyles";
-import { useState, useEffect } from "react";
-import { FaWheelchair, FaRestroom } from "react-icons/fa";
-import { MdMale, MdFemale } from "react-icons/md";
+import { useEffect, useState } from "react";
+import { FaRestroom, FaWheelchair } from "react-icons/fa";
+import { MdFemale, MdMale } from "react-icons/md";
 
 /**
  * Right sidebar component that displays details about the current location and accessibility features

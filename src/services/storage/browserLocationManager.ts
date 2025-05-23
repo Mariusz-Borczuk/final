@@ -1,4 +1,4 @@
-import { LocationSearchResult } from "@/assets/styles/types";
+import { LocationSearchResult } from "@/styles/types";
 
 const STORAGE_KEY = "savedLocations";
 

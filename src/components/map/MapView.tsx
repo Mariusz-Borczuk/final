@@ -1,4 +1,4 @@
-import { PathSegmentsProps } from "@/assets/styles/types";
+import { PathSegmentsProps } from "@/styles/types";
 import React, { useRef } from "react";
 import { GridMap } from "./GridMap";
 import { MapLegend } from "./MapLegend";

@@ -1,4 +1,4 @@
-import { FindPathButtonProps } from "@/assets/styles/types";
+import { FindPathButtonProps } from "@/styles/types";
 import { FaRoute, FaWheelchair } from "@/utils/icons/icons";
 import React, { useMemo } from "react";
 

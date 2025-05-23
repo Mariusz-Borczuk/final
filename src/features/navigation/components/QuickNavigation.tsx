@@ -3,14 +3,18 @@ import {
   LocationSearchResult,
   NavigationItem,
   RightSidebarProps,
-} from "@/assets/styles/types";
+} from "@/styles/types";
 
+import {
+  deleteLocationFromFile,
+  readLocationsFromFile,
+  saveLocationToFile,
+} from "@/services/storage/browserLocationManager";
+import { getSettings } from "@/utils/accessibility/accessibilityStyles";
 import * as Icons from "@/utils/icons/icons";
 import React, { useEffect, useState } from "react";
 import { IconType } from "react-icons";
 import { AddCustomNavigationButton } from "./CustomLocation";
-import { readLocationsFromFile, saveLocationToFile, deleteLocationFromFile } from "@/services/storage/browserLocationManager";
-import { getSettings } from "@/utils/accessibility/accessibilityStyles";
 
 /**
  * QuickNavigation component provides a list of saved locations and custom navigation items.

@@ -1,4 +1,4 @@
-import { IconSelectorProps } from "@/assets/styles/types";
+import { IconSelectorProps } from "@/styles/types";
 import * as Icons from "@/utils/icons/icons";
 import React from "react";
 

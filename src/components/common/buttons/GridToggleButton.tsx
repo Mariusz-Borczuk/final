@@ -1,7 +1,4 @@
-import {
-  AccessibilitySettings,
-  GridToggleButtonProps,
-} from "@/assets/styles/types";
+import { AccessibilitySettings, GridToggleButtonProps } from "@/styles/types";
 import { getSettings } from "@/utils/accessibility/accessibilityStyles";
 import { IoMdGrid } from "@/utils/icons/icons";
 import { ToggleButtonContainer } from "../ToggleButtonContainer";

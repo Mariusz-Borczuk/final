@@ -1,4 +1,4 @@
-import { AccessibilitySettings } from "@/assets/styles/types";
+import { AccessibilitySettings } from "@/styles/types";
 import { getSettings } from "@/utils/accessibility/accessibilityStyles";
 import { FaWheelchair, FiType, IoMdEye } from "@/utils/icons/icons";
 import React from "react";

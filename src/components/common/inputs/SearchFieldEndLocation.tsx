@@ -5,7 +5,7 @@ import {
   coordRegex,
   LocationSearchProps,
   LocationSearchResult,
-} from "@/assets/styles/types";
+} from "@/styles/types";
 import {
   getEndLocationStyles,
   getSettings,

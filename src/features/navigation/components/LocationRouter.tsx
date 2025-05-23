@@ -1,12 +1,12 @@
-import {
-  LocationSearchResult,
-  PathFinderProps,
-  PathSegment,
-} from "@/assets/styles/types";
 import { FindPathButton } from "@/components/common/buttons/FindPathButton";
 import { NavigationButton } from "@/components/common/buttons/NavigationButton";
 import { EndLocationSearchField } from "@/components/common/inputs/SearchFieldEndLocation";
 import { StartLocationSearchField } from "@/components/common/inputs/StartLocationSearchField";
+import {
+  LocationSearchResult,
+  PathFinderProps,
+  PathSegment,
+} from "@/styles/types";
 import React, { useCallback, useState } from "react";
 import { RouteNavigator } from "../services/RouteCalculator";
 

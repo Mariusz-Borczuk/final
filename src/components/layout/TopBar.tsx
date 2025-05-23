@@ -1,5 +1,5 @@
-import { TopBarProps } from "@/assets/styles/types";
 import { LocationRouter } from "@/features/navigation/components/LocationRouter";
+import { TopBarProps } from "@/styles/types";
 import React from "react";
 import { GridToggleButton } from "../common/buttons/GridToggleButton";
 

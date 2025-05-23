@@ -1,4 +1,13 @@
-import { RouteFinderProps, FloorData, Coordinate, Elevator, Stair, TransitPoint, PathSegment, allFloorData } from "@/assets/styles/types";
+import {
+  Coordinate,
+  Elevator,
+  FloorData,
+  PathSegment,
+  RouteFinderProps,
+  Stair,
+  TransitPoint,
+  allFloorData,
+} from "@/styles/types";
 
 /**
  * Core PathFinder function that calculates paths between locations.

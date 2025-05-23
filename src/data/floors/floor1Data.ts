@@ -1,4 +1,4 @@
-import { FloorData } from "@/assets/styles/types";
+import { FloorData } from "@/styles/types";
 
 /**
  * Data representation of the first floor layout.

@@ -3,7 +3,7 @@ import {
   SpeechSettings,
   TextToSpeechOptions,
   TTSControlButtonProps,
-} from "@/assets/styles/types";
+} from "@/styles/types";
 import React, { useEffect, useState } from "react";
 
 /**

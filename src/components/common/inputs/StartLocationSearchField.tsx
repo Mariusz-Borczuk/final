@@ -4,8 +4,11 @@ import {
   Coordinate,
   coordRegex,
   LocationSearchResult,
-} from "@/assets/styles/types";
-import { getSettings, getStartLocationStyles } from "@/utils/accessibility/accessibilityStyles";
+} from "@/styles/types";
+import {
+  getSettings,
+  getStartLocationStyles,
+} from "@/utils/accessibility/accessibilityStyles";
 import { FaPlay, MdLocationPin, SiGoogleclassroom } from "@/utils/icons/icons";
 import React, { useEffect, useState } from "react";
 
