@@ -1,11 +1,10 @@
-import IconSelector from "@/components/common/IconSelector";
 import {
   AddLocationButtonProps,
   formatIconName,
   LocationSearchResult,
   NavigationItem,
 } from "@/styles/types";
-import { IoMdArrowDropdown, MdLocationPin } from "@/utils/icons/icons";
+import { MdLocationPin } from "@/utils/icons/icons";
 import React, { useState } from "react";
 
 /**
@@ -31,7 +30,6 @@ export const AddCustomNavigationButton: React.FC<
   );
   const [selectedIconName, setSelectedIconName] = useState("MdLocationPin");
   const [markerColor, setMarkerColor] = useState("#4CAF50"); // Default green color
-  const [isIconSelectorOpen, setIsIconSelectorOpen] = useState(false);
 
   const colorOptions = [
     { name: "Blue", value: "#0072B2" },
@@ -80,13 +78,6 @@ export const AddCustomNavigationButton: React.FC<
     setCoordinates({ x: 0, y: 0 });
     setSelectedIcon(<MdLocationPin />);
     setSelectedIconName("MdLocationPin");
-  };
-
-  // Handle icon selection from IconSelector
-  const handleIconSelect = (icon: React.ReactNode, iconName: string) => {
-    setSelectedIcon(icon);
-    setSelectedIconName(iconName);
-    setIsIconSelectorOpen(false);
   };
 
   return (
@@ -251,77 +242,6 @@ export const AddCustomNavigationButton: React.FC<
                     </span>
                   </div>
                 </div>
-              </div>
-              {/* Icon Selection */}
-              <div className="mb-4">
-                <label
-                  className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
-                  id="icon-select-label"
-                >
-                  Icon:
-                  <span className="sr-only">
-                    Required. Select an icon for your custom location.
-                  </span>
-                </label>
-                <div className="flex items-center gap-3">
-                  <div className="w-14 h-14 bg-white dark:bg-gray-700 border-2 border-blue-500 rounded-md flex items-center justify-center">
-                    <div
-                      className="w-10 h-10 rounded-lg flex items-center justify-center"
-                      style={{ backgroundColor: markerColor }}
-                    >
-                      <span className="text-xl text-white">{selectedIcon}</span>
-                    </div>
-                  </div>
-                  <div className="flex-1">
-                    <button
-                      type="button"
-                      onClick={() => setIsIconSelectorOpen(!isIconSelectorOpen)}
-                      className="block w-full text-left px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      aria-haspopup="dialog"
-                      aria-expanded={isIconSelectorOpen}
-                      aria-controls="icon-selector-panel"
-                      aria-labelledby="icon-select-label"
-                      aria-describedby="icon-select-desc"
-                    >
-                      <div className="flex items-center justify-between">
-                        <span>
-                          <span className="flex flex-col">
-                            {formatIconName(selectedIconName)}
-                            <span className="text-xs text-gray-500 dark:text-gray-400">
-                              (Click to change)
-                            </span>
-                          </span>
-                        </span>
-                        <span className="text-gray-400 text-3xl">
-                          <IoMdArrowDropdown />
-                        </span>
-                      </div>
-                    </button>
-                    <span id="icon-select-desc" className="sr-only">
-                      Click to open the icon selection dialog and choose an icon
-                      for your custom location.
-                    </span>
-                  </div>
-                </div>
-                {isIconSelectorOpen && (
-                  <div
-                    id="icon-selector-panel"
-                    className="mt-2 max-h-64 overflow-auto border border-gray-300 dark:border-gray-600 rounded-md shadow-lg"
-                    role="dialog"
-                    aria-modal="true"
-                    aria-label="Icon selection dialog"
-                    aria-describedby="icon-selector-desc"
-                  >
-                    <span id="icon-selector-desc" className="sr-only">
-                      Select an icon from the list for your custom navigation
-                      point.
-                    </span>
-                    <IconSelector
-                      selectedIcon={selectedIcon}
-                      onIconSelect={handleIconSelect}
-                    />
-                  </div>
-                )}
               </div>
               {/* Color Selection */}
               <div className="mb-4">
