@@ -21,7 +21,7 @@ export const TopBar: React.FC<TopBarProps> = ({
     <div id="top-bar-desc" className="sr-only">
       This top bar contains controls for toggling the map grid and finding
       navigation paths between locations.
-    </div>``
+    </div>
     <GridToggleButton
       showGrid={showGrid}
       onToggle={onToggleGrid}
