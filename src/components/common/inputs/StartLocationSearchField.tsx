@@ -15,7 +15,7 @@ import React, { useEffect, useState } from "react";
  * Props for the search field, onSearch returns the full LocationSearchResult
  */
 interface LocationSearchFieldProps {
-  onSearch: (result: LocationSearchResult | null) => void; // Changed signature
+  onSearch: (result: LocationSearchResult | null) => void;
   currentFloor: number;
   setCurrentFloor?: (floor: number) => void;
   settings?: any;

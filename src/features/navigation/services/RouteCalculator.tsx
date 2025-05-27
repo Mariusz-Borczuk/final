@@ -19,21 +19,27 @@ export const RouteNavigator = ({
   isWheelchair,
   onPathFound,
   onError,
-  preferredBathroom,
-}: RouteFinderProps): null => {
+}: RouteFinderProps) => {
   /**
-   * Find all elevator entry points on a floor
+   * Find all elevators and stairs entry points on a floor
    */
-  const findElevatorEntryPoints = (floorData: FloorData): Coordinate[] => {
-    return floorData.elevators.map((elevator: Elevator) => elevator.entry);
+  const findEntryPoints = (
+    floorData: FloorData,
+    type: "elevator" | "stair"
+  ): Coordinate[] => {
+    if (type === "elevator") {
+      return floorData.elevators.map((elevator: Elevator) => elevator.entry);
+    } else {
+      return floorData.stairs.map((stair: Stair) => stair.entry);
+    }
   };
 
-  /**
-   * Find all stair entry points on a floor
-   */
-  const findStairEntryPoints = (floorData: FloorData): Coordinate[] => {
-    return floorData.stairs.map((stair: Stair) => stair.entry);
-  };
+  // Basic coordinate check helper function
+  const isWithinBounds = (x: number, y: number): boolean =>
+    x >= 0 && y >= 0 && x < 60 && y < 60;
+
+  const matchesPoint = (point: Coordinate, x: number, y: number): boolean =>
+    point.x === x && point.y === y;
 
   /**
    * Check if a tile is a valid path tile or an entry point of any room type
@@ -41,102 +47,58 @@ export const RouteNavigator = ({
   const isValidPathTile = (
     floorData: FloorData,
     x: number,
-    y: number
+    y: number,
+    preferredBathroom?: string
   ): boolean => {
-    // Check grid bounds
-    if (x < 0 || y < 0 || x >= 60 || y >= 60) return false;
+    if (!isWithinBounds(x, y)) return false;
 
-    // Check if the coordinate falls within any path rectangle
-    const isOnPath = floorData.paths.some(
-      (path) =>
-        x >= Math.min(path.start.x, path.end.x) &&
-        x <= Math.max(path.start.x, path.end.x) &&
-        y >= Math.min(path.start.y, path.end.y) &&
-        y <= Math.max(path.start.y, path.end.y)
-    );
-
-    if (isOnPath) return true;
-
-    // Check if it's an entry point to a classroom
-    const isClassroomEntry = floorData.classrooms.some((room) => {
-      if (Array.isArray(room.entry)) {
-        return room.entry.some((entry) => entry.x === x && entry.y === y);
-      }
-      return room.entry && room.entry.x === x && room.entry.y === y;
-    });
-
-    if (isClassroomEntry) return true;
-
-    // Check bathroom entry points
-    if (isBathroomEntry(floorData, x, y)) return true;
-
-    // Check elevator entry points
-    if (isElevatorEntry(floorData, x, y)) return true;
-
-    // Check stair entry points
-    if (isStairEntry(floorData, x, y)) return true;
-
-    // Check utility room entry points
-    return isUtilityRoomEntry(floorData, x, y);
-  };
-
-  /**
-   * Determine if a point is an elevator entry
-   */
-  const isElevatorEntry = (
-    floorData: FloorData,
-    x: number,
-    y: number
-  ): boolean => {
-    return floorData.elevators.some(
-      (elevator) => elevator.entry.x === x && elevator.entry.y === y
+    // Check all entry points in a single pass
+    return (
+      floorData.paths.some(
+        (path) =>
+          x >= Math.min(path.start.x, path.end.x) &&
+          x <= Math.max(path.start.x, path.end.x) &&
+          y >= Math.min(path.start.y, path.end.y) &&
+          y <= Math.max(path.start.y, path.end.y)
+      ) ||
+      floorData.classrooms.some((room) =>
+        Array.isArray(room.entry)
+          ? room.entry.some((entry) => matchesPoint(entry, x, y))
+          : room.entry && matchesPoint(room.entry, x, y)
+      ) ||
+      floorData.bathrooms.some(
+        (bathroom) =>
+          matchesPoint(bathroom.entry, x, y) &&
+          (!preferredBathroom ||
+            bathroom.type === preferredBathroom ||
+            preferredBathroom === "Any")
+      ) ||
+      floorData.elevators.some((elevator) =>
+        matchesPoint(elevator.entry, x, y)
+      ) ||
+      floorData.stairs.some((stair) => matchesPoint(stair.entry, x, y)) ||
+      floorData.utilityRooms.some((room) => matchesPoint(room.entry, x, y))
     );
   };
 
   /**
-   * Determine if a point is a stair entry
+   * Determine if a point is an elevator or stair entry
    */
-  const isStairEntry = (
+  const isTransitEntry = (
     floorData: FloorData,
     x: number,
-    y: number
+    y: number,
+    type: "elevator" | "stair"
   ): boolean => {
-    return floorData.stairs.some(
-      (stair) => stair.entry.x === x && stair.entry.y === y
-    );
-  };
-
-  /**
-   * Check if it's an entry point to a bathroom that matches user preferences
-   */
-  const isBathroomEntry = (
-    floorData: FloorData,
-    x: number,
-    y: number
-  ): boolean => {
-    const bathroomAtLocation = floorData.bathrooms.find(
-      (b) => b.entry.x === x && b.entry.y === y
-    );
-
-    if (!bathroomAtLocation) return false;
-
-    if (preferredBathroom === "Male" || preferredBathroom === "Female") {
-      return bathroomAtLocation.type === preferredBathroom;
+    if (type === "elevator") {
+      return floorData.elevators.some(
+        (elevator) => elevator.entry.x === x && elevator.entry.y === y
+      );
+    } else {
+      return floorData.stairs.some(
+        (stair) => stair.entry.x === x && stair.entry.y === y
+      );
     }
-    return true;
-  };
-
-  /**
-   * Check if it's a utility room entry point
-   */
-  const isUtilityRoomEntry = (
-    floorData: FloorData,
-    x: number,
-    y: number
-  ): boolean => {
-    return floorData.utilityRooms.some(
-      (room) => room.entry.x === x && room.entry.y === y
-    );
   };
 
   /**
@@ -170,7 +132,7 @@ export const RouteNavigator = ({
       }
     }
 
-    return null; // No valid path tile found nearby
+    return null;
   };
 
   /**
@@ -194,23 +156,16 @@ export const RouteNavigator = ({
     startY: number
   ): TransitPoint | null | undefined => {
     const transitPoints: TransitPoint[] = [];
+    const elevatorEntries = findEntryPoints(floorData, "elevator");
+    elevatorEntries.forEach((entry) => {
+      transitPoints.push({ coord: entry, isElevator: true });
+    });
 
-    if (isWheelchair) {
-      // Wheelchair users can only use elevators
-      const elevatorEntries = findElevatorEntryPoints(floorData);
-      elevatorEntries.forEach((entry) => {
-        transitPoints.push({ coord: entry, isElevator: true });
-      });
-    } else {
-      // Non-wheelchair users prefer stairs but can use elevators too
-      const stairEntries = findStairEntryPoints(floorData);
-      const elevatorEntries = findElevatorEntryPoints(floorData);
+    if (!isWheelchair) {
+      const stairEntries = findEntryPoints(floorData, "stair");
 
       stairEntries.forEach((entry) => {
         transitPoints.push({ coord: entry, isElevator: false });
-      });
-      elevatorEntries.forEach((entry) => {
-        transitPoints.push({ coord: entry, isElevator: true });
       });
     }
 
@@ -269,6 +224,21 @@ export const RouteNavigator = ({
     }
 
     const queue: Array<{ x: number; y: number; path: Coordinate[] }> = [];
+    const transitChecks = new Map<
+      string,
+      { isElevator: boolean; isStair: boolean }
+    >();
+
+    // Pre-check the start and end points for transit status
+    const checkAndCacheTransit = (point: Coordinate) => {
+      const key = `${point.x},${point.y}`;
+      if (!transitChecks.has(key)) {
+        transitChecks.set(key, {
+          isElevator: isTransitEntry(floorData, point.x, point.y, "elevator"),
+          isStair: isTransitEntry(floorData, point.x, point.y, "stair"),
+        });
+      }
+    };
 
     // Start path
     const initialPath: Coordinate[] =
@@ -294,12 +264,21 @@ export const RouteNavigator = ({
         // Convert path coordinates to segments
         return path.slice(0, -1).map((start, i) => {
           const end = path[i + 1] as Coordinate;
+
+          // Cache transit checks for both points
+          checkAndCacheTransit(start);
+          checkAndCacheTransit(end);
+
+          const startTransit = transitChecks.get(`${start.x},${start.y}`);
+          const endTransit = transitChecks.get(`${end.x},${end.y}`);
+
           const isElevatorTransit =
-            isElevatorEntry(floorData, start.x, start.y) ||
-            isElevatorEntry(floorData, end.x, end.y);
+            startTransit?.isElevator ||
+            false ||
+            endTransit?.isElevator ||
+            false;
           const isStairTransit =
-            isStairEntry(floorData, start.x, start.y) ||
-            isStairEntry(floorData, end.x, end.y);
+            startTransit?.isStair || false || endTransit?.isStair || false;
 
           return {
             start,
@@ -409,6 +388,28 @@ export const RouteNavigator = ({
               ? path
               : [...path, endCoord];
 
+          // Precompute transit points once before the loop
+          const transitChecks = new Map<
+            string,
+            { isElevator: boolean; isStair: boolean }
+          >();
+
+          // Check each point in the path for transit status
+          finalPath.forEach((point) => {
+            const key = `${point.x},${point.y}`;
+            if (!transitChecks.has(key)) {
+              transitChecks.set(key, {
+                isElevator: isTransitEntry(
+                  floorData,
+                  point.x,
+                  point.y,
+                  "elevator"
+                ),
+                isStair: isTransitEntry(floorData, point.x, point.y, "stair"),
+              });
+            }
+          });
+
           // Convert path coordinates to segments
           const segments: PathSegment[] = [];
 
@@ -423,12 +424,16 @@ export const RouteNavigator = ({
               continue;
             }
 
+            const startTransit = transitChecks.get(`${start.x},${start.y}`);
+            const endTransit = transitChecks.get(`${end.x},${end.y}`);
+
             const isElevatorTransit =
-              isElevatorEntry(floorData, start.x, start.y) ||
-              isElevatorEntry(floorData, end.x, end.y);
+              startTransit?.isElevator ||
+              false ||
+              endTransit?.isElevator ||
+              false;
             const isStairTransit =
-              isStairEntry(floorData, start.x, start.y) ||
-              isStairEntry(floorData, end.x, end.y);
+              startTransit?.isStair || false || endTransit?.isStair || false;
 
             segments.push({
               start,
@@ -531,7 +536,7 @@ export const RouteNavigator = ({
     if (startFloorTransit.isElevator) {
       // If using elevator, find the nearest elevator on destination floor
       const elevators = endFloorData
-        ? findElevatorEntryPoints(endFloorData)
+        ? findEntryPoints(endFloorData, "elevator")
         : [];
 
       if (elevators.length > 0) {
@@ -557,7 +562,7 @@ export const RouteNavigator = ({
       }
     } else {
       // If using stairs, find the nearest stair on destination floor
-      const stairs = endFloorData ? findStairEntryPoints(endFloorData) : [];
+      const stairs = endFloorData ? findEntryPoints(endFloorData, "stair") : [];
 
       if (stairs.length > 0) {
         // Find nearest stair to end point
@@ -635,4 +640,103 @@ export const RouteNavigator = ({
     onPathFound(fullPath);
     return null;
   }
+};
+
+interface QueueItem {
+  point: Coordinate;
+  path: Coordinate[];
+}
+
+// Basic coordinate check helper function
+const isWithinBounds = (x: number, y: number): boolean =>
+  x >= 0 && y >= 0 && x < 60 && y < 60;
+
+const matchesPoint = (point: Coordinate, x: number, y: number): boolean =>
+  point.x === x && point.y === y;
+
+// Path tile validation including all entry point checks
+const isValidPathTile = (
+  floorData: FloorData,
+  x: number,
+  y: number,
+  preferredBathroom?: string
+): boolean => {
+  if (!isWithinBounds(x, y)) return false;
+
+  // Check all entry points in a single pass
+  return (
+    floorData.paths.some(
+      (path) =>
+        x >= Math.min(path.start.x, path.end.x) &&
+        x <= Math.max(path.start.x, path.end.x) &&
+        y >= Math.min(path.start.y, path.end.y) &&
+        y <= Math.max(path.start.y, path.end.y)
+    ) ||
+    floorData.classrooms.some((room) =>
+      Array.isArray(room.entry)
+        ? room.entry.some((entry) => matchesPoint(entry, x, y))
+        : room.entry && matchesPoint(room.entry, x, y)
+    ) ||
+    floorData.bathrooms.some(
+      (bathroom) =>
+        matchesPoint(bathroom.entry, x, y) &&
+        (!preferredBathroom ||
+          bathroom.type === preferredBathroom ||
+          preferredBathroom === "Any")
+    ) ||
+    floorData.elevators.some((elevator) =>
+      matchesPoint(elevator.entry, x, y)
+    ) ||
+    floorData.stairs.some((stair) => matchesPoint(stair.entry, x, y)) ||
+    floorData.utilityRooms.some((room) => matchesPoint(room.entry, x, y))
+  );
+};
+
+export const findPath = (
+  start: Coordinate,
+  end: Coordinate,
+  floorData: FloorData,
+  preferredBathroom?: string
+): Coordinate[] | null => {
+  // Early validation
+  if (!isWithinBounds(start.x, start.y) || !isWithinBounds(end.x, end.y)) {
+    return null;
+  }
+
+  const visited = new Set<string>();
+  const queue: QueueItem[] = [{ point: start, path: [start] }];
+  const directions: [number, number][] = [
+    [0, 1],
+    [1, 0],
+    [0, -1],
+    [-1, 0],
+  ];
+
+  while (queue.length > 0) {
+    const { point, path } = queue.shift()!;
+    const key = `${point.x},${point.y}`;
+
+    if (matchesPoint(point, end.x, end.y)) {
+      return path;
+    }
+
+    if (visited.has(key)) continue;
+    visited.add(key);
+
+    // Check all four directions
+    for (const [dx, dy] of directions) {
+      const newX = point.x + dx;
+      const newY = point.y + dy;
+
+      if (isValidPathTile(floorData, newX, newY, preferredBathroom)) {
+        const newPoint = { x: newX, y: newY };
+        queue.push({
+          point: newPoint,
+          path: [...path, newPoint],
+        });
+      }
+    }
+  }
+
+  return null;
 };

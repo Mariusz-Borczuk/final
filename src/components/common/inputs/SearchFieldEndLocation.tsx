@@ -199,8 +199,8 @@ export const EndLocationSearchField: React.FC<LocationSearchProps> = ({
     if (result.floor !== currentFloor && setCurrentFloor) {
       setCurrentFloor(result.floor);
     }
-    setSelectedDisplayLocation(result); // Update internal state for display
-    onSearch(result); // Pass the full result object up
+    setSelectedDisplayLocation(result);
+    onSearch(result);
     setSearchQuery("");
     setIsDropdownOpen(false);
   };

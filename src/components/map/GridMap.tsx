@@ -53,11 +53,6 @@ export const GridMap: React.FC<PathSegmentsProps> = ({
     null
   );
 
-  // Get specifically the font size class for elements that need independent scaling
-  const fontSizeClass = settings
-    ? getSettings(settings as AccessibilitySettings)
-    : "";
-
   // Validate currentFloor and get floor data
   const floorIndex = currentFloor - 1;
 
@@ -527,14 +522,14 @@ export const GridMap: React.FC<PathSegmentsProps> = ({
                   ? "1px solid #333"
                   : "none";
 
-                // Check if this cell should be highlighted as destination
-                const isHighlighted =
+                // Check if this cell should be highlighted as destination - only on the destination floor
+                const isEndPoint =
                   highlightedCell &&
                   highlightedCell.floor === currentFloor &&
                   highlightedCell.location.y === rowIndex &&
                   highlightedCell.location.x === colIndex;
 
-                // Check if this cell should be highlighted as starting point
+                // Check if this cell should be highlighted as starting point - only on the start floor
                 const isStartPoint =
                   startLocation &&
                   startLocation.floor === currentFloor &&
@@ -548,7 +543,9 @@ export const GridMap: React.FC<PathSegmentsProps> = ({
                 return (
                   <div
                     key={`${rowIndex}-${colIndex}`}
-                    className={`w-3 h-3 relative ${fontSizeClass}`}
+                    className={`w-3 h-3 relative ${getSettings(
+                      settings as AccessibilitySettings
+                    )}`}
                     style={{
                       backgroundColor: cell.color,
                       borderTop: showGrid ? "1px solid #ddd" : borderTop,
@@ -576,7 +573,7 @@ export const GridMap: React.FC<PathSegmentsProps> = ({
                       setHoveredCell(null);
                     }}
                   >
-                    {isHighlighted && (
+                    {isEndPoint && highlightedCell.floor === currentFloor && (
                       <div
                         className="absolute inset-0 flex items-center justify-center z-10 pointer-events-none"
                         title={
@@ -587,7 +584,7 @@ export const GridMap: React.FC<PathSegmentsProps> = ({
                           className="absolute w-4 h-4 border-2 border-white rounded-full shadow-lg"
                           style={{
                             backgroundColor: highlightedCell.color || "#F44336",
-                          }} // Use custom color or default red
+                          }}
                         >
                           <div
                             className="absolute inset-0 rounded-full animate-ping opacity-60"
@@ -595,11 +592,11 @@ export const GridMap: React.FC<PathSegmentsProps> = ({
                               backgroundColor:
                                 highlightedCell.color || "#F44336",
                             }}
-                          ></div>
+                          />
                         </div>
                       </div>
                     )}
-                    {isStartPoint && (
+                    {isStartPoint && startLocation.floor === currentFloor && (
                       <div
                         className="absolute inset-0 flex items-center justify-center z-10 pointer-events-none"
                         title={startLocation.description || startLocation.name}
@@ -608,14 +605,14 @@ export const GridMap: React.FC<PathSegmentsProps> = ({
                           className="absolute w-4 h-4 border-2 border-white rounded-full shadow-lg"
                           style={{
                             backgroundColor: startLocation.color || "#4CAF50",
-                          }} // Use custom color or default green
+                          }}
                         >
                           <div
                             className="absolute inset-0 rounded-full animate-ping opacity-60"
                             style={{
                               backgroundColor: startLocation.color || "#4CAF50",
                             }}
-                          ></div>
+                          />
                         </div>
                       </div>
                     )}
@@ -627,7 +624,9 @@ export const GridMap: React.FC<PathSegmentsProps> = ({
 
           {hoveredCell && (
             <div
-              className={`absolute z-20 p-2 rounded shadow-lg pointer-events-none bg-gray-400 font-bold ${fontSizeClass}`}
+              className={`absolute z-20 p-2 rounded shadow-lg pointer-events-none bg-gray-400 font-bold ${getSettings(
+                settings as AccessibilitySettings
+              )}`}
               style={{
                 left: `${hoveredCell.x}px`,
                 top: `${hoveredCell.y}px`,

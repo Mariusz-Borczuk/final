@@ -12,9 +12,18 @@ export const FindPathButton: React.FC<FindPathButtonProps> = ({
   isLoading = false,
   settings,
   isWheelchair = false,
+  onFloorChange,
 }) => {
   // Determine if the button should be enabled
   const isDisabled: boolean = isLoading || !startLocation || !endLocation;
+
+  // Handle button click with floor navigation
+  const handleClick = () => {
+    if (startLocation && onFloorChange) {
+      onFloorChange(startLocation.floor);
+    }
+    onFindPath();
+  };
 
   // Memoize button color based on props to prevent unnecessary re-renders
   const buttonColorClass: string = useMemo(() => {
@@ -77,7 +86,7 @@ export const FindPathButton: React.FC<FindPathButtonProps> = ({
         className={`px-5 py-3 rounded-lg font-medium flex items-center justify-center 
                    shadow-md ${buttonColorClass} transition-colors ${fontSizeClass}
                    focus:outline-none focus:ring-2 focus:ring-orange-300 focus:ring-offset-2`}
-        onClick={onFindPath}
+        onClick={handleClick}
         disabled={isDisabled}
         type="button"
         {...accessibilityProps}

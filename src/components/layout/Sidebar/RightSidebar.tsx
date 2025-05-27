@@ -1,5 +1,10 @@
 import { AccessibleTTSButton } from "@/components/common/SpeechOutput";
-import { getSettings, PreferredBathroom, RightSidebarProps, Route } from "@/styles/types";
+import {
+  getSettings,
+  PreferredBathroom,
+  RightSidebarProps,
+  Route,
+} from "@/styles/types";
 
 import { useEffect, useState } from "react";
 import { FaRestroom, FaWheelchair } from "react-icons/fa";
@@ -31,8 +36,8 @@ export const RightSidebar: React.FC<RightSidebarProps> = ({
   pathSegments = [],
   onUpdateSettings,
 }) => {
-  // Default walking speed if not set (e.g., 1.4 meters per second)
-  const walkingSpeed = settings.walkingSpeedMPS ?? 1.4; // Use m/s, default 1.4
+  // Default moving speed if not set (e.g., 1.4 meters per second)
+  const walkingSpeed = settings.walkingSpeedMPS ?? 1.4; // Uses m/s, default 1.4
   const preferredBathroom = settings.preferredBathroom ?? "Any";
 
   // State to track UI feedback for settings changes
@@ -50,24 +55,13 @@ export const RightSidebar: React.FC<RightSidebarProps> = ({
     setCurrentSpeed(walkingSpeed);
   }, [walkingSpeed]);
 
-  // Human-readable speed descriptions
-  const getSpeedDescription = (speed: number): string => {
-    if (speed < 0.8) return "Very slow";
-    if (speed < 1.2) return "Slow";
-    if (speed < 1.6) return "Average";
-    if (speed < 2.0) return "Fast";
-    return "Very fast";
-  };
-
-  // Calculate estimated time based on path segments and walking speed
+  // Calculate estimated time based on path segments and moving speed
   const calculateEstimatedTime = (speed: number = walkingSpeed) => {
-    if (pathSegments.length === 0 || speed <= 0) return "N/A"; // Avoid division by zero/negative
+    if (pathSegments.length === 0 || speed <= 0) return "N/A";
     const totalDistanceMeters = pathSegments.length; // Each segment is 1 tile = 1 meter
     const timeSeconds = totalDistanceMeters / speed; // Direct division: distance / speed
-    const wheelchairFactor = isWheelchair ? 1.5 : 1.0; // Slower factor for wheelchair
-    const adjustedTimeSeconds = timeSeconds * wheelchairFactor; // Apply wheelchair factor
-    const minutes = Math.floor(adjustedTimeSeconds / 60);
-    const seconds = Math.round(adjustedTimeSeconds % 60);
+    const minutes = Math.floor(timeSeconds / 60);
+    const seconds = Math.round(timeSeconds % 60);
     return `${minutes} min ${seconds} sec`;
   };
 
@@ -91,9 +85,9 @@ export const RightSidebar: React.FC<RightSidebarProps> = ({
     estimatedTime: calculatedTime,
     accessibilityNotes: `${
       isWheelchair ? "Wheelchair accessible route" : "Standard route"
-    }. Preferred Bathroom: ${preferredBathroom}. Walking speed: ${currentSpeed.toFixed(
+    }. Preferred Bathroom: ${preferredBathroom}. Moving speed: ${currentSpeed.toFixed(
       1
-    )} m/s (${getSpeedDescription(currentSpeed)}).`,
+    )} m/s.`,
     navigationInstructions: `Follow the highlighted path to Floor ${currentFloor}.`,
     distance: calculatedDistance,
   };
@@ -197,18 +191,12 @@ export const RightSidebar: React.FC<RightSidebarProps> = ({
                   >
                     {route.estimatedTime}
                   </span>
-                  {isWheelchair && (
-                    <span className="block text-xs opacity-70 mt-1">
-                      (Includes wheelchair pace adjustment)
-                    </span>
-                  )}
                 </p>
 
                 <p
                   className={`mt-1 ${getSettings(settings)} text-xs opacity-70`}
                 >
                   {`Based on ${currentSpeed.toFixed(1)} meters per second`}
-                  {isWheelchair ? " with 1.5x factor" : ""}
                 </p>
               </>
             ) : (
@@ -285,35 +273,32 @@ export const RightSidebar: React.FC<RightSidebarProps> = ({
               </div>
             </div>
 
-            {/* Walking Speed Slider */}
+            {/* Moving Speed Slider */}
             <div className="mb-2">
               <label
-                htmlFor="walking-speed"
+                htmlFor="moving-speed"
                 className={`block text-sm font-medium mb-1 ${getSettings(
                   settings
                 )}`}
               >
-                Walking Speed:{" "}
+                Moving Speed:{" "}
                 <span className="font-semibold">
                   {currentSpeed.toFixed(1)} m/s
-                </span>
-                <span className="ml-2 text-xs">
-                  ({getSpeedDescription(currentSpeed)})
                 </span>
               </label>
               {/* Combined Slider Container */}
               <div className="mt-3 relative h-6 flex items-center">
                 {/* Background Track */}
-                <div className="absolute top-1/2 left-1 right-1 h-2 bg-gray-600 rounded-lg transform -translate-y-1/2 pointer-events-none"></div>
+                <div className="absolute top-1/2 left-1 right-1 h-2 bg-gray-600 rounded-lg transform -translate-y-1/2 pointer-events-none" />
 
                 {/* Filled Track - Modified to start from left edge with proper margin */}
                 <div
                   className="absolute top-1/2 left-1 h-2 bg-blue-500 rounded-lg pointer-events-none transform -translate-y-1/2"
                   style={{
-                    width: `${((currentSpeed - 0.5) / 2) * (100 - 8)}%`, // Adjusted to account for margins
-                    maxWidth: "calc(100% - 8px)", // Account for left and right margin
+                    width: `${((currentSpeed - 0.5) / 2) * (100 - 8)}%`,
+                    maxWidth: "calc(100% - 8px)",
                   }}
-                ></div>
+                />
 
                 {/* Visible Thumb/Knob */}
                 <div
@@ -321,13 +306,13 @@ export const RightSidebar: React.FC<RightSidebarProps> = ({
                   style={{
                     left: `calc(${
                       ((currentSpeed - 0.5) / 2) * (100 - 8)
-                    }% + 20px)`, // Adjusted position calculation
+                    }% + 20px)`,
                     top: "50%",
                     transform: "translate(-50%, -50%)",
                   }}
                 >
                   {/* Line indicators for better grip visual */}
-                  <div className="w-2 h-0.5 bg-white rounded-full"></div>
+                  <div className="w-2 h-0.5 bg-white rounded-full" />
                 </div>
 
                 {/* Invisible Input Range - positioned over the visual elements */}
@@ -340,10 +325,10 @@ export const RightSidebar: React.FC<RightSidebarProps> = ({
                   value={currentSpeed}
                   onChange={handleSpeedChange}
                   onInput={handleSliderInput}
-                  className="absolute inset-x-1 inset-y-0 w-[calc(100%-8px)] h-full opacity-0 cursor-grab z-20" // Adjusted to match visible track
-                  aria-label={`Walking speed slider, currently ${currentSpeed.toFixed(
+                  className="absolute inset-x-1 inset-y-0 w-[calc(100%-8px)] h-full opacity-0 cursor-grab z-20"
+                  aria-label={`Moving speed slider, currently ${currentSpeed.toFixed(
                     1
-                  )} meters per second (${getSpeedDescription(currentSpeed)})`}
+                  )} meters per second`}
                   aria-describedby="speed-feedback"
                 />
               </div>
@@ -352,25 +337,19 @@ export const RightSidebar: React.FC<RightSidebarProps> = ({
               <div className="flex justify-between text-xs mt-3 px-1">
                 <span className={`${getSettings(settings)} text-xs opacity-70`}>
                   0.5 m/s
-                  <br />
-                  Very Slow
                 </span>
                 <span className={`${getSettings(settings)} text-xs opacity-70`}>
                   1.4 m/s
-                  <br />
-                  Average
                 </span>
                 <span className={`${getSettings(settings)} text-xs opacity-70`}>
                   2.5 m/s
-                  <br />
-                  Very Fast
                 </span>
               </div>
 
               {/* Feedback messages */}
               <div
                 id="speed-feedback"
-                className={`text-xs text-green-400 mt-1 ${
+                className={`text-xs text-green-400 ${
                   showSaveIndicator === "speed" ? "animate-pulse" : "invisible"
                 }`}
               >
@@ -383,9 +362,7 @@ export const RightSidebar: React.FC<RightSidebarProps> = ({
               )}
 
               <p className={`mt-2 text-xs ${getSettings(settings)} opacity-70`}>
-                {isWheelchair
-                  ? "Note: Wheelchair mode applies a 1.5× time factor to account for accessibility needs."
-                  : "Adjust based on your typical walking pace."}
+                {"Adjust based on your typical pace. 1.4 m/s is average moving speed."}
               </p>
             </div>
           </div>

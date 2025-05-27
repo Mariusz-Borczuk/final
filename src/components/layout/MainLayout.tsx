@@ -113,11 +113,8 @@ export const MainLayout: React.FC<LayoutProps> = () => {
       new Set(pathSegments.map((segment) => segment.floor)).size - 1;
     const transitionSeconds = floorTransitions * 60; // 1 minute per floor transition
 
-    // Apply wheelchair speed adjustment (slower in wheelchair mode)
-    const wheelchairFactor = isWheelchair ? 1.5 : 1.0; // 50% slower in wheelchair mode
-
     // Calculate total time (in seconds)
-    const totalSeconds = (baseSeconds + transitionSeconds) * wheelchairFactor;
+    const totalSeconds = baseSeconds + transitionSeconds;
 
     // Convert to minutes and seconds
     const totalMinutes = Math.floor(totalSeconds / 60);

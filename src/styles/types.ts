@@ -62,7 +62,7 @@ export interface Exit {
 
 /** Accessibility Settings
  *FontAccessibilityOptions: Props for the font size component.
- *AccessibilitySettings: Represents the accessibility settings for the application, including font size, contrast, preferred bathroom, and walking speed.
+ *AccessibilitySettings: Represents the accessibility settings for the application, including font size, contrast, preferred bathroom, and moving speed.
  *AccessibilitySettingsProps: Props for the accessibility settings component.
  *AccessibilityFontSizeProps: Props for the font size component.
  */
@@ -82,11 +82,11 @@ export interface AccessibilitySettingsProps {
 }
 
 /** Left Sidebar Props
-  *LeftSidebarProps: Props for the left sidebar component, including accessibility settings, wheelchair mode, and floor management.
-  *FloorManagementProps: Props for the floor management component, including current floor and floor change handler.
-  *AccessibilityButtonProps: Props for the accessibility button component, including label, active state, click handler, icon, and description.
-  *NavigationItem: Represents a navigation item with name, coordinates, icon, and optional color.
-  *AddLocationButtonProps: Props for the add location button component, including add handler.
+ *LeftSidebarProps: Props for the left sidebar component, including accessibility settings, wheelchair mode, and floor management.
+ *FloorManagementProps: Props for the floor management component, including current floor and floor change handler.
+ *AccessibilityButtonProps: Props for the accessibility button component, including label, active state, click handler, icon, and description.
+ *NavigationItem: Represents a navigation item with name, coordinates, icon, and optional color.
+ *AddLocationButtonProps: Props for the add location button component, including add handler.
  */
 export interface LeftSidebarProps {
   settings: AccessibilitySettings;
@@ -122,13 +122,13 @@ export interface AddLocationButtonProps {
 }
 
 /** Right Sidebar Props
-  *RightSidebarProps: Props for the right sidebar component, including accessibility settings, current floor, wheelchair mode, path segments, estimated time, distance, and update settings function.
-  *IconSelectorProps: Props for the icon selector component, including selected icon, onIconSelect function, and optional className.
-  *TextToSpeechOptions: Options for text-to-speech functionality, including language, pitch, rate, volume, and event handlers.
-  *TTSControlButtonProps: Props for the text-to-speech control button, including route, optional className, and accessibility settings.
-  *SpeechSettings: Settings for speech synthesis, including volume and rate.
-  *Section: Represents a section with a title and content.
-  */
+ *RightSidebarProps: Props for the right sidebar component, including accessibility settings, current floor, wheelchair mode, path segments, estimated time, distance, and update settings function.
+ *IconSelectorProps: Props for the icon selector component, including selected icon, onIconSelect function, and optional className.
+ *TextToSpeechOptions: Options for text-to-speech functionality, including language, pitch, rate, volume, and event handlers.
+ *TTSControlButtonProps: Props for the text-to-speech control button, including route, optional className, and accessibility settings.
+ *SpeechSettings: Settings for speech synthesis, including volume and rate.
+ *Section: Represents a section with a title and content.
+ */
 export interface RightSidebarProps {
   settings: AccessibilitySettings;
   currentFloor: number;
@@ -167,12 +167,12 @@ export interface Section {
 }
 
 /** Top Bar Props
-  *TopBarProps: Props for the top bar component, including grid toggle, settings, current floor, and pathfinding.
-  *TransitPoint: Represents a transit point with coordinates and elevator status.
-  *FindPathButtonProps: Props for the find path button, including start and end locations, loading state, and wheelchair mode.
-  *GridToggleButtonProps: Props for the grid toggle button, including show grid state and onToggle function.
-  *PathFinderProps: Props for the path finder component, including current floor, settings, and pathfinding.
-  *LocationSearchResult: Represents a location search result with type, name, floor, coordinates, description, color, preferred bathroom, and icon.
+ *TopBarProps: Props for the top bar component, including grid toggle, settings, current floor, and pathfinding.
+ *TransitPoint: Represents a transit point with coordinates and elevator status.
+ *FindPathButtonProps: Props for the find path button, including start and end locations, loading state, and wheelchair mode.
+ *GridToggleButtonProps: Props for the grid toggle button, including show grid state and onToggle function.
+ *PathFinderProps: Props for the path finder component, including current floor, settings, and pathfinding.
+ *LocationSearchResult: Represents a location search result with type, name, floor, coordinates, description, color, preferred bathroom, and icon.
  */
 export interface TopBarProps {
   showGrid: boolean;
@@ -197,7 +197,8 @@ export interface FindPathButtonProps {
   onFindPath: () => void;
   isLoading?: boolean;
   settings?: AccessibilitySettings;
-  isWheelchair?: boolean; // Add wheelchair mode flag
+  isWheelchair?: boolean;
+  onFloorChange?: (floor: number) => void;
 }
 export interface GridToggleButtonProps {
   showGrid: boolean;
@@ -263,15 +264,15 @@ export interface MapViewProps {
 }
 
 /** Logic and Data Props
-  *RouteFinderProps: Props for the route finder component, including start and end locations, wheelchair mode, and pathfinding callbacks.
-  *LocationSearchResult: Represents a location search result with type, name, floor, coordinates, description, color, preferred bathroom, and icon.
-  *PathSegment: Represents a segment of the path with start and end coordinates, floor number, and optional transit point information.
-  *LocationSearchProps: Props for the location search component, including search callback, current floor, and optional floor change handler.
-  *isWheelchair: Boolean flag indicating if wheelchair mode is enabled.
-  *coordRegex: Regular expression for matching coordinates in the format "x: 123 y: 456" or "(123, 456)".
-  *FloorData: Represents data for a specific floor, including rooms, elevators, bathrooms, fire equipment, utility rooms, stairs, paths, and exits.
-  *allFloorData: Array of all floor data objects.
-  *LayoutProps: Props for the layout component, including children elements.
+ *RouteFinderProps: Props for the route finder component, including start and end locations, wheelchair mode, and pathfinding callbacks.
+ *LocationSearchResult: Represents a location search result with type, name, floor, coordinates, description, color, preferred bathroom, and icon.
+ *PathSegment: Represents a segment of the path with start and end coordinates, floor number, and optional transit point information.
+ *LocationSearchProps: Props for the location search component, including search callback, current floor, and optional floor change handler.
+ *isWheelchair: Boolean flag indicating if wheelchair mode is enabled.
+ *coordRegex: Regular expression for matching coordinates in the format "x: 123 y: 456" or "(123, 456)".
+ *FloorData: Represents data for a specific floor, including rooms, elevators, bathrooms, fire equipment, utility rooms, stairs, paths, and exits.
+ *allFloorData: Array of all floor data objects.
+ *LayoutProps: Props for the layout component, including children elements.
  */
 export interface RouteFinderProps {
   startLocation: LocationSearchResult | null;
@@ -319,10 +320,10 @@ export interface LayoutProps {
 }
 
 /** Functions
-  *getFloorFromRoomNumber: Extracts the floor number from a room number string.
-  *isRoomOnFloor: Checks if a room is on a specific floor based on its number.
-  *highlightLocation: Creates a LocationSearchResult object for highlighting a location on the map.
-  *formatIconName: Formats an icon component name into a user-friendly string.
+ *getFloorFromRoomNumber: Extracts the floor number from a room number string.
+ *isRoomOnFloor: Checks if a room is on a specific floor based on its number.
+ *highlightLocation: Creates a LocationSearchResult object for highlighting a location on the map.
+ *formatIconName: Formats an icon component name into a user-friendly string.
  */
 export function getFloorFromRoomNumber(roomNumber: string): number {
   const firstDigit = parseInt(roomNumber.charAt(0));
@@ -362,11 +363,11 @@ export function formatIconName(componentName: string): string {
 }
 
 /** Accessibility Settings
-  *getSettings: Generates a string of CSS classes based on accessibility settings.
-  *getStartLocationStyles: Returns styles for the start location input based on accessibility settings.
-  *getEndLocationStyles: Returns styles for the end location input based on accessibility settings.
-  *getSearchStyles: Returns styles for the search input based on accessibility settings.
-*/
+ *getSettings: Generates a string of CSS classes based on accessibility settings.
+ *getStartLocationStyles: Returns styles for the start location input based on accessibility settings.
+ *getEndLocationStyles: Returns styles for the end location input based on accessibility settings.
+ *getSearchStyles: Returns styles for the search input based on accessibility settings.
+ */
 export const getSettings = ({
   contrast,
   fontSize,

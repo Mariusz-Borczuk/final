@@ -202,6 +202,7 @@ export const LocationRouter: React.FC<PathFinderProps> = ({
               isLoading={isLoading}
               settings={settings}
               isWheelchair={isWheelchair}
+              onFloorChange={setCurrentFloor}
             />
 
             {pathSegments.length > 0 && (

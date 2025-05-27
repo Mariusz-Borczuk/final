@@ -29,7 +29,7 @@ export const AddCustomNavigationButton: React.FC<
     <MdLocationPin />
   );
   const [selectedIconName, setSelectedIconName] = useState("MdLocationPin");
-  const [markerColor, setMarkerColor] = useState("#4CAF50"); // Default green color
+  const [markerColor, setMarkerColor] = useState("#4CAF50");
 
   const colorOptions = [
     { name: "Blue", value: "#0072B2" },
