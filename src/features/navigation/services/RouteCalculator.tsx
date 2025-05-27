@@ -25,28 +25,14 @@ export const RouteNavigator = ({
    * Find all elevator entry points on a floor
    */
   const findElevatorEntryPoints = (floorData: FloorData): Coordinate[] => {
-    return floorData.elevators.map((elevator: Elevator) => {
-      if (elevator.entry) {
-        return elevator.entry;
-      }
-
-      // Use center point as fallback
-      const centerX = Math.floor((elevator.start.x + elevator.end.x) / 2);
-      const centerY = Math.floor((elevator.start.y + elevator.end.y) / 2);
-      return { x: centerX, y: centerY };
-    });
+    return floorData.elevators.map((elevator: Elevator) => elevator.entry);
   };
 
   /**
    * Find all stair entry points on a floor
    */
   const findStairEntryPoints = (floorData: FloorData): Coordinate[] => {
-    return floorData.stairs.map((stair: Stair) => {
-      // Use center point for stairs
-      const centerX = Math.floor((stair.start.x + stair.end.x) / 2);
-      const centerY = Math.floor((stair.start.y + stair.end.y) / 2);
-      return { x: centerX, y: centerY };
-    });
+    return floorData.stairs.map((stair: Stair) => stair.entry);
   };
 
   /**
@@ -81,66 +67,17 @@ export const RouteNavigator = ({
 
     if (isClassroomEntry) return true;
 
-    // Use the preferredBathroom prop directly
-    const userPreferredBathroom = preferredBathroom;
-
-    /**
-     * Check if it's an entry point to a bathroom that matches user preferences
-     */
-    const isBathroomEntry = (
-      currentFloorData: FloorData,
-      currentX: number,
-      currentY: number
-    ): boolean => {
-      // Check if the coordinates match any bathroom entry
-      const bathroomAtLocation = currentFloorData.bathrooms.find(
-        (b) => b.entry && b.entry.x === currentX && b.entry.y === currentY
-      );
-
-      if (!bathroomAtLocation) {
-        return false; // Not a bathroom entry
-      }
-
-      // If preference is Male or Female, check type
-      if (
-        userPreferredBathroom === "Male" ||
-        userPreferredBathroom === "Female"
-      ) {
-        return bathroomAtLocation.type === userPreferredBathroom;
-      }
-
-      // For "Any", "Neutral", or undefined preference, any bathroom entry is valid.
-      // The pathfinding algorithm (BFS) will find the nearest among these.
-      return true;
-    };
-
+    // Check bathroom entry points
     if (isBathroomEntry(floorData, x, y)) return true;
 
-    // Check if it's an entry point to an elevator
-    const isElevatorEntry = floorData.elevators.some(
-      (elevator) =>
-        elevator.entry && elevator.entry.x === x && elevator.entry.y === y
-    );
+    // Check elevator entry points
+    if (isElevatorEntry(floorData, x, y)) return true;
 
-    if (isElevatorEntry) return true;
-
-    // Check stair entry points (center of stairs)
-    const isStairEntry = floorData.stairs.some((stair) => {
-      const centerX = Math.floor((stair.start.x + stair.end.x) / 2);
-      const centerY = Math.floor((stair.start.y + stair.end.y) / 2);
-      return x === centerX && y === centerY;
-    });
-
-    if (isStairEntry) return true;
+    // Check stair entry points
+    if (isStairEntry(floorData, x, y)) return true;
 
     // Check utility room entry points
-    const isUtilityRoomEntry = floorData.utilityRooms.some((utilityRoom) => {
-      const centerX = Math.floor((utilityRoom.start.x + utilityRoom.end.x) / 2);
-      const centerY = Math.floor((utilityRoom.start.y + utilityRoom.end.y) / 2);
-      return x === centerX && y === centerY;
-    });
-
-    return isUtilityRoomEntry;
+    return isUtilityRoomEntry(floorData, x, y);
   };
 
   /**
@@ -151,16 +88,9 @@ export const RouteNavigator = ({
     x: number,
     y: number
   ): boolean => {
-    return floorData.elevators.some((elevator) => {
-      if (elevator.entry && elevator.entry.x === x && elevator.entry.y === y) {
-        return true;
-      }
-
-      // Check center point as fallback
-      const centerX = Math.floor((elevator.start.x + elevator.end.x) / 2);
-      const centerY = Math.floor((elevator.start.y + elevator.end.y) / 2);
-      return x === centerX && y === centerY;
-    });
+    return floorData.elevators.some(
+      (elevator) => elevator.entry.x === x && elevator.entry.y === y
+    );
   };
 
   /**
@@ -171,11 +101,42 @@ export const RouteNavigator = ({
     x: number,
     y: number
   ): boolean => {
-    return floorData.stairs.some((stair) => {
-      const centerX = Math.floor((stair.start.x + stair.end.x) / 2);
-      const centerY = Math.floor((stair.start.y + stair.end.y) / 2);
-      return x === centerX && y === centerY;
-    });
+    return floorData.stairs.some(
+      (stair) => stair.entry.x === x && stair.entry.y === y
+    );
+  };
+
+  /**
+   * Check if it's an entry point to a bathroom that matches user preferences
+   */
+  const isBathroomEntry = (
+    floorData: FloorData,
+    x: number,
+    y: number
+  ): boolean => {
+    const bathroomAtLocation = floorData.bathrooms.find(
+      (b) => b.entry.x === x && b.entry.y === y
+    );
+
+    if (!bathroomAtLocation) return false;
+
+    if (preferredBathroom === "Male" || preferredBathroom === "Female") {
+      return bathroomAtLocation.type === preferredBathroom;
+    }
+    return true;
+  };
+
+  /**
+   * Check if it's a utility room entry point
+   */
+  const isUtilityRoomEntry = (
+    floorData: FloorData,
+    x: number,
+    y: number
+  ): boolean => {
+    return floorData.utilityRooms.some(
+      (room) => room.entry.x === x && room.entry.y === y
+    );
   };
 
   /**
@@ -225,7 +186,7 @@ export const RouteNavigator = ({
   };
 
   /**
-   * Find the nearest stair or elevator entry point depending on wheelchair mode
+   * Find the nearest transit point for multi-floor navigation
    */
   const findNearestTransitPoint = (
     floorData: FloorData,
@@ -235,52 +196,55 @@ export const RouteNavigator = ({
     const transitPoints: TransitPoint[] = [];
 
     if (isWheelchair) {
-      // For wheelchair users, ONLY use elevators
+      // Wheelchair users can only use elevators
       const elevatorEntries = findElevatorEntryPoints(floorData);
       elevatorEntries.forEach((entry) => {
         transitPoints.push({ coord: entry, isElevator: true });
       });
     } else {
-      // For non-wheelchair users, ONLY use stairs
+      // Non-wheelchair users prefer stairs but can use elevators too
       const stairEntries = findStairEntryPoints(floorData);
+      const elevatorEntries = findElevatorEntryPoints(floorData);
+
       stairEntries.forEach((entry) => {
         transitPoints.push({ coord: entry, isElevator: false });
       });
+      elevatorEntries.forEach((entry) => {
+        transitPoints.push({ coord: entry, isElevator: true });
+      });
     }
 
-    if (transitPoints.length === 0) {
-      return undefined;
-    }
+    if (transitPoints.length === 0) return undefined;
 
-    // Find the nearest transit point using reduce
-    return transitPoints.length > 0
-      ? transitPoints.reduce((nearest, current) => {
-          const currentDistance = calculateDistance(
-            startX,
-            startY,
-            current.coord.x,
-            current.coord.y
-          );
-          const nearestDistance = nearest
-            ? calculateDistance(
-                startX,
-                startY,
-                nearest.coord.x,
-                nearest.coord.y
-              )
-            : Infinity;
+    // Find nearest transit point using Manhattan distance
+    return transitPoints.reduce((nearest, current) => {
+      const currentDist =
+        Math.abs(current.coord.x - startX) + Math.abs(current.coord.y - startY);
+      const nearestDist = nearest
+        ? Math.abs(nearest.coord.x - startX) +
+          Math.abs(nearest.coord.y - startY)
+        : Infinity;
 
-          return currentDistance < nearestDistance ? current : nearest;
-        }, transitPoints[0] || null)
-      : undefined;
+      // Add slight preference for stairs for non-wheelchair users
+      const currentScore = current.isElevator ? currentDist * 1.2 : currentDist;
+      const nearestScore = nearest?.isElevator
+        ? nearestDist * 1.2
+        : nearestDist;
+
+      return currentScore < nearestScore ? current : nearest;
+    }, transitPoints[0]);
   };
 
-  // Directions for BFS: up, right, down, left
+  // Optimized directions including diagonals for more natural paths
   const directions: Coordinate[] = [
     { x: 0, y: -1 }, // up
+    { x: 1, y: -1 }, // up-right
     { x: 1, y: 0 }, // right
+    { x: 1, y: 1 }, // down-right
     { x: 0, y: 1 }, // down
+    { x: -1, y: 1 }, // down-left
     { x: -1, y: 0 }, // left
+    { x: -1, y: -1 }, // up-left
   ];
 
   // Input validation
