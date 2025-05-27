@@ -11,7 +11,8 @@ import React, { useCallback, useState } from "react";
 import { RouteNavigator } from "../services/RouteCalculator";
 
 /**
- * LocationRouter component - Manages start and end location selection, pathfinding, and navigation
+ * PathFinder UI component - Handles location selection and pathfinding
+ * with support for wheelchair accessibility
  */
 export const LocationRouter: React.FC<PathFinderProps> = ({
   currentFloor,
@@ -204,20 +205,20 @@ export const LocationRouter: React.FC<PathFinderProps> = ({
               onFloorChange={setCurrentFloor}
             />
 
-            {pathSegments.length > 0 && (
-              <NavigationButton
-                pathSegments={pathSegments}
-                nextFloors={nextFloors}
-                currentPathIndex={currentPathIndex}
-                pathCompleted={pathCompleted}
-                setCurrentFloor={setCurrentFloor}
-                setCurrentPathIndex={setCurrentPathIndex}
-                setPathCompleted={setPathCompleted}
-                onClearPath={handleClearPath}
-                settings={settings}
-              />
-            )}
-          </div>
+          {pathSegments.length > 0 && (
+            <NavigationButton
+              pathSegments={pathSegments}
+              nextFloors={nextFloors}
+              currentPathIndex={currentPathIndex}
+              pathCompleted={pathCompleted}
+              setCurrentFloor={setCurrentFloor}
+              setCurrentPathIndex={setCurrentPathIndex}
+              setPathCompleted={setPathCompleted}
+              onClearPath={handleClearPath}
+              settings={settings}
+            />
+          )}
+        </div>
         </div>
 
         {/* Error message display */}
@@ -225,9 +226,8 @@ export const LocationRouter: React.FC<PathFinderProps> = ({
           <div
             className="bg-red-100 border border-red-400 text-red-700 px-4 py-2 rounded-lg mt-2"
             role="alert"
-            aria-live="polite"
           >
-            <span className="block sm:inline">{errorMessage}</span>
+            {errorMessage}
           </div>
         )}
 

@@ -6,7 +6,7 @@ import {
 } from "@/styles/types";
 import React from "react";
 
-export const BuildingFeatures: React.FC<
+export const QuickNavigation: React.FC<
   AccessibilitySettingsProps & {
     onSelectLocation?: (location: LocationSearchResult) => void;
   }
@@ -23,6 +23,25 @@ export const BuildingFeatures: React.FC<
     const bathrooms = searchLocationsInSession(searchQuery);
     if (bathrooms.length > 0 && onSelectLocation && bathrooms[0]) {
       onSelectLocation(bathrooms[0]); // Select the first matching bathroom
+    }
+  };
+
+  const handleElevatorSelect = () => {
+    const elevators = searchLocationsInSession("elevator");
+    if (elevators.length > 0 && onSelectLocation && elevators[0]) {
+      onSelectLocation(elevators[0]); // Select the first elevator
+    }
+  };
+
+  const handleAutomaticDoorSelect = () => {
+    // Search for exits with automatic doors
+    const exits = searchLocationsInSession("exit");
+    const automaticDoors = exits.filter((exit) =>
+      exit.description?.toLowerCase().includes("automatic")
+    );
+
+    if (automaticDoors.length > 0 && onSelectLocation && automaticDoors[0]) {
+      onSelectLocation(automaticDoors[0]); // Select the first automatic door
     }
   };
 
@@ -61,6 +80,7 @@ export const BuildingFeatures: React.FC<
             className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 my-2 px-4 rounded-md text-lg"
             aria-label="Show locations with automatic doors"
             aria-describedby="building-features-desc"
+            onClick={handleAutomaticDoorSelect}
           >
             Show
           </button>
@@ -94,6 +114,7 @@ export const BuildingFeatures: React.FC<
             className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 my-2 px-4 rounded-md text-lg"
             aria-label="Show elevator locations"
             aria-describedby="building-features-desc"
+            onClick={handleElevatorSelect}
           >
             Show
           </button>

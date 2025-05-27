@@ -19,7 +19,7 @@ import { AddCustomNavigationButton } from "./CustomLocation";
 /**
  * QuickNavigation component provides a list of saved locations and custom navigation items.
  */
-export const QuickNavigation: React.FC<
+export const SavedLocations: React.FC<
   RightSidebarProps & {
     onSelectLocation?: (location: LocationSearchResult) => void;
     onUpdateSettings?: (settings: AccessibilitySettings) => void;

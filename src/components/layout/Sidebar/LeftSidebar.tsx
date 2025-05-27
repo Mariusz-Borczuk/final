@@ -1,7 +1,7 @@
 import { AccessibilitySettingsPanel } from "@/components/common/AccessibilitySettings";
-import { BuildingFeatures } from "@/components/common/BuildingFeatures";
+import { QuickNavigation } from "@/components/common/QuickNavigation";
 import { FloorManagement } from "@/components/common/FloorManagement";
-import { QuickNavigation } from "@/features/navigation/components/QuickNavigation";
+import { SavedLocations } from "@/features/navigation/components/SavedLocations";
 import { LeftSidebarProps } from "@/styles/types";
 import React from "react";
 import { MainHeader } from "../../common/MainHeader";
@@ -44,15 +44,16 @@ export const LeftSidebar: React.FC<LeftSidebarProps> = ({
         isWheelchair={isWheelchair}
         setIsWheelchair={setIsWheelchair}
       />
-      <QuickNavigation
+      <SavedLocations
         settings={settings}
         currentFloor={currentFloor}
         onSelectLocation={onSelectLocation}
         onUpdateSettings={onUpdateSettings}
       />
-      <BuildingFeatures
+      <QuickNavigation
         settings={settings}
         onUpdateSettings={onUpdateSettings}
+        onSelectLocation={onSelectLocation}
       />
     </aside>
   );
