@@ -8,7 +8,7 @@ import { TileType } from "@/data/tiles/tileData";
  *Coordinate: Represents a point on the floor plan with x and y coordinates.
  *Room: Represents a room with a number, start and end coordinates, and optional entry points.
  *Elevator: Represents an elevator with start, end, and entry coordinates.
- *Bathroom: Represents a bathroom with a type (Male, Female, Neutral) and start, end, and entry coordinates.
+ *Bathroom: Represents a bathroom with a type (Male, Female) and start, end, and entry coordinates.
  *FireEquipment: Represents fire safety equipment with a location coordinate.
  *UtilityRoom: Represents a utility room with a name, start and end coordinates, and entry points.
  *Stair: Represents a stairway with start, end, and entry coordinates.
@@ -282,7 +282,7 @@ export interface RouteFinderProps {
   onError: (message: string) => void;
   preferredBathroom?: PreferredBathroom;
 }
-export type PreferredBathroom = "Male" | "Female" | "Neutral" | "Any";
+export type PreferredBathroom = "Male" | "Female" |  "Any";
 export interface PathSegment {
   start: Coordinate;
   end: Coordinate;

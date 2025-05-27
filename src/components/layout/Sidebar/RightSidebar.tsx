@@ -5,10 +5,9 @@ import {
   RightSidebarProps,
   Route,
 } from "@/styles/types";
+import { FaRestroom, MdFemale, MdMale } from "@/utils/icons/icons";
 
 import { useEffect, useState } from "react";
-import { FaRestroom, FaWheelchair } from "react-icons/fa";
-import { MdFemale, MdMale } from "react-icons/md";
 
 /**
  * Right sidebar component that displays details about the current location and accessibility features
@@ -133,10 +132,8 @@ export const RightSidebar: React.FC<RightSidebarProps> = ({
         return <MdMale className="text-blue-400" />;
       case "Female":
         return <MdFemale className="text-pink-400" />;
-      case "Neutral":
-        return <FaWheelchair className="text-purple-400" />;
       default:
-        return <FaRestroom className="text-green-400" />;
+        return <FaRestroom className="text-purple-400" />;
     }
   };
 
@@ -257,7 +254,6 @@ export const RightSidebar: React.FC<RightSidebarProps> = ({
                     <option value="Any">Any Bathroom</option>
                     <option value="Male">Male Only</option>
                     <option value="Female">Female Only</option>
-                    <option value="Neutral">All-Gender/Neutral</option>
                   </select>
                 </div>
                 <div

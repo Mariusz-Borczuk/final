@@ -1,6 +1,6 @@
 import { FindPathButton } from "@/components/common/buttons/FindPathButton";
 import { NavigationButton } from "@/components/common/buttons/NavigationButton";
-import { EndLocationSearchField } from "@/components/common/inputs/SearchFieldEndLocation";
+import { EndLocationSearchField } from "@/components/common/inputs/EndLocationSearchField";
 import { StartLocationSearchField } from "@/components/common/inputs/StartLocationSearchField";
 import {
   LocationSearchResult,
@@ -11,8 +11,7 @@ import React, { useCallback, useState } from "react";
 import { RouteNavigator } from "../services/RouteCalculator";
 
 /**
- * PathFinder UI component - Handles location selection and pathfinding
- * with support for wheelchair accessibility
+ * LocationRouter component - Manages start and end location selection, pathfinding, and navigation
  */
 export const LocationRouter: React.FC<PathFinderProps> = ({
   currentFloor,
