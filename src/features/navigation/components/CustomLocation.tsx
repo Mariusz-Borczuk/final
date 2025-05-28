@@ -105,7 +105,7 @@ export const AddCustomNavigationButton: React.FC<
           <button
             onClick={() => setIsAccordionOpen(!isAccordionOpen)}
             className="p-3 bg-blue-600 text-white w-full rounded-lg hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:outline-none transition duration-200 font-medium"
-            aria-expanded={isAccordionOpen}
+            aria-expanded={isAccordionOpen ? "true" : "false"}
             aria-controls="custom-navigation-panel"
             aria-label={
               isAccordionOpen

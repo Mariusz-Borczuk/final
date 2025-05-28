@@ -172,7 +172,14 @@ export interface Section {
  *GridToggleButtonProps: Props for the grid toggle button, including show grid state and onToggle function.
  *PathFinderProps: Props for the path finder component, including current floor, settings, and pathfinding.
  *LocationSearchResult: Represents a location search result with type, name, floor, coordinates, description, color, preferred bathroom, and icon.
+ *LocationSearchFieldProps: Props for the location search field, including onSearch, currentFloor, setCurrentFloor, and settings.
  */
+export interface LocationSearchFieldProps {
+  onSearch: (result: LocationSearchResult | null) => void;
+  currentFloor: number;
+  setCurrentFloor?: (floor: number) => void;
+  settings?: any;
+}
 export interface TopBarProps {
   showGrid: boolean;
   onToggleGrid: () => void;

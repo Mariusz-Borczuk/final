@@ -304,8 +304,29 @@ export const GridMap: React.FC<PathSegmentsProps> = ({
 
   // Add stairs with darker color for entry points
   const gridWithStairs = currentFloorData.stairs.reduce(
-    (grid: CellType[][], stair: Stair) => {
+    (grid: CellType[][], stair: Stair, index: number) => {
       let updatedGrid = grid;
+
+      // Calculate center of the stairs
+      const stairCenterX = (stair.start.x + stair.end.x) / 2;
+      const stairCenterY = (stair.start.y + stair.end.y) / 2;
+
+      // Determine direction relative to map center
+      let direction = "";
+      
+      // Determine vertical direction (N/S)
+      if (stairCenterY < 30) {
+        direction += "N";
+      } else if (stairCenterY > 30) {
+        direction += "S";
+      }
+
+      // Determine horizontal direction (E/W)
+      if (stairCenterX > 30) {
+        direction += "E";
+      } else if (stairCenterX < 30) {
+        direction += "W";
+      }
 
       // Fill stair area with regular stairs color
       for (
@@ -323,19 +344,18 @@ export const GridMap: React.FC<PathSegmentsProps> = ({
             col,
             type: "stairs",
             color: tileData.stairs.color,
-            label: "Stairs",
+            label: `Stairs ${index + 1} (${direction})`,
           });
         }
       }
 
-      // Add a centered entry point with darker color
-      // Add entry point with darker color if defined, otherwise use the center
+      // Add entry point with darker color if defined
       updatedGrid = updateGridCell(updatedGrid, stair.entry.y, stair.entry.x, {
         row: stair.entry.y,
         col: stair.entry.x,
         type: "stairsEntry",
         color: tileData.stairsEntry.color,
-        label: "Stairs Entry",
+        label: `Stairs ${index + 1} (${direction}) Entry`,
       });
 
       return updatedGrid;

@@ -18,7 +18,8 @@ import {
 import React, { useCallback, useEffect, useState } from "react";
 
 /**
- * End Location Search Field - Updated to support finding paths between different room types.
+ * Search field component for selecting a destination location.
+ * Allows searching by classroom number, bathroom type, elevator, stairs, utility room, exit, or coordinates.
  */
 export const EndLocationSearchField: React.FC<LocationSearchProps & {
   externalLocation?: LocationSearchResult | null;
@@ -120,21 +121,12 @@ export const EndLocationSearchField: React.FC<LocationSearchProps & {
       // Search classrooms
       floorData.classrooms.forEach((room) => {
         if (room.number.toLowerCase().includes(lowerQuery)) {
-          let entryCoord = Array.isArray(room.entry)
-            ? room.entry[0]
-            : room.entry;
-          if (!entryCoord) {
-            // Fallback to center if no entry
-            entryCoord = {
-              x: Math.floor((room.start.x + room.end.x) / 2),
-              y: Math.floor((room.start.y + room.end.y) / 2),
-            };
-          }
+          
           results.push({
             type: "classroom",
             name: `Classroom ${room.number}`,
             floor: floorNumber,
-            location: entryCoord as Coordinate,
+            location: room.entry as Coordinate,
             description: `Classroom ${room.number} on floor ${floorNumber}`,
           });
         }
@@ -143,16 +135,12 @@ export const EndLocationSearchField: React.FC<LocationSearchProps & {
       // Search bathrooms
       floorData.bathrooms.forEach((bathroom) => {
         if (bathroom.type.toLowerCase().includes(lowerQuery)) {
-          const entryCoord = bathroom.entry || {
-            x: Math.floor((bathroom.start.x + bathroom.end.x) / 2),
-            y: Math.floor((bathroom.start.y + bathroom.end.y) / 2),
-          };
-
+          
           results.push({
             type: "bathroom",
             name: `${bathroom.type} Bathroom`,
             floor: floorNumber,
-            location: entryCoord,
+            location: bathroom.entry,
             description: `${bathroom.type} Bathroom on floor ${floorNumber}`,
           });
         }
@@ -161,16 +149,12 @@ export const EndLocationSearchField: React.FC<LocationSearchProps & {
       // Search elevators
       floorData.elevators.forEach((elevator, index) => {
         if ("elevator".includes(lowerQuery)) {
-          const entryCoord = elevator.entry || {
-            x: Math.floor((elevator.start.x + elevator.end.x) / 2),
-            y: Math.floor((elevator.start.y + elevator.end.y) / 2),
-          };
-
+          
           results.push({
             type: "elevator",
             name: `Elevator ${index + 1}`,
             floor: floorNumber,
-            location: entryCoord,
+            location: elevator.entry,
             description: `Elevator ${index + 1} on floor ${floorNumber}`,
           });
         }
@@ -179,16 +163,12 @@ export const EndLocationSearchField: React.FC<LocationSearchProps & {
       // Search stairs
       floorData.stairs.forEach((stair, index) => {
         if ("stair".includes(lowerQuery) || "stairs".includes(lowerQuery)) {
-          const centerCoord = {
-            x: Math.floor((stair.start.x + stair.end.x) / 2),
-            y: Math.floor((stair.start.y + stair.end.y) / 2),
-          };
-
+          
           results.push({
             type: "stairs",
             name: `Stairs ${index + 1}`,
             floor: floorNumber,
-            location: centerCoord,
+            location: stair.entry,
             description: `Stairs ${index + 1} on floor ${floorNumber}`,
           });
         }
@@ -197,16 +177,12 @@ export const EndLocationSearchField: React.FC<LocationSearchProps & {
       // Search utility rooms
       floorData.utilityRooms.forEach((room) => {
         if (room.name.toLowerCase().includes(lowerQuery)) {
-          const centerCoord = {
-            x: Math.floor((room.start.x + room.end.x) / 2),
-            y: Math.floor((room.start.y + room.end.y) / 2),
-          };
-
+          
           results.push({
             type: "utilityRoom",
             name: room.name,
             floor: floorNumber,
-            location: centerCoord,
+            location: room.entry,
             description: `${room.name} on floor ${floorNumber}`,
           });
         }
@@ -219,13 +195,12 @@ export const EndLocationSearchField: React.FC<LocationSearchProps & {
           (exit.description &&
             exit.description.toLowerCase().includes(lowerQuery))
         ) {
-          const coordinates = exit.location || { x: 0, y: 0 };
-
+          
           results.push({
             type: "exit",
             name: exit.description || `Exit`,
             floor: floorNumber,
-            location: coordinates,
+            location: exit.location as Coordinate,
             description: `${
               exit.description || "Building Exit"
             } on floor ${floorNumber}`,
