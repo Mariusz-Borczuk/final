@@ -1,4 +1,4 @@
-import { FloorData } from "../components/types/types";
+import { FloorData } from "@/styles/types";
 
 /**
  * Data representation for the third floor layout.

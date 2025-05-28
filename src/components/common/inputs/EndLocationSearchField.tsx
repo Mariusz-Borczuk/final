@@ -219,7 +219,7 @@ export const EndLocationSearchField: React.FC<LocationSearchProps & {
           (exit.description &&
             exit.description.toLowerCase().includes(lowerQuery))
         ) {
-          const coordinates = exit.coordinates || { x: 0, y: 0 };
+          const coordinates = exit.location || { x: 0, y: 0 };
 
           results.push({
             type: "exit",

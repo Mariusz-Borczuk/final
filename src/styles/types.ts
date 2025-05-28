@@ -55,8 +55,7 @@ export interface Path {
   end: Coordinate;
 }
 export interface Exit {
-  type: "main" | "standard";
-  coordinates: Coordinate;
+  location: Coordinate;
   description: string;
 }
 
@@ -307,7 +306,7 @@ export interface FloorData {
   utilityRooms: UtilityRoom[];
   stairs: Stair[];
   paths: Path[];
-  exits: Exit[];
+  exits?: Exit[];
 }
 export const allFloorData: FloorData[] = [
   floor1Data,

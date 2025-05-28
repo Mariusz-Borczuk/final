@@ -360,13 +360,13 @@ export const GridMap: React.FC<PathSegmentsProps> = ({
   // Add exits (emergency exits, etc.)
   const gridWithExits = (currentFloorData.exits || []).reduce(
     (grid: CellType[][], exit: Exit) => {
-      return updateGridCell(grid, exit.coordinates.y, exit.coordinates.x, {
-        row: exit.coordinates.y,
-        col: exit.coordinates.x,
+      return updateGridCell(grid, exit.location.y, exit.location.x, {
+        row: exit.location.y,
+        col: exit.location.x,
         type: "exit",
-        color: "#00FF00", // Main: dark green, Standard: lighter dark green
+        color: "#00FF00", 
         label:
-          exit.description || (exit.type === "main" ? "Main Exit" : "Exit"),
+          exit.description,
       });
     },
     gridWithFire

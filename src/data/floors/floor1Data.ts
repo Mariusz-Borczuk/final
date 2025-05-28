@@ -317,16 +317,8 @@ export const floor1Data: FloorData = {
     { start: { x: 55, y: 14 }, end: { x: 53, y: 12 } },
   ],
   exits: [
-    { coordinates: { x: 55, y: 13 }, type: "main", description: "Main Exit" },
-    {
-      coordinates: { x: 47, y: 50 },
-      type: "standard",
-      description: "Parking exit",
-    },
-    {
-      coordinates: { x: 8, y: 50 },
-      type: "standard",
-      description: "CNTI exit",
-    },
+    { location: { x: 55, y: 13 }, description: "Main Exit" },
+    { location: { x: 47, y: 50 }, description: "Parking exit" },
+    { location: { x: 8, y: 50 }, description: "CNTI exit" },
   ],
 };
