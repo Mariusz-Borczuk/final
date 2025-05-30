@@ -7,7 +7,7 @@ import {
   PathFinderProps,
   PathSegment,
 } from "@/styles/types";
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useState, useEffect } from "react";
 import { RouteNavigator } from "../services/RouteCalculator";
 
 /**
@@ -20,6 +20,7 @@ export const LocationRouter: React.FC<PathFinderProps> = ({
   settings,
   onPathFound,
   isWheelchair = false,
+  onSelectLocation,
 }) => {
   // State management with proper TypeScript typing
   const [startLocation, setStartLocation] =
@@ -34,6 +35,33 @@ export const LocationRouter: React.FC<PathFinderProps> = ({
   const [currentPathIndex, setCurrentPathIndex] = useState<number>(0);
   const [pathCompleted, setPathCompleted] = useState<boolean>(false);
   const [externalLocation, setExternalLocation] = useState<LocationSearchResult | null>(null);
+
+  // Handler for QuickNavigation location selection
+  const handleQuickNavigationSelect = useCallback(
+    (location: LocationSearchResult): void => {
+      console.log("QuickNavigation location selected:", location);
+      setEndLocation(location);
+      setExternalLocation(location);
+      setErrorMessage(null);
+      setPathSegments([]);
+      setNextFloors([]);
+      setCurrentPathIndex(0);
+      setPathCompleted(false);
+
+      if (location.floor !== currentFloor) {
+        setCurrentFloor(location.floor);
+      }
+    },
+    [currentFloor, setCurrentFloor]
+  );
+
+  // Use handleQuickNavigationSelect as the onSelectLocation handler
+  const handleLocationSelect = useCallback(
+    (location: LocationSearchResult) => {
+      handleQuickNavigationSelect(location);
+    },
+    [handleQuickNavigationSelect]
+  );
 
   // Handler for start location selection
   const handleStartLocationSearch = useCallback(

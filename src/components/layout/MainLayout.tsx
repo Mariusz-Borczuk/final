@@ -195,12 +195,7 @@ export const MainLayout: React.FC<LayoutProps> = () => {
           />
         </div>
         {/* Main Content Area */}
-        <main
-          className="flex-1 flex flex-col mr-8"
-          role="main"
-          aria-label="Map and pathfinding area"
-        >
-          {/* Top Bar */}
+        <div className="flex-1 flex flex-col">
           <TopBar
             showGrid={showGrid}
             onToggleGrid={() => setShowGrid(!showGrid)}
@@ -209,6 +204,7 @@ export const MainLayout: React.FC<LayoutProps> = () => {
             setCurrentFloor={setCurrentFloor}
             isWheelchair={isWheelchair}
             onPathFound={handlePathFound}
+            onSelectLocation={handleLocationSelect}
           />
           {/* Map View */}
           <div className="flex-1 overflow-hidden flex items-center justify-center p-4">
@@ -221,7 +217,7 @@ export const MainLayout: React.FC<LayoutProps> = () => {
               pathSegments={pathSegments}
             />
           </div>
-        </main>
+        </div>
         {/* Right Sidebar */}
         <div
           className="w-72 flex flex-col"

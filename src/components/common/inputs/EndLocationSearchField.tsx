@@ -48,7 +48,7 @@ export const EndLocationSearchField: React.FC<LocationSearchProps & {
       }
       setSelectedDisplayLocation(location);
       onSearch(location);
-      setSearchQuery("");
+      setSearchQuery(location.name);
       setIsDropdownOpen(false);
     },
     [currentFloor, setCurrentFloor, onSearch]

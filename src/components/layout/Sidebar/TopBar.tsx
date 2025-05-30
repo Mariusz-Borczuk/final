@@ -11,6 +11,7 @@ export const TopBar: React.FC<TopBarProps> = ({
   setCurrentFloor,
   isWheelchair,
   onPathFound,
+  onSelectLocation,
 }) => (
   <div
     className="flex items-center justify-center space-x-4 p-4 bg-gray-800 rounded-lg shadow-md"
@@ -36,6 +37,7 @@ export const TopBar: React.FC<TopBarProps> = ({
       settings={settings}
       isWheelchair={isWheelchair}
       onPathFound={onPathFound}
+      onSelectLocation={onSelectLocation}
     />
   </div>
 );

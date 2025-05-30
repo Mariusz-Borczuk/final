@@ -187,11 +187,8 @@ export interface TopBarProps {
   currentFloor: number;
   setCurrentFloor: (floor: number) => void;
   isWheelchair: boolean;
-  onPathFound: (
-    path: PathSegment[],
-    startCoord: { x: number; y: number },
-    endCoord: { x: number; y: number }
-  ) => void;
+  onPathFound: (path: PathSegment[], startCoord: Coordinate, endCoord: Coordinate) => void;
+  onSelectLocation?: (location: LocationSearchResult) => void;
 }
 export type TransitPoint = {
   coord: Coordinate;
@@ -214,13 +211,10 @@ export interface GridToggleButtonProps {
 export interface PathFinderProps {
   currentFloor: number;
   setCurrentFloor: (floor: number) => void;
-  settings?: AccessibilitySettings;
-  onPathFound: (
-    path: PathSegment[],
-    startCoord: Coordinate,
-    endCoord: Coordinate
-  ) => void;
+  settings: AccessibilitySettings;
+  onPathFound: (path: PathSegment[], startCoord: Coordinate, endCoord: Coordinate) => void;
   isWheelchair?: boolean;
+  onSelectLocation?: (location: LocationSearchResult) => void;
 }
 export interface LocationSearchResult {
   type: TileType | string;
