@@ -1,49 +1,52 @@
-import { searchLocationsInSession } from "@/services/storage/browserLocationManager";
 import {
-  AccessibilitySettingsProps,
   LocationSearchResult,
+  QuickNavigationProps,
   getSettings,
 } from "@/styles/types";
-import React from "react";
+import React, { useCallback, useMemo } from "react";
 
-export const QuickNavigation: React.FC<
-  AccessibilitySettingsProps & {
-    onSelectLocation?: (location: LocationSearchResult) => void;
-  }
-> = ({ settings, onSelectLocation }) => {
-  const handleBathroomSelect = () => {
-    const preferredBathroom = settings.preferredBathroom || "Any";
-    let searchQuery = "bathroom";
+export const QuickNavigation: React.FC<QuickNavigationProps> = ({
+  settings,
+  onSelectLocation,
+  savedLocations = [],
+}) => {
+  const predefinedSearches = useMemo(() => {
+    const locations: LocationSearchResult[] = [
+      {
+        type: 'exit',
+        name: 'Main Exit',
+        floor: 1,
+        location: { x: 55, y: 13 },
+        description: 'Main Exit',
+      },
+      {
+        type: 'bathroom',
+        name: 'Male Bathroom',
+        floor: 1,
+        location: { x: 10, y: 17 },
+        description: 'Male Bathroom on floor 1',
+      },
+      {
+        type: 'elevator',
+        name: 'Elevator',
+        floor: 1,
+        location: { x: 10, y: 32 },
+        description: 'Elevator on floor 1',
+      }
+    ];
+    
+    return locations;
+  }, []);
 
-    // If user has a specific preference, search for that type
-    if (preferredBathroom === "Male" || preferredBathroom === "Female") {
-      searchQuery = `${preferredBathroom.toLowerCase()} restroom`;
+  const handleLocationSelect = useCallback((location: LocationSearchResult) => {
+    console.log("QuickNavigation: handleLocationSelect called with:", location);
+    if (onSelectLocation) {
+      console.log("QuickNavigation: calling onSelectLocation");
+      onSelectLocation(location);
+    } else {
+      console.log("QuickNavigation: onSelectLocation is not defined");
     }
-
-    const bathrooms = searchLocationsInSession(searchQuery);
-    if (bathrooms.length > 0 && onSelectLocation && bathrooms[0]) {
-      onSelectLocation(bathrooms[0]); // Select the first matching bathroom
-    }
-  };
-
-  const handleElevatorSelect = () => {
-    const elevators = searchLocationsInSession("elevator");
-    if (elevators.length > 0 && onSelectLocation && elevators[0]) {
-      onSelectLocation(elevators[0]); // Select the first elevator
-    }
-  };
-
-  const handleAutomaticDoorSelect = () => {
-    // Search for exits with automatic doors
-    const exits = searchLocationsInSession("exit");
-    const automaticDoors = exits.filter((exit) =>
-      exit.description?.toLowerCase().includes("automatic")
-    );
-
-    if (automaticDoors.length > 0 && onSelectLocation && automaticDoors[0]) {
-      onSelectLocation(automaticDoors[0]); // Select the first automatic door
-    }
-  };
+  }, [onSelectLocation]);
 
   return (
     <section
@@ -52,7 +55,6 @@ export const QuickNavigation: React.FC<
       aria-label="Building accessibility features"
       aria-describedby="building-features-desc"
     >
-      {/* Description for screen readers */}
       <div id="building-features-desc" className="sr-only">
         This section lists accessibility features available in the building,
         such as automatic doors and elevators.
@@ -63,63 +65,70 @@ export const QuickNavigation: React.FC<
       >
         Quick path to building features
       </h3>
-      <ul
-        className={`${getSettings(settings)} list-disc ml-4 text-sm`}
-        role="list"
-        aria-labelledby="building-features-heading"
-        aria-describedby="building-features-desc"
-      >
-        <li
-          role="listitem"
-          className={`flex items-center justify-between ${getSettings(
-            settings
-          )}`}
+      
+      {/* Predefined Searches */}
+      <div className="mb-4">
+        <h4 className={`text-sm font-medium mb-2 ${getSettings(settings)}`}>
+          Common Locations
+        </h4>
+        <ul
+          className={`${getSettings(settings)} list-disc ml-4 text-sm`}
+          role="list"
         >
-          <span>Automatic doors</span>
-          <button
-            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 my-2 px-4 rounded-md text-lg"
-            aria-label="Show locations with automatic doors"
-            aria-describedby="building-features-desc"
-            onClick={handleAutomaticDoorSelect}
+          {predefinedSearches.map((search, index: number) => (
+            <li
+              key={`${search.type}-${index}`}
+              role="listitem"
+              className={`flex items-center justify-between ${getSettings(settings)}`}
+            >
+              <span>{search.name}</span>
+              <button
+                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 my-2 px-4 rounded-md text-lg"
+                aria-label={`Show ${search.name} locations`}
+                onClick={() => {
+                  console.log("QuickNavigation: Button clicked for:", search);
+                  handleLocationSelect(search);
+                }}
+              >
+                Show
+              </button>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      {/* Saved Locations */}
+      {savedLocations.length > 0 && (
+        <div>
+          <h4 className={`text-sm font-medium mb-2 ${getSettings(settings)}`}>
+            Saved Locations
+          </h4>
+          <ul
+            className={`${getSettings(settings)} list-disc ml-4 text-sm`}
+            role="list"
           >
-            Show
-          </button>
-        </li>
-        <li
-          role="listitem"
-          className={`flex items-center justify-between ${getSettings(
-            settings
-          )}`}
-        >
-          <span>Bathroom ({settings.preferredBathroom || "Any"})</span>
-          <button
-            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 my-2 px-4 rounded-md text-lg"
-            aria-label={`Navigate to nearest ${
-              settings.preferredBathroom || "any"
-            } bathroom`}
-            aria-describedby="building-features-desc"
-            onClick={handleBathroomSelect}
-          >
-            Show
-          </button>
-        </li>
-        <li
-          role="listitem"
-          className={`flex items-center justify-between ${getSettings(
-            settings
-          )}`}
-        >
-          <span>Elevators</span>
-          <button
-            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 my-2 px-4 rounded-md text-lg"
-            aria-label="Show elevator locations"
-            aria-describedby="building-features-desc"
-            onClick={handleElevatorSelect}
-          >
-            Show
-          </button>
-        </li>
-      </ul>
+            {savedLocations.map((location, index: number) => (
+              <li
+                key={`${location.name}-${index}`}
+                role="listitem"
+                className={`flex items-center justify-between ${getSettings(settings)}`}
+              >
+                <span>{location.name}</span>
+                <button
+                  className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 my-2 px-4 rounded-md text-lg"
+                  aria-label={`Go to ${location.name}`}
+                  onClick={() => {
+                    console.log("QuickNavigation: Saved location button clicked for:", location);
+                    handleLocationSelect(location);
+                  }}
+                >
+                  Go
+                </button>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
     </section>
   );
 };

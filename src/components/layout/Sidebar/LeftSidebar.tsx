@@ -52,7 +52,6 @@ export const LeftSidebar: React.FC<LeftSidebarProps> = ({
       />
       <QuickNavigation
         settings={settings}
-        onUpdateSettings={onUpdateSettings}
         onSelectLocation={onSelectLocation}
       />
     </aside>

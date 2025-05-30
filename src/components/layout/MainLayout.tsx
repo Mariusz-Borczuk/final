@@ -5,7 +5,7 @@ import {
   LocationSearchResult,
   PathSegment,
 } from "@/styles/types";
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
 import { MapView } from "../map/MapView";
 import { LeftSidebar } from "./sidebar/LeftSidebar";
 import { RightSidebar } from "./sidebar/RightSidebar";
@@ -44,6 +44,14 @@ export const MainLayout: React.FC<LayoutProps> = () => {
     useState<LocationSearchResult | null>(null);
   const [pathEndLocation, setPathEndLocation] =
     useState<LocationSearchResult | null>(null);
+
+  // Handler for location selection
+  const handleLocationSelect = useCallback((location: LocationSearchResult) => {
+    setPathEndLocation(location);
+    if (location.floor !== currentFloor) {
+      setCurrentFloor(location.floor);
+    }
+  }, [currentFloor, setCurrentFloor]);
 
   // Function to update accessibility settings
   const handleUpdateSettings = (
@@ -183,6 +191,7 @@ export const MainLayout: React.FC<LayoutProps> = () => {
             onFloorChange={function (floor: number): void {
               setCurrentFloor(floor);
             }}
+            onSelectLocation={handleLocationSelect}
           />
         </div>
         {/* Main Content Area */}

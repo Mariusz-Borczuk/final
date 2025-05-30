@@ -473,3 +473,9 @@ export const getSearchStyles = (settings?: AccessibilitySettings) => {
     iconColor: "text-white",
   };
 };
+
+export interface QuickNavigationProps {
+  settings: AccessibilitySettings;
+  onSelectLocation?: (location: LocationSearchResult) => void;
+  savedLocations?: LocationSearchResult[];
+}

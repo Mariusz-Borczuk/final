@@ -29,6 +29,8 @@ export const EndLocationSearchField: React.FC<LocationSearchProps & {
   currentFloor,
   setCurrentFloor,
   settings,
+  externalLocation,
+  onExternalLocationSet,
 }) => {
   const [searchQuery, setSearchQuery] = useState("");
   const [searchResults, setSearchResults] = useState<LocationSearchResult[]>(
@@ -51,6 +53,18 @@ export const EndLocationSearchField: React.FC<LocationSearchProps & {
     },
     [currentFloor, setCurrentFloor, onSearch]
   );
+
+  // Effect to handle external location changes
+  useEffect(() => {
+    if (externalLocation) {
+      console.log("External location detected:", externalLocation);
+      handleLocationSelection(externalLocation);
+      if (onExternalLocationSet) {
+        console.log("Calling onExternalLocationSet callback");
+        onExternalLocationSet();
+      }
+    }
+  }, [externalLocation, handleLocationSelection, onExternalLocationSet]);
 
   // Enhanced icon selector
   const getLocationIcon = useCallback((type?: string) => {

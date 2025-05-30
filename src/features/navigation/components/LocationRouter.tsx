@@ -33,6 +33,7 @@ export const LocationRouter: React.FC<PathFinderProps> = ({
   const [nextFloors, setNextFloors] = useState<number[]>([]);
   const [currentPathIndex, setCurrentPathIndex] = useState<number>(0);
   const [pathCompleted, setPathCompleted] = useState<boolean>(false);
+  const [externalLocation, setExternalLocation] = useState<LocationSearchResult | null>(null);
 
   // Handler for start location selection
   const handleStartLocationSearch = useCallback(
@@ -55,6 +56,9 @@ export const LocationRouter: React.FC<PathFinderProps> = ({
   const handleEndLocationSearch = useCallback(
     (result: LocationSearchResult | null): void => {
       setEndLocation(result);
+      if (result) {
+        setExternalLocation(result);
+      }
       setErrorMessage(null);
       setPathSegments([]);
       setNextFloors([]);
@@ -67,6 +71,14 @@ export const LocationRouter: React.FC<PathFinderProps> = ({
     },
     [currentFloor, setCurrentFloor]
   );
+
+  // Handler for external location set
+  const handleExternalLocationSet = useCallback(() => {
+    // Only clear external location if it's been handled
+    if (externalLocation) {
+      setExternalLocation(null);
+    }
+  }, [externalLocation]);
 
   // Error handler function
   const handleError = useCallback(
@@ -190,6 +202,8 @@ export const LocationRouter: React.FC<PathFinderProps> = ({
               currentFloor={currentFloor}
               setCurrentFloor={setCurrentFloor}
               settings={settings}
+              externalLocation={externalLocation}
+              onExternalLocationSet={handleExternalLocationSet}
             />
           </div>
 
