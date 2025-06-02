@@ -4,6 +4,7 @@ import {
   getSettings,
 } from "@/styles/types";
 import React, { useCallback, useMemo } from "react";
+import * as Icons from "@/utils/icons/icons";
 
 export const QuickNavigation: React.FC<QuickNavigationProps> = ({
   settings,
@@ -38,19 +39,23 @@ export const QuickNavigation: React.FC<QuickNavigationProps> = ({
     return locations;
   }, []);
 
-  const handleLocationSelect = useCallback((location: LocationSearchResult) => {
-    console.log("QuickNavigation: handleLocationSelect called with:", location);
+  const handleStartLocationSelect = useCallback((location: LocationSearchResult) => {
+    console.log("QuickNavigation: Start button clicked for location:", location);
     if (onSelectLocation) {
-      console.log("QuickNavigation: calling onSelectLocation");
-      onSelectLocation(location);
-    } else {
-      console.log("QuickNavigation: onSelectLocation is not defined");
+      onSelectLocation(location, true);
+    }
+  }, [onSelectLocation]);
+
+  const handleEndLocationSelect = useCallback((location: LocationSearchResult) => {
+    console.log("QuickNavigation: End button clicked for location:", location);
+    if (onSelectLocation) {
+      onSelectLocation(location, false);
     }
   }, [onSelectLocation]);
 
   return (
     <section
-      className="mb-4 bg-gray-700 text-white my-4 p-6 flex flex-col rounded-2xl"
+      className="mb-4 bg-gray-700 text-white my-4 p-4 flex flex-col rounded-2xl"
       role="region"
       aria-label="Building accessibility features"
       aria-describedby="building-features-desc"
@@ -72,26 +77,37 @@ export const QuickNavigation: React.FC<QuickNavigationProps> = ({
           Common Locations
         </h4>
         <ul
-          className={`${getSettings(settings)} list-disc ml-4 text-sm`}
+          className={`${getSettings(settings)} space-y-2`}
           role="list"
         >
           {predefinedSearches.map((search, index: number) => (
             <li
               key={`${search.type}-${index}`}
               role="listitem"
-              className={`flex items-center justify-between ${getSettings(settings)}`}
+              className={`flex items-center justify-between bg-gray-600 p-2 rounded-lg ${getSettings(settings)}`}
             >
-              <span>{search.name}</span>
-              <button
-                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 my-2 px-4 rounded-md text-lg"
-                aria-label={`Show ${search.name} locations`}
-                onClick={() => {
-                  console.log("QuickNavigation: Button clicked for:", search);
-                  handleLocationSelect(search);
-                }}
-              >
-                Show
-              </button>
+              <div className="flex items-center gap-2 min-w-0">
+                <span className="truncate">{search.name}</span>
+                <span className="text-xs text-gray-400" title={`Floor ${search.floor} • (${search.location.x}, ${search.location.y})`}>
+                  ({search.location.x}, {search.location.y})
+                </span>
+              </div>
+              <div className="flex items-center bg-gray-700 rounded-lg overflow-hidden">
+                <button
+                  className="p-1.5 bg-blue-600 text-white hover:bg-blue-500 transition-colors flex items-center gap-1 border-r border-gray-600"
+                  aria-label={`Set ${search.name} as start point`}
+                  onClick={() => handleStartLocationSelect(search)}
+                >
+                  <Icons.FaPlay className="text-xs" />
+                </button>
+                <button
+                  className="p-1.5 bg-green-600 text-white hover:bg-green-500 transition-colors flex items-center gap-1"
+                  aria-label={`Set ${search.name} as end point`}
+                  onClick={() => handleEndLocationSelect(search)}
+                >
+                  <Icons.FaMapMarkerAlt className="text-xs" />
+                </button>
+              </div>
             </li>
           ))}
         </ul>
@@ -104,26 +120,44 @@ export const QuickNavigation: React.FC<QuickNavigationProps> = ({
             Saved Locations
           </h4>
           <ul
-            className={`${getSettings(settings)} list-disc ml-4 text-sm`}
+            className={`${getSettings(settings)} space-y-2`}
             role="list"
           >
             {savedLocations.map((location, index: number) => (
               <li
                 key={`${location.name}-${index}`}
                 role="listitem"
-                className={`flex items-center justify-between ${getSettings(settings)}`}
+                className={`flex items-center justify-between bg-gray-600 p-2 rounded-lg ${getSettings(settings)}`}
               >
-                <span>{location.name}</span>
-                <button
-                  className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 my-2 px-4 rounded-md text-lg"
-                  aria-label={`Go to ${location.name}`}
-                  onClick={() => {
-                    console.log("QuickNavigation: Saved location button clicked for:", location);
-                    handleLocationSelect(location);
-                  }}
-                >
-                  Go
-                </button>
+                <div className="flex items-center gap-2 min-w-0">
+                  <span className="truncate">{location.name}</span>
+                  <span className="text-xs text-gray-400" title={`Floor ${location.floor} • (${location.location.x}, ${location.location.y})`}>
+                    ({location.location.x}, {location.location.y})
+                  </span>
+                </div>
+                <div className="flex items-center bg-gray-700 rounded-lg overflow-hidden">
+                  <button
+                    className="p-1.5 bg-blue-600 text-white hover:bg-blue-500 transition-colors flex items-center gap-1 border-r border-gray-600"
+                    aria-label={`Set ${location.name} as start point`}
+                    onClick={() => handleStartLocationSelect(location)}
+                  >
+                    <Icons.FaPlay className="text-xs" />
+                  </button>
+                  <button
+                    className="p-1.5 bg-green-600 text-white hover:bg-green-500 transition-colors flex items-center gap-1 border-r border-gray-600"
+                    aria-label={`Set ${location.name} as end point`}
+                    onClick={() => handleEndLocationSelect(location)}
+                  >
+                    <Icons.FaMapMarkerAlt className="text-xs" />
+                  </button>
+                  <button
+                    className="p-1.5 bg-red-600 text-white hover:bg-red-500 transition-colors flex items-center gap-1"
+                    aria-label={`Delete ${location.name} from saved locations`}
+                    onClick={() => {/* Add delete handler */}}
+                  >
+                    <Icons.FaTrashAlt className="text-xs" />
+                  </button>
+                </div>
               </li>
             ))}
           </ul>

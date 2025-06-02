@@ -20,6 +20,8 @@ export const StartLocationSearchField: React.FC<LocationSearchFieldProps> = ({
   currentFloor,
   setCurrentFloor,
   settings,
+  externalLocation,
+  onExternalLocationSet,
 }) => {
   const [searchQuery, setSearchQuery] = useState("");
   const [searchResults, setSearchResults] = useState<LocationSearchResult[]>(
@@ -28,6 +30,29 @@ export const StartLocationSearchField: React.FC<LocationSearchFieldProps> = ({
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [selectedDisplayLocation, setSelectedDisplayLocation] =
     useState<LocationSearchResult | null>(null);
+
+  // Handle external location selection
+  useEffect(() => {
+    if (externalLocation) {
+      console.log("External start location detected:", externalLocation);
+      handleLocationSelection(externalLocation);
+      if (onExternalLocationSet) {
+        onExternalLocationSet();
+      }
+    }
+  }, [externalLocation, onExternalLocationSet]);
+
+  // Handle location selection
+  const handleLocationSelection = (location: LocationSearchResult) => {
+    console.log("StartLocationSearchField: handleLocationSelection called with:", location);
+    if (location.floor !== currentFloor && setCurrentFloor) {
+      setCurrentFloor(location.floor);
+    }
+    setSelectedDisplayLocation(location);
+    onSearch(location);
+    setSearchQuery(location.name);
+    setIsDropdownOpen(false);
+  };
 
   // Function to parse coordinates from search query
   const parseCoordinates = (query: string): Coordinate | null => {
@@ -72,7 +97,6 @@ export const StartLocationSearchField: React.FC<LocationSearchFieldProps> = ({
       // Search classrooms
       floorData.classrooms.forEach((room) => {
         if (room.number.toLowerCase().includes(lowerQuery)) {
-
           results.push({
             type: "classroom",
             name: `Classroom ${room.number}`,
@@ -86,21 +110,19 @@ export const StartLocationSearchField: React.FC<LocationSearchFieldProps> = ({
       // Search bathrooms
       floorData.bathrooms.forEach((bathroom) => {
         if (bathroom.type.toLowerCase().includes(lowerQuery)) {
-
           results.push({
             type: "bathroom",
             name: `${bathroom.type} Bathroom`,
             floor: floorNumber,
             location: bathroom.entry,
             description: `${bathroom.type} Bathroom on floor ${floorNumber}`,
-            });
+          });
         }
       });
 
       // Search elevators
       floorData.elevators.forEach((elevator, index) => {
         if ("elevator".includes(lowerQuery)) {
-         
           results.push({
             type: "elevator",
             name: `Elevator ${index + 1}`,
@@ -114,7 +136,6 @@ export const StartLocationSearchField: React.FC<LocationSearchFieldProps> = ({
       // Search stairs
       floorData.stairs.forEach((stair, index) => {
         if ("stair".includes(lowerQuery) || "stairs".includes(lowerQuery)) {
-          
           results.push({
             type: "stairs",
             name: `Stairs ${index + 1}`,
@@ -128,7 +149,6 @@ export const StartLocationSearchField: React.FC<LocationSearchFieldProps> = ({
       // Search utility rooms
       floorData.utilityRooms.forEach((room) => {
         if (room.name.toLowerCase().includes(lowerQuery)) {
-          
           results.push({
             type: "utilityRoom",
             name: room.name,
@@ -146,7 +166,6 @@ export const StartLocationSearchField: React.FC<LocationSearchFieldProps> = ({
           (exit.description &&
             exit.description.toLowerCase().includes(lowerQuery))
         ) {
-          
           results.push({
             type: "exit",
             name: exit.description || `Exit`,
@@ -164,16 +183,9 @@ export const StartLocationSearchField: React.FC<LocationSearchFieldProps> = ({
     setIsDropdownOpen(results.length > 0);
   }, [searchQuery, currentFloor]);
 
-  // Handle selection from dropdown
+  // Handle result click
   const handleResultClick = (result: LocationSearchResult) => {
-    console.log("Start Location Selected:", result);
-    if (result.floor !== currentFloor && setCurrentFloor) {
-      setCurrentFloor(result.floor);
-    }
-    setSelectedDisplayLocation(result); // Update internal state for display
-    onSearch(result); // Pass the full result object up
-    setSearchQuery("");
-    setIsDropdownOpen(false);
+    handleLocationSelection(result);
   };
 
   // --- UI Rendering ---

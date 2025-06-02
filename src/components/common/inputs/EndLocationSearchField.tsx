@@ -40,57 +40,28 @@ export const EndLocationSearchField: React.FC<LocationSearchProps & {
   const [selectedDisplayLocation, setSelectedDisplayLocation] =
     useState<LocationSearchResult | null>(null);
 
-  // Handle external location selection (from BuildingFeatures)
-  const handleLocationSelection = useCallback(
-    (location: LocationSearchResult) => {
-      if (location.floor !== currentFloor && setCurrentFloor) {
-        setCurrentFloor(location.floor);
-      }
-      setSelectedDisplayLocation(location);
-      onSearch(location);
-      setSearchQuery(location.name);
-      setIsDropdownOpen(false);
-    },
-    [currentFloor, setCurrentFloor, onSearch]
-  );
-
-  // Effect to handle external location changes
+  // Handle external location selection
   useEffect(() => {
     if (externalLocation) {
-      console.log("External location detected:", externalLocation);
+      console.log("External end location detected:", externalLocation);
       handleLocationSelection(externalLocation);
       if (onExternalLocationSet) {
-        console.log("Calling onExternalLocationSet callback");
         onExternalLocationSet();
       }
     }
-  }, [externalLocation, handleLocationSelection, onExternalLocationSet]);
+  }, [externalLocation, onExternalLocationSet]);
 
-  // Enhanced icon selector
-  const getLocationIcon = useCallback((type?: string) => {
-    switch (type?.toLowerCase()) {
-      case "classroom":
-        return <SiGoogleclassroom className="text-red-600" />;
-      case "bathroom":
-        return <FaRestroom className="text-red-600" />;
-      case "elevator":
-        return <FaElevator className="text-red-600" />;
-      case "exit":
-        return <FaMapMarkerAlt className="text-red-600" />;
-      case "coordinate":
-        return <MdLocationPin className="text-red-600" />;
-      default:
-        return <MdLocationPin className="text-red-600" />;
+  // Handle location selection
+  const handleLocationSelection = useCallback((location: LocationSearchResult) => {
+    console.log("EndLocationSearchField: handleLocationSelection called with:", location);
+    if (location.floor !== currentFloor && setCurrentFloor) {
+      setCurrentFloor(location.floor);
     }
-  }, []);
-
-  // Handle result click (internal selection)
-  const handleResultClick = useCallback(
-    (result: LocationSearchResult) => {
-      handleLocationSelection(result);
-    },
-    [handleLocationSelection]
-  );
+    setSelectedDisplayLocation(location);
+    onSearch(location);
+    setSearchQuery(location.name);
+    setIsDropdownOpen(false);
+  }, [currentFloor, setCurrentFloor, onSearch]);
 
   // Function to parse coordinates from search query
   const parseCoordinates = (query: string): Coordinate | null => {
@@ -227,8 +198,30 @@ export const EndLocationSearchField: React.FC<LocationSearchProps & {
     setIsDropdownOpen(results.length > 0);
   }, [searchQuery, currentFloor]);
 
+  // Handle result click
+  const handleResultClick = useCallback((result: LocationSearchResult) => {
+    handleLocationSelection(result);
+  }, [handleLocationSelection]);
+
   // --- UI Rendering ---
   const styles = getEndLocationStyles(settings);
+
+  const getLocationIcon = useCallback((type?: string) => {
+    switch (type?.toLowerCase()) {
+      case "classroom":
+        return <SiGoogleclassroom className="text-green-600" />;
+      case "bathroom":
+        return <FaRestroom className="text-green-600" />;
+      case "elevator":
+        return <FaElevator className="text-green-600" />;
+      case "exit":
+        return <FaMapMarkerAlt className="text-green-600" />;
+      case "coordinate":
+        return <MdLocationPin className="text-green-600" />;
+      default:
+        return <MdLocationPin className="text-green-600" />;
+    }
+  }, []);
 
   return (
     <div
@@ -276,8 +269,8 @@ export const EndLocationSearchField: React.FC<LocationSearchProps & {
               onClick={() => {
                 if (searchResults.length > 0 && searchResults[0]) {
                   handleResultClick(searchResults[0]);
+                  setSearchQuery(searchResults[0].name);
                 } else {
-                  // Handle case where user types coordinates and clicks button
                   const coords = parseCoordinates(searchQuery);
                   if (coords) {
                     const coordResult: LocationSearchResult = {
@@ -288,8 +281,9 @@ export const EndLocationSearchField: React.FC<LocationSearchProps & {
                       description: `Coordinates (${coords.x}, ${coords.y}) on current floor`,
                     };
                     handleResultClick(coordResult);
+                    setSearchQuery(coordResult.name);
                   } else {
-                    onSearch(null); // Clear selection if invalid input
+                    onSearch(null);
                     setSelectedDisplayLocation(null);
                   }
                 }
@@ -307,7 +301,7 @@ export const EndLocationSearchField: React.FC<LocationSearchProps & {
         <div
           className={`mt-1 p-2 ${styles.inputBg} border-2 border-red-500 rounded-lg flex items-center`}
         >
-          {/* Updated icon wrapper with red styling */}
+          {/* Updated icon wrapper with green styling */}
           <div className="mr-2 text-lg flex items-center justify-center w-6 h-6 rounded-md ring-2 ring-red-500 bg-red-100/30 text-bold">
             {getLocationIcon(selectedDisplayLocation.type as string)}
           </div>

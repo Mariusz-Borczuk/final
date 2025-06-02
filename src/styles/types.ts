@@ -179,6 +179,8 @@ export interface LocationSearchFieldProps {
   currentFloor: number;
   setCurrentFloor?: (floor: number) => void;
   settings?: any;
+  externalLocation?: LocationSearchResult | null;
+  onExternalLocationSet?: () => void;
 }
 export interface TopBarProps {
   showGrid: boolean;
@@ -470,6 +472,6 @@ export const getSearchStyles = (settings?: AccessibilitySettings) => {
 
 export interface QuickNavigationProps {
   settings: AccessibilitySettings;
-  onSelectLocation?: (location: LocationSearchResult) => void;
+  onSelectLocation?: (location: LocationSearchResult, isStart: boolean) => void;
   savedLocations?: LocationSearchResult[];
 }

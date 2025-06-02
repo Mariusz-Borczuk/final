@@ -603,14 +603,13 @@ export const GridMap: React.FC<PathSegmentsProps> = ({
                         <div
                           className="absolute w-4 h-4 border-2 border-white rounded-full shadow-lg"
                           style={{
-                            backgroundColor: highlightedCell.color || "#F44336",
+                            backgroundColor: "#4CAF50", // Green for end point
                           }}
                         >
                           <div
                             className="absolute inset-0 rounded-full animate-ping opacity-60"
                             style={{
-                              backgroundColor:
-                                highlightedCell.color || "#F44336",
+                              backgroundColor: "#4CAF50", // Green for end point
                             }}
                           />
                         </div>
@@ -624,13 +623,13 @@ export const GridMap: React.FC<PathSegmentsProps> = ({
                         <div
                           className="absolute w-4 h-4 border-2 border-white rounded-full shadow-lg"
                           style={{
-                            backgroundColor: startLocation.color || "#4CAF50",
+                            backgroundColor: "#2196F3", // Blue for start point
                           }}
                         >
                           <div
                             className="absolute inset-0 rounded-full animate-ping opacity-60"
                             style={{
-                              backgroundColor: startLocation.color || "#4CAF50",
+                              backgroundColor: "#2196F3", // Blue for start point
                             }}
                           />
                         </div>

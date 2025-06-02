@@ -21,7 +21,7 @@ import { AddCustomNavigationButton } from "./CustomLocation";
  */
 export const SavedLocations: React.FC<
   RightSidebarProps & {
-    onSelectLocation?: (location: LocationSearchResult) => void;
+    onSelectLocation?: (location: LocationSearchResult, isStart: boolean) => void;
     onUpdateSettings?: (settings: AccessibilitySettings) => void;
   }
 > = ({ settings, currentFloor, onSelectLocation }) => {
@@ -44,26 +44,17 @@ export const SavedLocations: React.FC<
     return <Icon className="text-white text-xl" />;
   };
 
-  const handleAddCustomNavigation = (item: NavigationItem) => {
-    const locationResult: LocationSearchResult = {
-      type: "custom",
-      name: item.name,
-      floor: currentFloor,
-      location: { x: item.coordinates.x, y: item.coordinates.y },
-      description: `Custom location: ${item.name}`,
-      color: item.color,
-      icon: item.iconName, // Save the icon name
-    };
-
-    if (storeLocationInSession(locationResult)) {
-      setSavedLocations((prev) => [...prev, locationResult]);
+  // Handle location click for start point
+  const handleStartLocationClick = (location: LocationSearchResult) => {
+    if (onSelectLocation) {
+      onSelectLocation(location, true);
     }
   };
 
-  // Handle location click
-  const handleLocationClick = (location: LocationSearchResult) => {
+  // Handle location click for end point
+  const handleEndLocationClick = (location: LocationSearchResult) => {
     if (onSelectLocation) {
-      onSelectLocation(location);
+      onSelectLocation(location, false);
     }
   };
 
@@ -85,6 +76,23 @@ export const SavedLocations: React.FC<
         "savedLocations",
         JSON.stringify(updatedLocations)
       );
+    }
+  };
+
+  // Handle adding custom navigation
+  const handleAddCustomNavigation = (item: NavigationItem) => {
+    const locationResult: LocationSearchResult = {
+      type: "custom",
+      name: item.name,
+      floor: currentFloor,
+      location: { x: item.coordinates.x, y: item.coordinates.y },
+      description: `Custom location: ${item.name}`,
+      color: item.color,
+      icon: item.iconName,
+    };
+
+    if (storeLocationInSession(locationResult)) {
+      setSavedLocations((prev) => [...prev, locationResult]);
     }
   };
 
@@ -111,37 +119,43 @@ export const SavedLocations: React.FC<
           {savedLocations.map((location, index) => (
             <li key={`${location.name}-${location.floor}-${index}`}>
               <div className="flex items-center justify-between p-2 bg-gray-600 hover:bg-gray-500 rounded-lg transition-colors">
-                <div className="flex-1 flex items-center text-white text-left">
-                  <div className="flex items-center gap-2">
+                <div className="flex-1 flex items-center text-white text-left min-w-0">
+                  <div className="flex items-center gap-2 min-w-0">
                     <div
-                      className="w-8 h-8 rounded-[4px] flex items-center justify-center"
+                      className="w-8 h-8 rounded-[4px] flex-shrink-0 flex items-center justify-center"
                       style={{ backgroundColor: location.color || "#4CAF50" }}
                     >
                       {renderIcon(location.icon)}
                     </div>
-                    <div className="flex flex-col">
-                      <span>{location.name}</span>
-                      <span className="text-xs text-gray-400">
-                        Floor {location.floor} • ({location.location.x},{" "}
-                        {location.location.y})
+                    <div className="flex flex-col min-w-0">
+                      <span className="font-medium truncate">{location.name}</span>
+                      <span className="text-xs text-gray-400 truncate" title={`Floor ${location.floor} • (${location.location.x}, ${location.location.y})`}>
+                        ({location.location.x}, {location.location.y})
                       </span>
                     </div>
                   </div>
                 </div>
-                <div className="flex items-center gap-2">
+                <div className="flex items-center bg-gray-700 rounded-lg overflow-hidden">
                   <button
-                    onClick={() => handleLocationClick(location)}
-                    className="p-2 bg-green-600 text-white hover:bg-green-500 rounded-lg transition-colors flex items-center gap-1"
-                    aria-label={`Show ${location.name} on map`}
+                    onClick={() => handleStartLocationClick(location)}
+                    className="p-1.5 bg-blue-600 text-white hover:bg-blue-500 transition-colors flex items-center gap-1 border-r border-gray-600"
+                    aria-label={`Set ${location.name} as start point`}
                   >
-                    <Icons.FaMapMarkerAlt />
+                    <Icons.FaPlay className="text-xs" />
+                  </button>
+                  <button
+                    onClick={() => handleEndLocationClick(location)}
+                    className="p-1.5 bg-green-600 text-white hover:bg-green-500 transition-colors flex items-center gap-1 border-r border-gray-600"
+                    aria-label={`Set ${location.name} as end point`}
+                  >
+                    <Icons.FaMapMarkerAlt className="text-xs" />
                   </button>
                   <button
                     onClick={() => handleDeleteLocation(location)}
-                    className="p-2 bg-red-500 text-white hover:bg-red-400 rounded-lg transition-colors flex items-center gap-1"
+                    className="p-1.5 bg-red-600 text-white hover:bg-red-500 transition-colors flex items-center gap-1"
                     aria-label={`Delete ${location.name} from saved locations`}
                   >
-                    <Icons.FaTrashAlt />
+                    <Icons.FaTrashAlt className="text-xs" />
                   </button>
                 </div>
               </div>
@@ -156,7 +170,6 @@ export const SavedLocations: React.FC<
         <div className="mt-4 pt-4 border-t border-gray-600">
           <AddCustomNavigationButton
             onAdd={handleAddCustomNavigation}
-            onSelectLocation={onSelectLocation}
             currentFloor={currentFloor}
           />
         </div>

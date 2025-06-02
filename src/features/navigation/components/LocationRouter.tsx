@@ -34,14 +34,20 @@ export const LocationRouter: React.FC<PathFinderProps> = ({
   const [nextFloors, setNextFloors] = useState<number[]>([]);
   const [currentPathIndex, setCurrentPathIndex] = useState<number>(0);
   const [pathCompleted, setPathCompleted] = useState<boolean>(false);
-  const [externalLocation, setExternalLocation] = useState<LocationSearchResult | null>(null);
+  const [externalStartLocation, setExternalStartLocation] = useState<LocationSearchResult | null>(null);
+  const [externalEndLocation, setExternalEndLocation] = useState<LocationSearchResult | null>(null);
 
   // Handler for QuickNavigation location selection
   const handleQuickNavigationSelect = useCallback(
-    (location: LocationSearchResult): void => {
-      console.log("QuickNavigation location selected:", location);
-      setEndLocation(location);
-      setExternalLocation(location);
+    (location: LocationSearchResult, isStart: boolean): void => {
+      console.log("QuickNavigation location selected:", location, "isStart:", isStart);
+      if (isStart) {
+        setStartLocation(location);
+        setExternalStartLocation(location);
+      } else {
+        setEndLocation(location);
+        setExternalEndLocation(location);
+      }
       setErrorMessage(null);
       setPathSegments([]);
       setNextFloors([]);
@@ -57,8 +63,8 @@ export const LocationRouter: React.FC<PathFinderProps> = ({
 
   // Use handleQuickNavigationSelect as the onSelectLocation handler
   const handleLocationSelect = useCallback(
-    (location: LocationSearchResult) => {
-      handleQuickNavigationSelect(location);
+    (location: LocationSearchResult, isStart: boolean) => {
+      handleQuickNavigationSelect(location, isStart);
     },
     [handleQuickNavigationSelect]
   );
@@ -67,6 +73,7 @@ export const LocationRouter: React.FC<PathFinderProps> = ({
   const handleStartLocationSearch = useCallback(
     (result: LocationSearchResult | null): void => {
       setStartLocation(result);
+      setExternalStartLocation(null);
       setErrorMessage(null);
       setPathSegments([]);
       setNextFloors([]);
@@ -84,9 +91,7 @@ export const LocationRouter: React.FC<PathFinderProps> = ({
   const handleEndLocationSearch = useCallback(
     (result: LocationSearchResult | null): void => {
       setEndLocation(result);
-      if (result) {
-        setExternalLocation(result);
-      }
+      setExternalEndLocation(null);
       setErrorMessage(null);
       setPathSegments([]);
       setNextFloors([]);
@@ -101,12 +106,17 @@ export const LocationRouter: React.FC<PathFinderProps> = ({
   );
 
   // Handler for external location set
-  const handleExternalLocationSet = useCallback(() => {
-    // Only clear external location if it's been handled
-    if (externalLocation) {
-      setExternalLocation(null);
+  const handleExternalStartLocationSet = useCallback(() => {
+    if (externalStartLocation) {
+      setExternalStartLocation(null);
     }
-  }, [externalLocation]);
+  }, [externalStartLocation]);
+
+  const handleExternalEndLocationSet = useCallback(() => {
+    if (externalEndLocation) {
+      setExternalEndLocation(null);
+    }
+  }, [externalEndLocation]);
 
   // Error handler function
   const handleError = useCallback(
@@ -183,7 +193,7 @@ export const LocationRouter: React.FC<PathFinderProps> = ({
       console.error("Error during pathfinding:", error);
       handleError("An unexpected error occurred during pathfinding");
     }
-  }, [startLocation, endLocation, onPathFound, isWheelchair, handleError]);
+  }, [startLocation, endLocation, onPathFound, isWheelchair, handleError, settings?.preferredBathroom]);
 
   // Handle clearing the path - to be passed to the NavigationButton
   const handleClearPath = useCallback((): void => {
@@ -220,6 +230,8 @@ export const LocationRouter: React.FC<PathFinderProps> = ({
               currentFloor={currentFloor}
               setCurrentFloor={setCurrentFloor}
               settings={settings}
+              externalLocation={externalStartLocation}
+              onExternalLocationSet={handleExternalStartLocationSet}
             />
           </div>
 
@@ -230,8 +242,8 @@ export const LocationRouter: React.FC<PathFinderProps> = ({
               currentFloor={currentFloor}
               setCurrentFloor={setCurrentFloor}
               settings={settings}
-              externalLocation={externalLocation}
-              onExternalLocationSet={handleExternalLocationSet}
+              externalLocation={externalEndLocation}
+              onExternalLocationSet={handleExternalEndLocationSet}
             />
           </div>
 
