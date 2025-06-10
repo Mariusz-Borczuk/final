@@ -320,5 +320,6 @@ export const floor1Data: FloorData = {
     { location: { x: 55, y: 13 }, description: "Main Exit" },
     { location: { x: 47, y: 50 }, description: "Parking exit" },
     { location: { x: 8, y: 50 }, description: "CNTI exit" },
+    { location: { x: 9, y: 2 }, description: "Inside parking exit" },
   ],
 };
