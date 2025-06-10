@@ -43,8 +43,6 @@ import { useState } from "react";
 export const GridMap: React.FC<PathSegmentsProps> = ({
   showGrid,
   currentFloor,
-  endLocation: endLocation,
-  startLocation,
   settings,
   pathSegments = [],
 }) => {
@@ -427,7 +425,7 @@ export const GridMap: React.FC<PathSegmentsProps> = ({
 
   // Add the calculated path segments in purple
   const finalGrid = pathSegments.reduce(
-    (grid: CellType[][], segment: PathSegment) => {
+    (grid: CellType[][], segment: PathSegment, index: number) => {
       // Only process path segments for the current floor
       if (segment.floor !== currentFloor) {
         return grid;
@@ -452,11 +450,17 @@ export const GridMap: React.FC<PathSegmentsProps> = ({
             currentCell &&
             (currentCell.type === "path" || currentCell.type === "entry")
           ) {
+            // Check if this is the start or end point of the path
+            const isStartPoint = index === 0 && row === start.y && col === start.x;
+            const isEndPoint = index === pathSegments.length - 1 && row === end.y && col === end.x;
+
             updatedGrid = updateGridCell(updatedGrid, row, col, {
               ...currentCell,
               type: "calculated-path",
               color: "#800080", // Purple color for the path
               label: currentCell.label,
+              isStartPoint,
+              isEndPoint,
             });
           }
         }
@@ -542,20 +546,6 @@ export const GridMap: React.FC<PathSegmentsProps> = ({
                   ? "1px solid #333"
                   : "none";
 
-                // Check if this cell should be highlighted as destination - only on the destination floor
-                const isEndPoint =
-                  endLocation &&
-                  endLocation.floor === currentFloor! &&
-                  endLocation.location.y === rowIndex &&
-                  endLocation.location.x === colIndex;
-
-                // Check if this cell should be highlighted as starting point - only on the start floor
-                const isStartPoint =
-                  startLocation &&
-                  startLocation.floor === currentFloor! &&
-                  startLocation.location.y === rowIndex &&
-                  startLocation.location.x === colIndex;
-
                 const cellTitle = cell.label
                   ? `${cell.label} (${colIndex}, ${rowIndex})`
                   : `(${colIndex}, ${rowIndex})`;
@@ -593,44 +583,41 @@ export const GridMap: React.FC<PathSegmentsProps> = ({
                       setHoveredCell(null);
                     }}
                   >
-                    {isEndPoint && (
+                    {cell.isStartPoint && (
                       <div
                         className="absolute inset-0 flex items-center justify-center z-10 pointer-events-none"
-                        title={
-                          endLocation.description || endLocation.name
-                        }
+                        title="Start Point"
                       >
                         <div
                           className="absolute w-4 h-4 border-2 border-white rounded-full shadow-lg"
                           style={{
-                            backgroundColor: endLocation.color || "#F44336",
+                            backgroundColor: "#4CAF50",
                           }}
                         >
                           <div
                             className="absolute inset-0 rounded-full animate-ping opacity-60"
                             style={{
-                              backgroundColor:
-                                endLocation.color || "#F44336",
+                              backgroundColor: "#4CAF50",
                             }}
                           />
                         </div>
                       </div>
                     )}
-                    {isStartPoint && (
+                    {cell.isEndPoint && (
                       <div
                         className="absolute inset-0 flex items-center justify-center z-10 pointer-events-none"
-                        title={startLocation.description || startLocation.name}
+                        title="End Point"
                       >
                         <div
                           className="absolute w-4 h-4 border-2 border-white rounded-full shadow-lg"
                           style={{
-                            backgroundColor: startLocation.color || "#4CAF50",
+                            backgroundColor: "#F44336",
                           }}
                         >
                           <div
                             className="absolute inset-0 rounded-full animate-ping opacity-60"
                             style={{
-                              backgroundColor: startLocation.color || "#4CAF50",
+                              backgroundColor: "#F44336",
                             }}
                           />
                         </div>

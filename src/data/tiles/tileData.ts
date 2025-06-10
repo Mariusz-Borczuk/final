@@ -29,6 +29,8 @@ export type CellType = {
     type: string;
     color: string;
     label: string;
+    isStartPoint?: boolean;
+    isEndPoint?: boolean;
   };
  export type contrastSettings ={
           settings: {
