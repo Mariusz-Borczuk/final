@@ -135,25 +135,14 @@ export const RouteNavigator = ({
     return null;
   };
 
-  /**
-   * Calculate Euclidean distance between two points
-   */
-  const calculateDistance = (
-    x1: number,
-    y1: number,
-    x2: number,
-    y2: number
-  ): number => {
-    return Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
-  };
-
-  /**
+    /**
    * Find the nearest transit point for multi-floor navigation
    */
   const findNearestTransitPoint = (
     floorData: FloorData,
     startX: number,
-    startY: number
+    startY: number,
+    targetFloor?: number
   ): TransitPoint | null | undefined => {
     const transitPoints: TransitPoint[] = [];
     const elevatorEntries = findEntryPoints(floorData, "elevator");
@@ -163,7 +152,6 @@ export const RouteNavigator = ({
 
     if (!isWheelchair) {
       const stairEntries = findEntryPoints(floorData, "stair");
-
       stairEntries.forEach((entry) => {
         transitPoints.push({ coord: entry, isElevator: false });
       });
@@ -171,20 +159,46 @@ export const RouteNavigator = ({
 
     if (transitPoints.length === 0) return undefined;
 
-    // Find nearest transit point using Manhattan distance
-    return transitPoints.reduce((nearest, current) => {
-      const currentDist =
-        Math.abs(current.coord.x - startX) + Math.abs(current.coord.y - startY);
-      const nearestDist = nearest
-        ? Math.abs(nearest.coord.x - startX) +
-          Math.abs(nearest.coord.y - startY)
-        : Infinity;
+    // If we have a target floor, find the matching transit point
+    if (targetFloor !== undefined) {
+      const targetFloorData = allFloorData[targetFloor - 1];
+      if (targetFloorData) {
+        // Find matching transit points between floors
+        const targetTransitPoints = isWheelchair 
+          ? findEntryPoints(targetFloorData, "elevator").map(entry => ({ coord: entry, isElevator: true }))
+          : [...findEntryPoints(targetFloorData, "elevator").map(entry => ({ coord: entry, isElevator: true })),
+            ...findEntryPoints(targetFloorData, "stair").map(entry => ({ coord: entry, isElevator: false }))];
 
-      // Add slight preference for stairs for non-wheelchair users
+        // Find the closest matching transit point pair
+        let bestPair: { start: TransitPoint; end: TransitPoint } | null = null;
+        let minDistance = Infinity;
+
+        for (const startPoint of transitPoints) {
+          for (const endPoint of targetTransitPoints) {
+            if (startPoint.isElevator === endPoint.isElevator) {
+              const startDist = Math.abs(startPoint.coord.x - startX) + Math.abs(startPoint.coord.y - startY);
+              const endDist = Math.abs(endPoint.coord.x - startX) + Math.abs(endPoint.coord.y - startY);
+              const totalDist = startDist + endDist;
+
+              if (totalDist < minDistance) {
+                minDistance = totalDist;
+                bestPair = { start: startPoint, end: endPoint };
+              }
+            }
+          }
+        }
+
+        return bestPair?.start || transitPoints[0];
+      }
+    }
+
+    // If no target floor or no matching points found, use the original logic
+    return transitPoints.reduce((nearest, current) => {
+      const currentDist = Math.abs(current.coord.x - startX) + Math.abs(current.coord.y - startY);
+      const nearestDist = nearest ? Math.abs(nearest.coord.x - startX) + Math.abs(nearest.coord.y - startY) : Infinity;
+
       const currentScore = current.isElevator ? currentDist * 1.2 : currentDist;
-      const nearestScore = nearest?.isElevator
-        ? nearestDist * 1.2
-        : nearestDist;
+      const nearestScore = nearest?.isElevator ? nearestDist * 1.2 : nearestDist;
 
       return currentScore < nearestScore ? current : nearest;
     }, transitPoints[0]);
@@ -521,7 +535,8 @@ export const RouteNavigator = ({
       ? findNearestTransitPoint(
           startFloorData,
           validStartCoord.x,
-          validStartCoord.y
+          validStartCoord.y,
+          endLocation.floor
         )
       : null;
 
@@ -534,56 +549,38 @@ export const RouteNavigator = ({
     let endFloorTransit: TransitPoint | null = null;
 
     if (startFloorTransit.isElevator) {
-      // If using elevator, find the nearest elevator on destination floor
-      const elevators = endFloorData
-        ? findEntryPoints(endFloorData, "elevator")
-        : [];
-
+      // If using elevator, find the matching elevator on destination floor
+      const elevators = endFloorData ? findEntryPoints(endFloorData, "elevator") : [];
       if (elevators.length > 0) {
-        // Find nearest elevator to end point
-        endFloorTransit = {
-          coord: elevators.reduce((nearest, current) => {
-            const distCurrent = calculateDistance(
-              validEndCoord.x,
-              validEndCoord.y,
-              current.x,
-              current.y
-            );
-            const distNearest = calculateDistance(
-              validEndCoord.x,
-              validEndCoord.y,
-              nearest.x,
-              nearest.y
-            );
-            return distCurrent < distNearest ? current : nearest;
-          }, elevators[0] || { x: 0, y: 0 }),
-          isElevator: true,
-        };
+        // Find the elevator that matches the position of the start floor elevator
+        const matchingElevator = elevators.find(e => 
+          Math.abs(e.x - startFloorTransit.coord.x) < 2 && 
+          Math.abs(e.y - startFloorTransit.coord.y) < 2
+        );
+        const defaultElevator = elevators[0];
+        if (defaultElevator) {
+          endFloorTransit = {
+            coord: matchingElevator || { x: defaultElevator.x, y: defaultElevator.y },
+            isElevator: true,
+          };
+        }
       }
     } else {
-      // If using stairs, find the nearest stair on destination floor
+      // If using stairs, find the matching stair on destination floor
       const stairs = endFloorData ? findEntryPoints(endFloorData, "stair") : [];
-
       if (stairs.length > 0) {
-        // Find nearest stair to end point
-        endFloorTransit = {
-          coord: stairs.reduce((nearest, current) => {
-            const distCurrent = calculateDistance(
-              validEndCoord.x,
-              validEndCoord.y,
-              current.x,
-              current.y
-            );
-            const distNearest = calculateDistance(
-              validEndCoord.x,
-              validEndCoord.y,
-              nearest.x,
-              nearest.y
-            );
-            return distCurrent < distNearest ? current : nearest;
-          }, stairs[0] || { x: 0, y: 0 }),
-          isElevator: false,
-        };
+        // Find the stair that matches the position of the start floor stair
+        const matchingStair = stairs.find(s => 
+          Math.abs(s.x - startFloorTransit.coord.x) < 2 && 
+          Math.abs(s.y - startFloorTransit.coord.y) < 2
+        );
+        const defaultStair = stairs[0];
+        if (defaultStair) {
+          endFloorTransit = {
+            coord: matchingStair || { x: defaultStair.x, y: defaultStair.y },
+            isElevator: false,
+          };
+        }
       }
     }
 

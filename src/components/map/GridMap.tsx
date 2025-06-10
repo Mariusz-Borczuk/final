@@ -43,7 +43,7 @@ import { useState } from "react";
 export const GridMap: React.FC<PathSegmentsProps> = ({
   showGrid,
   currentFloor,
-  endLocation: highlightedCell,
+  endLocation: endLocation,
   startLocation,
   settings,
   pathSegments = [],
@@ -544,15 +544,15 @@ export const GridMap: React.FC<PathSegmentsProps> = ({
 
                 // Check if this cell should be highlighted as destination - only on the destination floor
                 const isEndPoint =
-                  highlightedCell &&
-                  highlightedCell.floor === currentFloor &&
-                  highlightedCell.location.y === rowIndex &&
-                  highlightedCell.location.x === colIndex;
+                  endLocation &&
+                  endLocation.floor === currentFloor! &&
+                  endLocation.location.y === rowIndex &&
+                  endLocation.location.x === colIndex;
 
                 // Check if this cell should be highlighted as starting point - only on the start floor
                 const isStartPoint =
                   startLocation &&
-                  startLocation.floor === currentFloor &&
+                  startLocation.floor === currentFloor! &&
                   startLocation.location.y === rowIndex &&
                   startLocation.location.x === colIndex;
 
@@ -593,30 +593,30 @@ export const GridMap: React.FC<PathSegmentsProps> = ({
                       setHoveredCell(null);
                     }}
                   >
-                    {isEndPoint && highlightedCell.floor === currentFloor && (
+                    {isEndPoint && (
                       <div
                         className="absolute inset-0 flex items-center justify-center z-10 pointer-events-none"
                         title={
-                          highlightedCell.description || highlightedCell.name
+                          endLocation.description || endLocation.name
                         }
                       >
                         <div
                           className="absolute w-4 h-4 border-2 border-white rounded-full shadow-lg"
                           style={{
-                            backgroundColor: highlightedCell.color || "#F44336",
+                            backgroundColor: endLocation.color || "#F44336",
                           }}
                         >
                           <div
                             className="absolute inset-0 rounded-full animate-ping opacity-60"
                             style={{
                               backgroundColor:
-                                highlightedCell.color || "#F44336",
+                                endLocation.color || "#F44336",
                             }}
                           />
                         </div>
                       </div>
                     )}
-                    {isStartPoint && startLocation.floor === currentFloor && (
+                    {isStartPoint && (
                       <div
                         className="absolute inset-0 flex items-center justify-center z-10 pointer-events-none"
                         title={startLocation.description || startLocation.name}

@@ -22,15 +22,11 @@ import React, { useCallback, useEffect, useState } from "react";
  * Allows searching by classroom number, bathroom type, elevator, stairs, utility room, exit, or coordinates.
  */
 export const EndLocationSearchField: React.FC<LocationSearchProps & {
-  externalLocation?: LocationSearchResult | null;
-  onExternalLocationSet?: () => void;
 }> = ({
   onSearch,
   currentFloor,
   setCurrentFloor,
   settings,
-  externalLocation,
-  onExternalLocationSet,
 }) => {
   const [searchQuery, setSearchQuery] = useState("");
   const [searchResults, setSearchResults] = useState<LocationSearchResult[]>(
@@ -54,17 +50,7 @@ export const EndLocationSearchField: React.FC<LocationSearchProps & {
     [currentFloor, setCurrentFloor, onSearch]
   );
 
-  // Effect to handle external location changes
-  useEffect(() => {
-    if (externalLocation) {
-      console.log("External location detected:", externalLocation);
-      handleLocationSelection(externalLocation);
-      if (onExternalLocationSet) {
-        console.log("Calling onExternalLocationSet callback");
-        onExternalLocationSet();
-      }
-    }
-  }, [externalLocation, handleLocationSelection, onExternalLocationSet]);
+
 
   // Enhanced icon selector
   const getLocationIcon = useCallback((type?: string) => {
