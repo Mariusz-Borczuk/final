@@ -39,13 +39,9 @@ export const QuickNavigation: React.FC<QuickNavigationProps> = ({
   }, []);
 
   const handleLocationSelect = useCallback((location: LocationSearchResult) => {
-    console.log("QuickNavigation: handleLocationSelect called with:", location);
     if (onSelectLocation) {
-      console.log("QuickNavigation: calling onSelectLocation");
       onSelectLocation(location);
-    } else {
-      console.log("QuickNavigation: onSelectLocation is not defined");
-    }
+    } 
   }, [onSelectLocation]);
 
   return (
@@ -86,7 +82,6 @@ export const QuickNavigation: React.FC<QuickNavigationProps> = ({
                 className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 my-2 px-4 rounded-md text-lg"
                 aria-label={`Show ${search.name} locations`}
                 onClick={() => {
-                  console.log("QuickNavigation: Button clicked for:", search);
                   handleLocationSelect(search);
                 }}
               >
@@ -118,7 +113,6 @@ export const QuickNavigation: React.FC<QuickNavigationProps> = ({
                   className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 my-2 px-4 rounded-md text-lg"
                   aria-label={`Go to ${location.name}`}
                   onClick={() => {
-                    console.log("QuickNavigation: Saved location button clicked for:", location);
                     handleLocationSelect(location);
                   }}
                 >

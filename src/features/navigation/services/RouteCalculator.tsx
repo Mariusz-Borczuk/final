@@ -462,7 +462,6 @@ export const RouteNavigator = ({
             });
           }
 
-          console.log("Path found with segments:", segments.length);
           return segments;
         }
 
@@ -633,7 +632,6 @@ export const RouteNavigator = ({
     // Combine all path segments
     const fullPath = [...startFloorPath, transitSegment, ...endFloorPath];
 
-    console.log("Multi-floor path found with segments:", fullPath.length);
     onPathFound(fullPath);
     return null;
   }

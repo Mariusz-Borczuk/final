@@ -69,7 +69,6 @@ class TextToSpeechService {
     };
 
     utterance.onerror = (event: SpeechSynthesisErrorEvent) => {
-      console.error("Speech synthesis error:", event);
       this.isSpeaking = false;
       options.onError?.(event);
     };

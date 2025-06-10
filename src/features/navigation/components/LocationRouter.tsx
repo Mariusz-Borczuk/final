@@ -124,9 +124,6 @@ export const LocationRouter: React.FC<PathFinderProps> = ({
                 (segment) => segment.isTransitPoint
               );
               if (transitSegment) {
-                console.log(
-                  `Transit via ${transitSegment.transitType} detected between floors`
-                );
                 setPathCompleted(false);
               } else {
                 setPathCompleted(uniqueFloors.length <= 1);

@@ -166,7 +166,6 @@ export const StartLocationSearchField: React.FC<LocationSearchFieldProps> = ({
 
   // Handle selection from dropdown
   const handleResultClick = (result: LocationSearchResult) => {
-    console.log("Start Location Selected:", result);
     if (result.floor !== currentFloor && setCurrentFloor) {
       setCurrentFloor(result.floor);
     }
